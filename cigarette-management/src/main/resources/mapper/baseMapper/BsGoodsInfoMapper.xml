@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.base.mapper.BsGoodsInfoMapper">
+
+    <resultMap type="com.ruoyi.base.domain.BsGoodsInfo" id="BsGoodsInfoResult">
+        <result property="id" column="id"/>
+        <result property="goodsCoded" column="goods_coded"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="brandCoded" column="brand_coded"/>
+        <result property="smallBoxBarcode" column="small_box_barcode"/>
+        <result property="barboxBarcode" column="barbox_barcode"/>
+        <result property="goodsType" column="goods_type"/>
+        <result property="goodsSpecification" column="goods_specification"/>
+        <result property="measureUnit" column="measure_unit"/>
+        <result property="singleBarboxNumber" column="single_barbox_number"/>
+        <result property="smallBoxNumber" column="small_box_number"/>
+        <result property="singleBoxPrice" column="single_box_price"/>
+        <result property="barboxPrice" column="barbox_price"/>
+        <result property="barboxWholesalePrices" column="barbox_wholesale_prices"/>
+        <result property="packagingForms" column="packaging_forms"/>
+        <result property="listingStatus" column="listing_status"/>
+        <result property="tarContent" column="tar_content"/>
+        <result property="smokeNicotine" column="smoke_nicotine"/>
+        <result property="monoxideCarbon" column="monoxide_carbon"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+    </resultMap>
+
+
+</mapper>
