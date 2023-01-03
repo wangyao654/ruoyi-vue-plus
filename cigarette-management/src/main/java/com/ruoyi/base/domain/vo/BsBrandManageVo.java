@@ -32,7 +32,7 @@ public class BsBrandManageVo extends BaseEntity {
      * 品牌编号
      */
     @ExcelProperty(value = "品牌编号")
-    private Long brandCoded;
+    private String brandCoded;
 
     /**
      * 品牌名称

@@ -32,7 +32,7 @@ public class BsWhAreaInfoVo extends BaseEntity {
      * 库区编号
      */
     @ExcelProperty(value = "库区编号")
-    private Long whAreaCoded;
+    private String whAreaCoded;
 
     /**
      * 库区名称
@@ -50,7 +50,7 @@ public class BsWhAreaInfoVo extends BaseEntity {
      * 所属仓库编号
      */
     @ExcelProperty(value = "所属仓库编号")
-    private Long warehouseCoded;
+    private String warehouseCoded;
 
     /**
      * 所属仓库

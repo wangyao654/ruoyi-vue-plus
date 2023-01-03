@@ -51,7 +51,7 @@ public class BsGoodsInfoVo extends BaseEntity {
      * 所属品牌编号
      */
     @ExcelProperty(value = "所属品牌编号")
-    private Long brandCoded;
+    private String brandCoded;
 
     /**
      * 小盒条码

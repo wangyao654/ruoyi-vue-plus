@@ -1,6 +1,7 @@
 package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.base.mapper.BsWhBitInfoMapper;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -31,6 +32,7 @@ import java.util.Objects;
 public class BsWhAreaInfoServiceImpl implements IBsWhAreaInfoService {
 
     private final BsWhAreaInfoMapper baseMapper;
+    private final BsWhBitInfoMapper bsWhBitInfoMapper;
 
     /**
      * 查询库区信息
@@ -96,6 +98,8 @@ public class BsWhAreaInfoServiceImpl implements IBsWhAreaInfoService {
     public Boolean updateByBo(BsWhAreaInfoBo bo) {
         BsWhAreaInfo update = BeanUtil.toBean(bo, BsWhAreaInfo.class);
         validEntityBeforeSave(update);
+        //修改库位中库区编号
+        int i=bsWhBitInfoMapper.updateWhAreaNameByWhAreaCoded(bo.getWhAreaCoded(),bo.getWhAreaName());
         return baseMapper.updateById(update) > 0;
     }
 
@@ -115,5 +119,13 @@ public class BsWhAreaInfoServiceImpl implements IBsWhAreaInfoService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteBatchIds(ids) > 0;
+    }
+
+    @Override
+    public BsWhAreaInfoVo getWhAreaInfoByWhAreaCoded(String whAreaCoded) {
+        LambdaQueryWrapper<BsWhAreaInfo> lqw = Wrappers.lambdaQuery();
+        lqw.eq(StringUtils.isNotBlank(whAreaCoded),BsWhAreaInfo::getWhAreaCoded,whAreaCoded);
+        BsWhAreaInfoVo bsWhAreaInfoVo = baseMapper.selectVoOne(lqw);
+        return bsWhAreaInfoVo;
     }
 }

@@ -3,6 +3,7 @@ package com.ruoyi.base.mapper;
 import com.ruoyi.base.domain.BsWhBitInfo;
 import com.ruoyi.base.domain.vo.BsWhBitInfoVo;
 import com.ruoyi.common.core.mapper.BaseMapperPlus;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 库位信息Mapper接口
@@ -12,4 +13,7 @@ import com.ruoyi.common.core.mapper.BaseMapperPlus;
  */
 public interface BsWhBitInfoMapper extends BaseMapperPlus<BsWhBitInfoMapper, BsWhBitInfo, BsWhBitInfoVo> {
 
+    int updateWarehouseNameByWarehouseCoded(@Param("warehouseCoded") String warehouseCoded, @Param("warehouseName") String warehouseName);
+
+    int updateWhAreaNameByWhAreaCoded(@Param("whAreaCoded")String whAreaCoded,@Param("whAreaName") String whAreaName);
 }

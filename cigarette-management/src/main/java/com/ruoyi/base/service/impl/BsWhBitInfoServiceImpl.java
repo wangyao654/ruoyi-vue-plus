@@ -1,6 +1,7 @@
 package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.base.domain.BsWarehouseInfo;
 import com.ruoyi.base.domain.BsWhBitInfo;
 import com.ruoyi.base.domain.bo.BsWhBitInfoBo;
 import com.ruoyi.base.domain.vo.BsWhBitInfoVo;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * 库位信息Service业务层处理
@@ -61,22 +63,25 @@ public class BsWhBitInfoServiceImpl implements IBsWhBitInfoService {
     private LambdaQueryWrapper<BsWhBitInfo> buildQueryWrapper(BsWhBitInfoBo bo) {
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<BsWhBitInfo> lqw = Wrappers.lambdaQuery();
-        lqw.eq(bo.getWhBitCoded() != null, BsWhBitInfo::getWhBitCoded, bo.getWhBitCoded());
+        lqw.eq(StringUtils.isNotBlank(bo.getWhBitCoded()), BsWhBitInfo::getWhBitCoded, bo.getWhBitCoded());
         lqw.like(StringUtils.isNotBlank(bo.getWhBitName()), BsWhBitInfo::getWhBitName, bo.getWhBitName());
         lqw.eq(StringUtils.isNotBlank(bo.getWhBitCapacity()), BsWhBitInfo::getWhBitCapacity, bo.getWhBitCapacity());
         lqw.eq(StringUtils.isNotBlank(bo.getIsExclusive()), BsWhBitInfo::getIsExclusive, bo.getIsExclusive());
         lqw.eq(StringUtils.isNotBlank(bo.getExclusiveType()), BsWhBitInfo::getExclusiveType, bo.getExclusiveType());
-        lqw.eq(bo.getWhAreaCoded() != null, BsWhBitInfo::getWhAreaCoded, bo.getWhAreaCoded());
+        lqw.eq(StringUtils.isNotBlank(bo.getWhAreaCoded()), BsWhBitInfo::getWhAreaCoded, bo.getWhAreaCoded());
         lqw.like(StringUtils.isNotBlank(bo.getWhAreaName()), BsWhBitInfo::getWhAreaName, bo.getWhAreaName());
-        lqw.eq(bo.getWarehouseCoded() != null, BsWhBitInfo::getWarehouseCoded, bo.getWarehouseCoded());
+        lqw.eq(StringUtils.isNotBlank(bo.getWarehouseCoded()), BsWhBitInfo::getWarehouseCoded, bo.getWarehouseCoded());
         lqw.like(StringUtils.isNotBlank(bo.getWarehouseName()), BsWhBitInfo::getWarehouseName, bo.getWarehouseName());
         lqw.eq(StringUtils.isNotBlank(bo.getWhBitType()), BsWhBitInfo::getWhBitType, bo.getWhBitType());
         lqw.eq(StringUtils.isNotBlank(bo.getShelfCoded()), BsWhBitInfo::getShelfCoded, bo.getShelfCoded());
-        lqw.eq(StringUtils.isNotBlank(bo.getRowNumber()), BsWhBitInfo::getRowNumber, bo.getRowNumber());
-        lqw.eq(StringUtils.isNotBlank(bo.getColumnNumber()), BsWhBitInfo::getColumnNumber, bo.getColumnNumber());
         lqw.eq(StringUtils.isNotBlank(bo.getWhBitEnabled()), BsWhBitInfo::getWhBitEnabled, bo.getWhBitEnabled());
-        lqw.eq(StringUtils.isNotBlank(bo.getObjectCoded()), BsWhBitInfo::getObjectCoded, bo.getObjectCoded());
-        lqw.like(StringUtils.isNotBlank(bo.getObjectName()), BsWhBitInfo::getObjectName, bo.getObjectName());
+        if (Objects.nonNull(bo.getStartTime()) && Objects.nonNull(bo.getEndTime())) {
+            lqw.between(BsWhBitInfo::getUpdateTime, bo.getStartTime(), bo.getEndTime());
+        } else if (Objects.nonNull(bo.getStartTime())) {
+            lqw.ge(BsWhBitInfo::getUpdateTime, bo.getStartTime());
+        } else if (Objects.nonNull(bo.getEndTime())) {
+            lqw.le(BsWhBitInfo::getUpdateTime, bo.getEndTime());
+        }
         return lqw;
     }
 

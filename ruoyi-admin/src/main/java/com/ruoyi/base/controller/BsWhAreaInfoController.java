@@ -70,6 +70,10 @@ public class BsWhAreaInfoController extends BaseController {
                                      @PathVariable Long id) {
         return R.ok(iBsWhAreaInfoService.queryById(id));
     }
+    @GetMapping("/getWhAreaInfoByWhAreaCoded")
+    public R<BsWhAreaInfoVo> getWhAreaInfoByWhAreaCoded(BsWhAreaInfoBo bo) {
+        return R.ok(iBsWhAreaInfoService.getWhAreaInfoByWhAreaCoded(bo.getWhAreaCoded()));
+    }
 
     /**
      * 新增库区信息

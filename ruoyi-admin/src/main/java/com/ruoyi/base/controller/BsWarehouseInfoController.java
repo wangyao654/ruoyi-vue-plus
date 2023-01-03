@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import com.ruoyi.base.domain.bo.BsWarehouseInfoBo;
 import com.ruoyi.base.domain.vo.BsWarehouseInfoVo;
 import com.ruoyi.base.service.IBsWarehouseInfoService;
+import com.ruoyi.base.service.IBsWhAreaInfoService;
+import com.ruoyi.base.service.IBsWhBitInfoService;
 import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.*;

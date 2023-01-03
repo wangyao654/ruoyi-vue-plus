@@ -1,12 +1,12 @@
 package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.ruoyi.base.domain.BsGoodsInfo;
 import com.ruoyi.base.domain.BsWarehouseInfo;
 import com.ruoyi.base.domain.bo.BsWarehouseInfoBo;
-import com.ruoyi.base.domain.vo.BsGoodsInfoVo;
 import com.ruoyi.base.domain.vo.BsWarehouseInfoVo;
 import com.ruoyi.base.mapper.BsWarehouseInfoMapper;
+import com.ruoyi.base.mapper.BsWhAreaInfoMapper;
+import com.ruoyi.base.mapper.BsWhBitInfoMapper;
 import com.ruoyi.base.service.IBsWarehouseInfoService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
@@ -34,6 +34,8 @@ import java.util.Objects;
 public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
 
     private final BsWarehouseInfoMapper baseMapper;
+    private final BsWhAreaInfoMapper bsWhAreaInfoMapper;
+    private final BsWhBitInfoMapper bsWhBitInfoMapper;
 
     /**
      * 查询仓库管理
@@ -65,7 +67,7 @@ public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
     private LambdaQueryWrapper<BsWarehouseInfo> buildQueryWrapper(BsWarehouseInfoBo bo) {
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<BsWarehouseInfo> lqw = Wrappers.lambdaQuery();
-        lqw.eq(bo.getWarehouseCoded() != null, BsWarehouseInfo::getWarehouseCoded, bo.getWarehouseCoded());
+        lqw.eq(StringUtils.isNotBlank(bo.getWarehouseCoded()), BsWarehouseInfo::getWarehouseCoded, bo.getWarehouseCoded());
         lqw.like(StringUtils.isNotBlank(bo.getWarehouseName()), BsWarehouseInfo::getWarehouseName, bo.getWarehouseName());
         lqw.eq(StringUtils.isNotBlank(bo.getWarehouseType()), BsWarehouseInfo::getWarehouseType, bo.getWarehouseType());
         lqw.eq(bo.getWarehouseOrganization() != null, BsWarehouseInfo::getWarehouseOrganization, bo.getWarehouseOrganization());
@@ -103,6 +105,10 @@ public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
     public Boolean updateByBo(BsWarehouseInfoBo bo) {
         BsWarehouseInfo update = BeanUtil.toBean(bo, BsWarehouseInfo.class);
         validEntityBeforeSave(update);
+        //修改库区中仓库名称
+        int i=  bsWhAreaInfoMapper.updateWarehouseNameByWarehouseCoded(bo.getWarehouseCoded(),bo.getWarehouseName());
+       //修改库区中仓库名称
+        int s=bsWhBitInfoMapper.updateWarehouseNameByWarehouseCoded(bo.getWarehouseCoded(),bo.getWarehouseName());
         return baseMapper.updateById(update) > 0;
     }
 
@@ -128,7 +134,7 @@ public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
     public R verifyWarehouseCoded(BsWarehouseInfoBo bo) {
         LambdaQueryWrapper<BsWarehouseInfo> lqw = Wrappers.lambdaQuery();
         lqw.ne(bo.getId() != null&&bo.getId() != 0  , BsWarehouseInfo::getId, bo.getId());
-        lqw.eq(bo.getWarehouseCoded() != null && bo.getWarehouseCoded() != 0, BsWarehouseInfo::getWarehouseCoded, bo.getWarehouseCoded());
+        lqw.eq(StringUtils.isNotBlank(bo.getWarehouseCoded()), BsWarehouseInfo::getWarehouseCoded, bo.getWarehouseCoded());
         List<BsWarehouseInfoVo> bsWarehouseInfoVos = this.baseMapper.selectVoList(lqw);
         return R.ok(bsWarehouseInfoVos);
     }

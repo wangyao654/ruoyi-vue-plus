@@ -309,9 +309,9 @@ export default {
         warehouseType: [
           { required: true, message: "仓库类型不能为空", trigger: "change" }
         ],
-        warehouseOrganization: [
+/*        warehouseOrganization: [
           { required: true, message: "仓库归属组织不能为空", trigger: "blur" }
-        ],
+        ],*/
         warehouseAddress: [
           { required: true, message: "仓库地址不能为空", trigger: "blur" }
         ],

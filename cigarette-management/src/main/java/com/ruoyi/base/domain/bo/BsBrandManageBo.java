@@ -30,8 +30,8 @@ public class BsBrandManageBo extends BaseEntity {
     /**
      * 品牌编号
      */
-    @NotNull(message = "品牌编号不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long brandCoded;
+    @NotBlank(message = "品牌编号不能为空", groups = { AddGroup.class, EditGroup.class })
+    private String brandCoded;
 
     /**
      * 品牌名称

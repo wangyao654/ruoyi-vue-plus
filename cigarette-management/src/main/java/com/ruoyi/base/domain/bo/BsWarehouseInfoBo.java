@@ -30,8 +30,8 @@ public class BsWarehouseInfoBo extends BaseEntity {
     /**
      * 仓库编号
      */
-    @NotNull(message = "仓库编号不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long warehouseCoded;
+    @NotBlank(message = "仓库编号不能为空", groups = { AddGroup.class, EditGroup.class })
+    private String warehouseCoded;
 
     /**
      * 仓库名称
@@ -48,7 +48,7 @@ public class BsWarehouseInfoBo extends BaseEntity {
     /**
      * 仓库归属组织(部门id)
      */
-    @NotNull(message = "仓库归属组织(不能为空", groups = { AddGroup.class, EditGroup.class })
+    //@NotNull(message = "仓库归属组织(不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long warehouseOrganization;
 
     /**

@@ -19,6 +19,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark" column="remark"/>
         <result property="createBy" column="create_by"/>
     </resultMap>
-
+    <update id="updateWarehouseNameByWarehouseCoded">
+        update bs_wh_area_info set warehouse_name=#{warehouseName} where  warehouse_coded=#{warehouseCoded}
+    </update>
 
 </mapper>

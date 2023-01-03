@@ -30,7 +30,7 @@ public class BsBrandManage extends BaseEntity {
     /**
      * 品牌编号
      */
-    private Long brandCoded;
+    private String brandCoded;
     /**
      * 品牌名称
      */

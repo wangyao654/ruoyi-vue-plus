@@ -28,6 +28,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime" column="create_time"/>
         <result property="createBy" column="create_by"/>
     </resultMap>
-
-
+    <update id="updateWarehouseNameByWarehouseCoded">
+        update bs_wh_bit_info set warehouse_name=#{warehouseName} where  warehouse_coded=#{warehouseCoded}
+    </update>
+    <update id="updateWhAreaNameByWhAreaCoded">
+           update bs_wh_bit_info set wh_area_name=#{whAreaName} where  wh_area_coded=#{whAreaCoded}
+    </update>
 </mapper>

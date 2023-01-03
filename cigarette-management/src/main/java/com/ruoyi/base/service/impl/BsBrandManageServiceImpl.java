@@ -63,7 +63,7 @@ public class BsBrandManageServiceImpl implements IBsBrandManageService {
     private LambdaQueryWrapper<BsBrandManage> buildQueryWrapper(BsBrandManageBo bo) {
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<BsBrandManage> lqw = Wrappers.lambdaQuery();
-        lqw.eq(bo.getBrandCoded() != null, BsBrandManage::getBrandCoded, bo.getBrandCoded());
+        lqw.eq(StringUtils.isNotBlank(bo.getBrandCoded()), BsBrandManage::getBrandCoded, bo.getBrandCoded());
         lqw.like(StringUtils.isNotBlank(bo.getBrandName()), BsBrandManage::getBrandName, bo.getBrandName());
         lqw.eq(StringUtils.isNotBlank(bo.getBrandLocality()), BsBrandManage::getBrandLocality, bo.getBrandLocality());
         lqw.eq(StringUtils.isNotBlank(bo.getBrandEnabled()), BsBrandManage::getBrandEnabled, bo.getBrandEnabled());
@@ -123,7 +123,7 @@ public class BsBrandManageServiceImpl implements IBsBrandManageService {
     public List<BsBrandManageVo> verifyBrandCode(BsBrandManageBo bo) {
         LambdaQueryWrapper<BsBrandManage> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.ne(bo.getId() != null&&bo.getId() != 0  , BsBrandManage::getId, bo.getId());
-        queryWrapper.eq(bo.getBrandCoded() != null && bo.getBrandCoded() != 0, BsBrandManage::getBrandCoded, bo.getBrandCoded());
+        queryWrapper.eq(StringUtils.isNotBlank(bo.getBrandCoded()), BsBrandManage::getBrandCoded, bo.getBrandCoded());
 
         return baseMapper.selectVoList(queryWrapper);
     }

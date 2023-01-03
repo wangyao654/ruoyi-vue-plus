@@ -290,7 +290,9 @@ export default {
         warehousCoded: undefined,
         warehouseId: undefined,
         whAreaEnabled: undefined,
-        betweenTime:undefined
+        betweenTime:undefined,
+        startTime:undefined,
+        endTime:undefined
       },
       // 表单参数
       form: {},
@@ -381,6 +383,10 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      let arr=[];
+      arr=this.queryParams.betweenTime.toString().split(",")
+      this.queryParams.startTime=arr[0]
+      this.queryParams.endTime=arr[1];
       this.getList();
     },
     /** 重置按钮操作 */

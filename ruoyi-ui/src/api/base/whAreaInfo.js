@@ -16,7 +16,14 @@ export function getWhAreaInfo(id) {
     method: 'get'
   })
 }
-
+// 查询库区信息详细
+export function getWhAreaInfoByWhAreaCoded(query) {
+  return request({
+    url: '/base/whAreaInfo/getWhAreaInfoByWhAreaCoded',
+    method: 'get',
+    params: query
+  })
+}
 // 新增库区信息
 export function addWhAreaInfo(data) {
   return request({

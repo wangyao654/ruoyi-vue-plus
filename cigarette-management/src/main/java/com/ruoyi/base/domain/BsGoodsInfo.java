@@ -43,7 +43,7 @@ public class BsGoodsInfo extends BaseEntity {
     /**
      * 所属品牌编号
      */
-    private Long brandCoded;
+    private String brandCoded;
     /**
      * 小盒条码
      */

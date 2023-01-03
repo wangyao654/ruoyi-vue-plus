@@ -32,7 +32,7 @@ public class BsWarehouseInfoVo extends BaseEntity {
      * 仓库编号
      */
     @ExcelProperty(value = "仓库编号")
-    private Long warehouseCoded;
+    private String  warehouseCoded;
 
     /**
      * 仓库名称

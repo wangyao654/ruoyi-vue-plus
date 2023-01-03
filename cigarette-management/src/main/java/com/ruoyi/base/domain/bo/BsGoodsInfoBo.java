@@ -48,8 +48,8 @@ public class BsGoodsInfoBo extends BaseEntity {
     /**
      * 所属品牌编号
      */
-    @NotNull(message = "所属品牌编号不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long brandCoded;
+    @NotBlank(message = "所属品牌编号不能为空", groups = { AddGroup.class, EditGroup.class })
+    private String brandCoded;
 
     /**
      * 小盒条码

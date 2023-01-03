@@ -32,7 +32,7 @@ public class BsWhBitInfoVo extends BaseEntity {
      * 库位编号
      */
     @ExcelProperty(value = "库位编号")
-    private Long whBitCoded;
+    private String whBitCoded;
 
     /**
      * 库位名称
@@ -65,7 +65,7 @@ public class BsWhBitInfoVo extends BaseEntity {
      * 所属库区编号
      */
     @ExcelProperty(value = "所属库区编号")
-    private Long whAreaCoded;
+    private String whAreaCoded;
 
     /**
      * 所属库区id
@@ -77,7 +77,7 @@ public class BsWhBitInfoVo extends BaseEntity {
      * 所属仓库编号
      */
     @ExcelProperty(value = "所属仓库编号")
-    private Long warehouseCoded;
+    private String warehouseCoded;
 
     /**
      * 所属仓库id

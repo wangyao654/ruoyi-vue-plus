@@ -30,7 +30,7 @@ public class BsWarehouseInfo extends BaseEntity {
     /**
      * 仓库编号
      */
-    private Long warehouseCoded;
+    private String warehouseCoded;
     /**
      * 仓库名称
      */

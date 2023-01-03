@@ -3,6 +3,7 @@ package com.ruoyi.base.mapper;
 import com.ruoyi.base.domain.BsWhAreaInfo;
 import com.ruoyi.base.domain.vo.BsWhAreaInfoVo;
 import com.ruoyi.common.core.mapper.BaseMapperPlus;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 库区信息Mapper接口
@@ -12,4 +13,5 @@ import com.ruoyi.common.core.mapper.BaseMapperPlus;
  */
 public interface BsWhAreaInfoMapper extends BaseMapperPlus<BsWhAreaInfoMapper, BsWhAreaInfo, BsWhAreaInfoVo> {
 
+    int updateWarehouseNameByWarehouseCoded(@Param("warehouseCoded") String warehouseCoded,@Param("warehouseName") String warehouseName);
 }
