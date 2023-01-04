@@ -220,7 +220,7 @@
 </template>
 
 <script>
-import { listWhAreaInfo, getWhAreaInfo, delWhAreaInfo, addWhAreaInfo, updateWhAreaInfo } from "@/api/base/whAreaInfo";
+import { listWhAreaInfo, getWhAreaInfo, delWhAreaInfo, addWhAreaInfo, updateWhAreaInfo,verifyWhAreaCoded } from "@/api/base/whAreaInfo";
 import { listWarehouseInfo} from "@/api/base/warehouseInfo";
 
 
@@ -228,6 +228,27 @@ export default {
   name: "WhAreaInfo",
   dicts: ['sys_normal_disable','libraryarea_type'],
   data() {
+    let whAreaCodedVerify=(rule, value, callback)=>{
+      let id = this.form.id;
+      if(value){
+                let flag=/^([0-9]*)$/
+                if(!flag.test(value)){
+                  callback(new Error('请输入非0开头的整数！'))
+                }
+        console.log(value+"1232323")
+        verifyWhAreaCoded({whAreaCoded:parseInt(value),id:id}).then(res=>{
+          this.verifyWhAreaInfoList=res.data
+          if(this.verifyWhAreaInfoList.length>0){
+            this.verifyWhAreaInfoList=[];
+            callback(new Error('该仓库编号已存在'))
+          }else{
+            callback()
+          }
+        })
+      }else{
+        callback()
+      }
+    }
     return {
       pickerOptions: {
         shortcuts: [{
@@ -256,6 +277,8 @@ export default {
           }
         }]
       },
+      //校验
+      verifyWhAreaInfoList:[],
       // 按钮loading
       buttonLoading: false,
       //修改禁止编号
@@ -299,7 +322,8 @@ export default {
       // 表单校验
       rules: {
         whAreaCoded: [
-          { required: true, message: "库区编号不能为空", trigger: "blur" }
+          { required: true, message: "库区编号不能为空", trigger: "blur" },
+          { validator:whAreaCodedVerify, trigger: "blur"}
         ],
         whAreaName: [
           { required: true, message: "库区名称不能为空", trigger: "blur" }
@@ -384,9 +408,12 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       let arr=[];
-      arr=this.queryParams.betweenTime.toString().split(",")
-      this.queryParams.startTime=arr[0]
-      this.queryParams.endTime=arr[1];
+      let r=this.queryParams.betweenTime;
+      if(r!=undefined&&r!=null&&r!=""){
+        arr=this.queryParams.betweenTime.toString().split(",")
+        this.queryParams.startTime=arr[0]
+        this.queryParams.endTime=arr[1];
+      }
       this.getList();
     },
     /** 重置按钮操作 */

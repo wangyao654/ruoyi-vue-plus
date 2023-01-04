@@ -25,7 +25,7 @@ public class BsWhAreaInfo extends BaseEntity {
     /**
      * 主键
      */
-    @TableId(value = "id")
+    @TableId(value = "id",type = IdType.AUTO)
     private Long id;
     /**
      * 库区编号

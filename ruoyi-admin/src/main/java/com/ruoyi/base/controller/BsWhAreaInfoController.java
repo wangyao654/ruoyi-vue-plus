@@ -109,4 +109,11 @@ public class BsWhAreaInfoController extends BaseController {
                           @PathVariable Long[] ids) {
         return toAjax(iBsWhAreaInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
     }
+    /*
+    * 校验库区编号
+    * */
+    @GetMapping("/verifyWhAreaCoded")
+    public R verifyWhAreaCoded(BsWhAreaInfoBo bo) {
+        return iBsWhAreaInfoService.verifyWhAreaCoded(bo);
+    }
 }

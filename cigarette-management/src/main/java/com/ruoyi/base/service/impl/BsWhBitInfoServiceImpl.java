@@ -2,11 +2,14 @@ package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.ruoyi.base.domain.BsWarehouseInfo;
+import com.ruoyi.base.domain.BsWhAreaInfo;
 import com.ruoyi.base.domain.BsWhBitInfo;
 import com.ruoyi.base.domain.bo.BsWhBitInfoBo;
+import com.ruoyi.base.domain.vo.BsWhAreaInfoVo;
 import com.ruoyi.base.domain.vo.BsWhBitInfoVo;
 import com.ruoyi.base.mapper.BsWhBitInfoMapper;
 import com.ruoyi.base.service.IBsWhBitInfoService;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -125,5 +128,14 @@ public class BsWhBitInfoServiceImpl implements IBsWhBitInfoService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteBatchIds(ids) > 0;
+    }
+
+    @Override
+    public R verifyWhBitCoded(BsWhBitInfoBo bo) {
+        LambdaQueryWrapper<BsWhBitInfo> lqw = Wrappers.lambdaQuery();
+        lqw.ne(bo.getId() != null&&bo.getId() != 0 , BsWhBitInfo::getId, bo.getId());
+        lqw.eq(StringUtils.isNotBlank(bo.getWhBitCoded()), BsWhBitInfo::getWhBitCoded, bo.getWhBitCoded());
+        List<BsWhBitInfoVo> bsWhBitInfoVos = baseMapper.selectVoList(lqw);
+        return R.ok(bsWhBitInfoVos);
     }
 }

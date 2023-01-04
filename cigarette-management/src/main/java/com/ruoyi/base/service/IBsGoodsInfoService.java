@@ -48,4 +48,6 @@ public interface IBsGoodsInfoService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     R verifyGoodsCoded(BsGoodsInfoBo bo);
+
+    String createGoodsCoded();
 }

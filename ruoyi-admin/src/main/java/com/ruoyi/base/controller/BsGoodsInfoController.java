@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.base.domain.bo.BsBrandManageBo;
 import com.ruoyi.base.service.IBsGoodsInfoService;
 import com.ruoyi.system.domain.bo.BsGoodsInfoBo;
 import lombok.RequiredArgsConstructor;
@@ -111,5 +112,13 @@ public class BsGoodsInfoController extends BaseController {
     @GetMapping("/verifyGoodsCoded")
     public R verifyGoodsCoded( BsGoodsInfoBo bo) {
         return iBsGoodsInfoService.verifyGoodsCoded(bo);
+    }
+    /*
+     * 自动生成编号
+     * */
+    @GetMapping("/createGoodsCoded")
+    public R createGoodsCoded() {
+        String GoodsCoded = iBsGoodsInfoService.createGoodsCoded();
+        return R.ok(GoodsCoded);
     }
 }

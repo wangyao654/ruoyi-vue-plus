@@ -12,4 +12,5 @@ import com.ruoyi.common.core.mapper.BaseMapperPlus;
  */
 public interface BsGoodsInfoMapper extends BaseMapperPlus<BsGoodsInfoMapper, BsGoodsInfo, BsGoodsInfoVo> {
 
+    Long selectCoded();
 }

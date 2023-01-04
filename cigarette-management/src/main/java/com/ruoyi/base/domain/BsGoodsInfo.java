@@ -26,7 +26,7 @@ public class BsGoodsInfo extends BaseEntity {
     /**
      * 主键
      */
-    @TableId(value = "id")
+    @TableId(value = "id",type = IdType.AUTO)
     private Long id;
     /**
      * 商品编码

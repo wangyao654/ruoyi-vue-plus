@@ -49,3 +49,11 @@ export function delWhAreaInfo(id) {
     method: 'delete'
   })
 }
+// 校验库区编码
+export function verifyWhAreaCoded(query) {
+  return request({
+    url: '/base/whAreaInfo/verifyWhAreaCoded',
+    method: 'get',
+    params: query
+  })
+}

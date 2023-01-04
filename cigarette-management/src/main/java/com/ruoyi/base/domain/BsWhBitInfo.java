@@ -74,7 +74,7 @@ public class BsWhBitInfo extends BaseEntity {
     /**
      * 行号
      */
-    private String rowNumber;
+    private String rowsNumber;
     /**
      * 列号
      */

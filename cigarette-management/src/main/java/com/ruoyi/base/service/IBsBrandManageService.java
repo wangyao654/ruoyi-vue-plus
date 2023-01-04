@@ -47,4 +47,6 @@ public interface IBsBrandManageService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     List<BsBrandManageVo> verifyBrandCode(BsBrandManageBo bo);
+
+    String createBrandCode(BsBrandManageBo bo);
 }

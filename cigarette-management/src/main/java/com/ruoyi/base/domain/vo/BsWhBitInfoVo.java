@@ -102,7 +102,7 @@ public class BsWhBitInfoVo extends BaseEntity {
      * 行号
      */
     @ExcelProperty(value = "行号")
-    private String rowNumber;
+    private String rowsNumber;
 
     /**
      * 列号

@@ -105,4 +105,11 @@ public class BsWhBitInfoController extends BaseController {
                           @PathVariable Long[] ids) {
         return toAjax(iBsWhBitInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
     }
+    /*
+    * 校验库位编码
+    * */
+    @GetMapping("/verifyWhBitCoded")
+    public R verifyWhBitCoded(BsWhBitInfoBo bo) {
+        return iBsWhBitInfoService.verifyWhBitCoded(bo);
+    }
 }

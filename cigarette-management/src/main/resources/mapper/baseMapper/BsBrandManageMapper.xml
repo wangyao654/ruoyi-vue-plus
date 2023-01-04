@@ -16,6 +16,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime" column="create_time"/>
         <result property="remark" column="remark"/>
     </resultMap>
-
+    <select id="selectCoded" resultType="long">
+    select MAX(CAST(brand_coded as unsigned)) from bs_brand_manage
+    </select>
 
 </mapper>

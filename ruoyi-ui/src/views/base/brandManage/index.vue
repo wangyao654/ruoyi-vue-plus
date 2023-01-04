@@ -154,7 +154,9 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="品牌编号" prop="brandCoded">
-          <el-input v-model="form.brandCoded" placeholder="请输入品牌编号" />
+          <el-input v-model="form.brandCoded" placeholder="请输入品牌编号" >
+          </el-input>
+          <el-button size="mini" @click="getBrandCoded">生成品牌编码</el-button>
         </el-form-item>
         <el-form-item label="品牌名称" prop="brandName">
           <el-input v-model="form.brandName" placeholder="请输入品牌名称" />
@@ -177,6 +179,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
+
         <el-button :loading="buttonLoading" type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -185,7 +188,7 @@
 </template>
 
 <script>
-import { listBrandManage, getBrandManage, delBrandManage, addBrandManage, updateBrandManage,verifyBrandCode } from "@/api/base/brandManage";
+import { listBrandManage, getBrandManage, delBrandManage, addBrandManage, updateBrandManage,verifyBrandCode,createBrandCoded } from "@/api/base/brandManage";
 
 export default {
   name: "BrandManage",
@@ -194,7 +197,7 @@ export default {
     let verifyBrandCodeByCode=(rule, value, callback)=>{
       let id = this.form.id;
       if(value){
-        let flag=/^([1-9][0-9]*)$/
+        let flag=/^([0-9]*)$/
         if(!flag.test(value)){
           callback(new Error('请输入非0开头的整数'))
         }
@@ -306,6 +309,11 @@ export default {
     this.getList();
   },
   methods: {
+    getBrandCoded(){
+      createBrandCoded().then(res=>{
+        this.form.brandCoded=res.msg;
+      })
+    },
     /** 查询品牌管理/品牌详细信息列表 */
     getList() {
       this.loading = true;
@@ -338,9 +346,12 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       let arr=[];
-      arr=this.queryParams.betweenTime.toString().split(",")
-      this.queryParams.startTime=arr[0]
-      this.queryParams.endTime=arr[1];
+      let r=this.queryParams.betweenTime;
+      if(r!=undefined&&r!=null&&r!=""){
+        arr=this.queryParams.betweenTime.toString().split(",")
+        this.queryParams.startTime=arr[0]
+        this.queryParams.endTime=arr[1];
+      }
       this.getList();
     },
     /** 重置按钮操作 */

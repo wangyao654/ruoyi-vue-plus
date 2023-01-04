@@ -12,4 +12,5 @@ import com.ruoyi.common.core.mapper.BaseMapperPlus;
  */
 public interface BsBrandManageMapper extends BaseMapperPlus<BsBrandManageMapper, BsBrandManage, BsBrandManageVo> {
 
+    Long selectCoded();
 }

@@ -83,7 +83,7 @@ public class BsWhBitInfoBo extends BaseEntity {
     /**
      * 库位类型（1-货架型，2-扁平型）
      */
-    @NotBlank(message = "库位类型（1-货架型，2-扁平型）不能为空", groups = { AddGroup.class, EditGroup.class })
+    @NotBlank(message = "库位类型不能为空", groups = { AddGroup.class, EditGroup.class })
     private String whBitType;
 
     /**
@@ -94,7 +94,7 @@ public class BsWhBitInfoBo extends BaseEntity {
     /**
      * 行号
      */
-    private String rowNumber;
+    private String rowsNumber;
 
     /**
      * 列号

@@ -209,6 +209,7 @@
           <el-col :span="8">
             <el-form-item label="商品编码" prop="goodsCoded">
               <el-input v-model="form.goodsCoded" placeholder="请输入商品编码" />
+              <el-button size="mini" @click="getGoodsCoded">生成商品编码</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -366,7 +367,7 @@
 </template>
 
 <script>
-import { listGoodsInfo, getGoodsInfo, delGoodsInfo, addGoodsInfo, updateGoodsInfo, verifyGoodsCoded } from "@/api/base/goodsInfo";
+import { listGoodsInfo, getGoodsInfo, delGoodsInfo, addGoodsInfo, updateGoodsInfo, verifyGoodsCoded,createGoodsCoded } from "@/api/base/goodsInfo";
 import { listBrandManage} from "@/api/base/brandManage";
 
 export default {
@@ -376,7 +377,7 @@ export default {
     let  goodsCodedVerify=(rule, value, callback)=>{
       let id = this.form.id;
       if(value){
-        let flag=/^([1-9][0-9]*)$/
+        let flag=/^([0-9]*)$/
         if(!flag.test(value)){
           callback(new Error('请输入非0开头的整数！'))
         }
@@ -578,6 +579,20 @@ export default {
     this.getBrandInfoList();
   },
   methods: {
+    //生成商品编号
+    getGoodsCoded(){
+      createGoodsCoded().then(res=>{
+      let a= this.form.brandCoded
+        if(a==undefined || a== null || a==""){
+          this.$message({
+            message: '警告! 请先选择品牌',
+            type: 'warning'
+          });
+        }else{
+          this.form.goodsCoded=this.form.brandCoded+res.msg;
+        }
+      })
+    },
     /*品牌下拉框*/
     getBrandInfoList(){
       this.loading = true;
@@ -642,9 +657,12 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       let arr=[];
-      arr=this.queryParams.betweenTime.toString().split(",")
-      this.queryParams.startTime=arr[0]
-      this.queryParams.endTime=arr[1];
+      let r=this.queryParams.betweenTime;
+      if(r!=undefined&&r!=null&&r!=""){
+        arr=this.queryParams.betweenTime.toString().split(",")
+        this.queryParams.startTime=arr[0]
+        this.queryParams.endTime=arr[1];
+      }
       this.getList();
     },
     /** 重置按钮操作 */

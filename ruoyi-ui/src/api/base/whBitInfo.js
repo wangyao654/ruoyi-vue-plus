@@ -42,3 +42,11 @@ export function delWhBitInfo(id) {
     method: 'delete'
   })
 }
+// 查询库位编码
+export function verifyWhBitCoded(query) {
+  return request({
+    url: '/whBitInfo/whBitInfo/verifyWhBitCoded',
+    method: 'get',
+    params: query
+  })
+}

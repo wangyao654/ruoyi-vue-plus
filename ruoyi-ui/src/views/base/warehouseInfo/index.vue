@@ -213,7 +213,7 @@ export default {
     let warehouseCodedVerify=(rule, value, callback)=>{
       let id = this.form.id;
       if(value){
-        let flag=/^([1-9][0-9]*)$/
+        let flag=/^([0-9]*)$/
         if(!flag.test(value)){
           callback(new Error('请输入非0开头的整数！'))
         }
@@ -368,9 +368,12 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1
       let arr=[];
-      arr=this.queryParams.betweenTime.toString().split(",")
-      this.queryParams.startTime=arr[0]
-      this.queryParams.endTime=arr[1];
+      let r=this.queryParams.betweenTime;
+      if(r!=undefined&&r!=null&&r!=""){
+        arr=this.queryParams.betweenTime.toString().split(",")
+        this.queryParams.startTime=arr[0]
+        this.queryParams.endTime=arr[1];
+      }
       this.getList()
     },
     /** 重置按钮操作 */

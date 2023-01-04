@@ -3,6 +3,7 @@ package com.ruoyi.base.service;
 import com.ruoyi.base.domain.BsWhAreaInfo;
 import com.ruoyi.base.domain.vo.BsWhAreaInfoVo;
 import com.ruoyi.base.domain.bo.BsWhAreaInfoBo;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
 
@@ -49,4 +50,6 @@ public interface IBsWhAreaInfoService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     BsWhAreaInfoVo getWhAreaInfoByWhAreaCoded(String whAreaCoded);
+
+    R verifyWhAreaCoded(BsWhAreaInfoBo bo);
 }

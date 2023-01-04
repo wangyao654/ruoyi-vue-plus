@@ -48,7 +48,6 @@ public class BsBrandManageController extends BaseController {
     /**
      * 校验品牌编号
      */
-    @SaCheckPermission("system:brandManage:list")
     @GetMapping("/verifyBrandCode")
     public R verifyBrandCode(BsBrandManageBo bo) {
         List<BsBrandManageVo> bsBrandManageVos = iBsBrandManageService.verifyBrandCode(bo);
@@ -110,5 +109,13 @@ public class BsBrandManageController extends BaseController {
     public R<Void> remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
         return toAjax(iBsBrandManageService.deleteWithValidByIds(Arrays.asList(ids), true));
+    }
+    /*
+    * 自动生成编号
+    * */
+    @GetMapping("/createBrandCoded")
+    public R createBrandCoded(BsBrandManageBo bo) {
+        String BrandCoded = iBsBrandManageService.createBrandCode(bo);
+        return R.ok(BrandCoded);
     }
 }

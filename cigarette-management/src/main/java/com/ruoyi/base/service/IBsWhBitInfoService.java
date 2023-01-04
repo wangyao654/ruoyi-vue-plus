@@ -2,6 +2,7 @@ package com.ruoyi.base.service;
 
 import com.ruoyi.base.domain.bo.BsWhBitInfoBo;
 import com.ruoyi.base.domain.vo.BsWhBitInfoVo;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
 
@@ -45,4 +46,6 @@ public interface IBsWhBitInfoService {
      * 校验并批量删除库位信息信息
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+
+    R verifyWhBitCoded(BsWhBitInfoBo bo);
 }

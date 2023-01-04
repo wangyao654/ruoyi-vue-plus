@@ -1,7 +1,9 @@
 package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.base.domain.BsWarehouseInfo;
 import com.ruoyi.base.mapper.BsWhBitInfoMapper;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -127,5 +129,14 @@ public class BsWhAreaInfoServiceImpl implements IBsWhAreaInfoService {
         lqw.eq(StringUtils.isNotBlank(whAreaCoded),BsWhAreaInfo::getWhAreaCoded,whAreaCoded);
         BsWhAreaInfoVo bsWhAreaInfoVo = baseMapper.selectVoOne(lqw);
         return bsWhAreaInfoVo;
+    }
+
+    @Override
+    public R verifyWhAreaCoded(BsWhAreaInfoBo bo) {
+        LambdaQueryWrapper<BsWhAreaInfo> lqw = Wrappers.lambdaQuery();
+        lqw.ne(bo.getId() != null&&bo.getId() != 0  , BsWhAreaInfo::getId, bo.getId());
+        lqw.eq(StringUtils.isNotBlank(bo.getWhAreaCoded()), BsWhAreaInfo::getWhAreaCoded, bo.getWhAreaCoded());
+        List<BsWhAreaInfoVo> bsWhAreaInfoVos = baseMapper.selectVoList(lqw);
+        return R.ok(bsWhAreaInfoVos);
     }
 }

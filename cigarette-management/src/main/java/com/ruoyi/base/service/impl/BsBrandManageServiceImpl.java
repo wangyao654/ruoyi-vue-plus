@@ -7,6 +7,7 @@ import com.ruoyi.base.domain.bo.BsBrandManageBo;
 import com.ruoyi.base.domain.vo.BsBrandManageVo;
 import com.ruoyi.base.mapper.BsBrandManageMapper;
 import com.ruoyi.base.service.IBsBrandManageService;
+import com.ruoyi.common.businessUtils.businessUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -127,4 +128,25 @@ public class BsBrandManageServiceImpl implements IBsBrandManageService {
 
         return baseMapper.selectVoList(queryWrapper);
     }
+
+    @Override
+    public String createBrandCode(BsBrandManageBo bo) {
+       Long  i = baseMapper.selectCoded();
+       Long coded=i+1;
+        int count =   businessUtils.getCount(coded);
+        if(count==2){
+            return "0"+coded;
+        }else if(count==1){
+            return "00"+coded;
+        }
+        return coded.toString();
+    }
+/*    public int getCount(Long id){
+        int count=1;
+        while (id/10>0){
+            count++;
+            id=id/10;
+        }
+        return count;
+    }*/
 }

@@ -51,4 +51,11 @@ export function verifyBrandCode(query) {
     params: query
   })
 }
+//生成品牌编号
+export function createBrandCoded() {
+  return request({
+    url: '/base/brandManage/createBrandCoded',
+    method: 'get'
+  })
+}
 

@@ -6,6 +6,7 @@ import com.ruoyi.base.domain.BsGoodsInfo;
 import com.ruoyi.base.domain.vo.BsGoodsInfoVo;
 import com.ruoyi.base.mapper.BsGoodsInfoMapper;
 import com.ruoyi.base.service.IBsGoodsInfoService;
+import com.ruoyi.common.businessUtils.businessUtils;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -14,6 +15,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.domain.bo.BsGoodsInfoBo;
 
@@ -136,5 +138,29 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
         lqw.eq(bo.getGoodsCoded() != null && bo.getGoodsCoded() != 0, BsGoodsInfo::getGoodsCoded, bo.getGoodsCoded());
         List<BsGoodsInfoVo> bsGoodsInfoVos = this.baseMapper.selectVoList(lqw);
         return R.ok(bsGoodsInfoVos);
+    }
+
+    @Override
+    public String createGoodsCoded() {
+        Long  i = baseMapper.selectCoded();
+        Long coded=i+1;
+        int count = businessUtils.getCount(coded);
+        String goodsCoded;
+        switch (count){
+            case 1: goodsCoded= "000000"+coded;
+             break;
+            case 2:  goodsCoded="00000"+coded;
+            break;
+            case 3:goodsCoded="0000"+coded;
+            break;
+            case 4:goodsCoded="000"+coded;
+            break;
+            case 5:goodsCoded="00"+coded;
+            break;
+            case 6:goodsCoded="0"+coded;
+            break;
+            default:goodsCoded=coded.toString();
+        }
+        return goodsCoded;
     }
 }

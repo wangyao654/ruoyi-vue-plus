@@ -42,10 +42,18 @@ export function delGoodsInfo(id) {
     method: 'delete'
   })
 }
+//校验商品编号
 export function verifyGoodsCoded(query) {
   return request({
     url: '/base/goodsInfo/verifyGoodsCoded',
     method: 'get',
     params: query
+  })
+}
+//生成商品编号
+export function createGoodsCoded() {
+  return request({
+    url: '/base/goodsInfo/createGoodsCoded',
+    method: 'get'
   })
 }
