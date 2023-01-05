@@ -33,7 +33,7 @@ public class BsGoodsInfoVo extends BaseEntity {
      * 商品编码
      */
     @ExcelProperty(value = "商品编码")
-    private Long goodsCoded;
+    private String goodsCoded;
 
     /**
      * 商品名称

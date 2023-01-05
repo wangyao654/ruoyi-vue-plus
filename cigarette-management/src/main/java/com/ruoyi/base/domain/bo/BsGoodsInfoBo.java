@@ -31,7 +31,7 @@ public class BsGoodsInfoBo extends BaseEntity {
      * 商品编码
      */
     @NotNull(message = "商品编码不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long goodsCoded;
+    private String goodsCoded;
 
     /**
      * 商品名称

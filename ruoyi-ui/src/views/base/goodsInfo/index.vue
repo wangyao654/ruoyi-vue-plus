@@ -109,7 +109,7 @@
     <el-table v-loading="loading" :data="goodsInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="id" v-if="false"/>
-      <el-table-column label="商品编码" align="center" prop="goodsCoded" />
+      <el-table-column label="商品编码" align="center" prop="goodsCoded" width="100px"/>
       <el-table-column label="商品名称" align="center" prop="goodsName" />
       <el-table-column label="品牌名称" align="center" prop="brandName" />
       <el-table-column label="品牌编号" align="center" prop="brandCoded"  v-if="false" />
@@ -589,7 +589,7 @@ export default {
             type: 'warning'
           });
         }else{
-          this.form.goodsCoded=this.form.brandCoded+res.msg;
+          this.form.goodsCoded=this.form.brandCoded.toString()+res.msg;
         }
       })
     },

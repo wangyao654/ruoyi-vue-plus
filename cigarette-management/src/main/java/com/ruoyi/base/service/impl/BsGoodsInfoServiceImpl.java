@@ -135,7 +135,7 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
     public R verifyGoodsCoded(BsGoodsInfoBo bo) {
         LambdaQueryWrapper<BsGoodsInfo> lqw = Wrappers.lambdaQuery();
         lqw.ne(bo.getId() != null&&bo.getId() != 0  , BsGoodsInfo::getId, bo.getId());
-        lqw.eq(bo.getGoodsCoded() != null && bo.getGoodsCoded() != 0, BsGoodsInfo::getGoodsCoded, bo.getGoodsCoded());
+        lqw.eq(StringUtils.isNotEmpty(bo.getGoodsCoded()), BsGoodsInfo::getGoodsCoded, bo.getGoodsCoded());
         List<BsGoodsInfoVo> bsGoodsInfoVos = this.baseMapper.selectVoList(lqw);
         return R.ok(bsGoodsInfoVos);
     }

@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createBy" column="create_by"/>
     </resultMap>
     <select id="selectCoded" resultType="long">
-            select MAX(CAST(goods_coded as unsigned)) from bs_goods_info
+            select MAX(CAST(substring(goods_coded,4)as unsigned)) from bs_goods_info
     </select>
 
 </mapper>

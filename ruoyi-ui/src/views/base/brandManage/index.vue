@@ -412,7 +412,10 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      const codes = row.brand_coded || this.codes;
+      let codes = row.brandCoded || this.codes;
+      if(codes==null||codes==""||codes==undefined){
+        codes=ids;
+      }
       this.$modal.confirm('是否确认删除品牌详细信息编号为"' + codes + '"的数据项？').then(() => {
         this.loading = true;
         return delBrandManage(ids);
