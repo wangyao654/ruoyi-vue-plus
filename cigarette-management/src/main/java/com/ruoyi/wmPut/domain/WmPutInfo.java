@@ -1,4 +1,4 @@
-package com.ruoyi.base.domain;
+package com.ruoyi.wmPut.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class WmPutInfo extends BaseEntity {
     /**
      * 主键
      */
-    @TableId(value = "id")
+    @TableId(value = "id",type = IdType.AUTO)
     private Long id;
     /**
      * 入库单号

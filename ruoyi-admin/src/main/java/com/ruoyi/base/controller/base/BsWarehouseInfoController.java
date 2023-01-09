@@ -1,4 +1,4 @@
-package com.ruoyi.base.controller;
+package com.ruoyi.base.controller.base;
 
 import java.util.List;
 import java.util.Arrays;

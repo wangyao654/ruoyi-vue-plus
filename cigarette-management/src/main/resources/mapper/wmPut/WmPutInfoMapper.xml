@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wmPut.mapper.WmPutInfoMapper">
+
+    <resultMap type="com.ruoyi.wmPut.domain.WmPutInfo" id="WmPutInfoResult">
+        <result property="id" column="id"/>
+        <result property="wmPutCoded" column="wm_put_coded"/>
+        <result property="certificateCoded" column="certificate_coded"/>
+        <result property="causeType" column="cause_type"/>
+        <result property="whPutDate" column="wh_put_date"/>
+        <result property="varietyNumber" column="variety_number"/>
+        <result property="whPutNumber" column="wh_put_number"/>
+        <result property="whBitCoded" column="wh_bit_coded"/>
+        <result property="invoicesStatus" column="invoices_status"/>
+        <result property="storekeeper" column="storekeeper"/>
+        <result property="synthesisKeeper" column="synthesis_keeper"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="enclosure" column="enclosure"/>
+    </resultMap>
+
+
+</mapper>

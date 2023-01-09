@@ -1,4 +1,4 @@
-package com.ruoyi.base.domain.bo;
+package com.ruoyi.wmPut.domain.bo;
 
 import com.ruoyi.common.core.validate.AddGroup;
 import com.ruoyi.common.core.validate.EditGroup;
@@ -96,4 +96,7 @@ public class WmPutInfoBo extends BaseEntity {
     private String enclosure;
 
 
+    private Date startTime;
+
+    private Date endTime;
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wmPut.mapper.WmPutTemporaryMapper">
+    <resultMap type="com.ruoyi.wmPut.domain.WmPutTemporary" id="WmPutTemporaryResult">
+        <result property="id" column="id"/>
+        <result property="wmPutId" column="wm_put_id"/>
+        <result property="client" column="client"/>
+        <result property="cause" column="cause"/>
+        <result property="detainDate" column="detain_date"/>
+        <result property="detainDeptName" column="detain_dept_name"/>
+        <result property="detainDept" column="detain_dept"/>
+        <result property="goodsCoded" column="goods_coded"/>
+        <result property="putNumber" column="put_number"/>
+        <result property="causeQr" column="cause_qr"/>
+        <result property="whAreaCoded" column="wh_area_coded"/>
+        <result property="whBitCoded" column="wh_bit_coded"/>
+        <result property="unitCoded" column="unit_coded"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="selectPageList" resultType="wmPutTemporaryVo" >
+        select wpin.*,wpt.*,goods.goodsName from wm_put_temporary wpt
+        left join wm_put_info wpin on wpin.id= wpt.wm_put_id
+        left join bs_goods_info goods on goods.goods_coded=wpt.goods_coded
+        <where>
+            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+                wpin.certificate_coded=#{bo.certificateCoded}
+            </if>
+            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+                wpt.client like concat('%',#{bo.client},'%')
+            </if>
+            <if test="bo.cause!=null and bo.cause!=''">
+                wpt.cause = #{bo.cause}
+            </if>
+            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+                goods.goods_name  like concat('%',#{bo.goodsName},'%')
+            </if>
+            <if test="bo.invoicesStatus!=null and bo.invoicesStatus!=''">
+                wpt.invoices_status = #{bo.invoicesStatus}
+            </if>
+            <choose>
+                <when test="bo.startTime!=null and bo.endTime!=null ">
+                    wpin.update_time between #{bo.startTime} and #{bo.endTime}
+                </when>
+                <when test="bo.startTime!=null">
+                    wpin.update_time &gt;= #{bo.startTime}
+                </when>
+                <when test="bo.endTime!=null">
+                    wpin.update_time &lt;= #{bo.endTime}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+</mapper>
