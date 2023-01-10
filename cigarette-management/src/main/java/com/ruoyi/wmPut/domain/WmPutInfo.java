@@ -3,6 +3,8 @@ package com.ruoyi.wmPut.domain;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
@@ -72,6 +74,6 @@ public class WmPutInfo extends BaseEntity {
     /**
      * 附件
      */
-    private String enclosure;
+    private File enclosure;
 
 }

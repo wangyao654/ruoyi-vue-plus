@@ -71,7 +71,6 @@ public class WmPutInfoServiceImpl implements IWmPutInfoService {
         lqw.eq(StringUtils.isNotBlank(bo.getInvoicesStatus()), WmPutInfo::getInvoicesStatus, bo.getInvoicesStatus());
         lqw.eq(StringUtils.isNotBlank(bo.getStorekeeper()), WmPutInfo::getStorekeeper, bo.getStorekeeper());
         lqw.eq(StringUtils.isNotBlank(bo.getSynthesisKeeper()), WmPutInfo::getSynthesisKeeper, bo.getSynthesisKeeper());
-        lqw.eq(StringUtils.isNotBlank(bo.getEnclosure()), WmPutInfo::getEnclosure, bo.getEnclosure());
         return lqw;
     }
 

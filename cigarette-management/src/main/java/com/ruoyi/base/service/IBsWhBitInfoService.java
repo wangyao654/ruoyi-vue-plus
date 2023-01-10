@@ -48,4 +48,6 @@ public interface IBsWhBitInfoService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     R verifyWhBitCoded(BsWhBitInfoBo bo);
+
+    R listAll(BsWhBitInfoBo bo);
 }

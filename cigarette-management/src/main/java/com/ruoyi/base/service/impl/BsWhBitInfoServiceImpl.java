@@ -138,4 +138,10 @@ public class BsWhBitInfoServiceImpl implements IBsWhBitInfoService {
         List<BsWhBitInfoVo> bsWhBitInfoVos = baseMapper.selectVoList(lqw);
         return R.ok(bsWhBitInfoVos);
     }
+
+    @Override
+    public R listAll(BsWhBitInfoBo bo) {
+        List<BsWhBitInfo> bsWhBitInfos = baseMapper.selectList();
+        return R.ok(bsWhBitInfos);
+    }
 }

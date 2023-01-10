@@ -1,0 +1,743 @@
+<template>
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="当事人" prop="client">
+        <el-input
+          v-model="queryParams.client"
+          placeholder="请输入当事人"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="案由" prop="cause">
+        <el-input
+          v-model="queryParams.cause"
+          placeholder="请选择案由"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="商品名称" prop="goodsName">
+        <el-input
+          v-model="queryParams.goodsName"
+          placeholder="请输入商品名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item  label="时间" prop="betweenTime">
+        <el-date-picker
+          v-model="queryParams.betweenTime"
+          type="datetimerange"
+          :picker-options="pickerOptions"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['wmPut:putTemporary:add']"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['wmPut:putTemporary:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['wmPut:putTemporary:remove']"
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          size="mini"
+          type="text"
+          icon="el-icon-edit"
+          @click="temporaryInfo()"
+          v-hasPermi="['wmPut:putTemporary:edit']"
+        >详细信息</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['wmPut:putTemporary:export']"
+        >导出</el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
+    <el-table v-loading="loading" :data="putTemporaryList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="100" align="center" />
+      <el-table-column label="主键" align="center" prop="id" v-if="false"/>
+      <el-table-column label="暂存入库信息" align="center" prop="wmPutId" v-if="false" />
+      <el-table-column label="入库单号" align="center" prop="wmPutCoded" />
+      <el-table-column label="文书编号" align="center" prop="certificateCoded" />
+      <el-table-column label="当事人" align="center" prop="client" />
+      <el-table-column label="案由" align="center" prop="cause" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.cause" :value="scope.row.singleBarboxNumber"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="入库数" align="center" prop="whPutNumber" />
+      <el-table-column label="案件类型" align="center" prop="causeType" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.cause_type" :value="scope.row.singleBarboxNumber"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="查扣日期" align="center" prop="detainDate" >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.detainDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="入库日期" align="center" prop="whPutDate" >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.whPutDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="入库品种数" align="center" prop="varietyNumber" />
+      <el-table-column label="库位编码" align="center" prop="whBitCoded" />
+      <el-table-column label="单据状态" align="center" prop="invoicesStatus" />
+      <el-table-column label="保管员" align="center" prop="storekeeper" />
+      <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
+      <el-table-column label="附件" align="center" prop="enclosure" v-if="false" />
+<!--      <el-table-column label="扣查部门" align="center" prop="detainDeptName" />
+      <el-table-column label="扣查部门id" align="center" prop="detainDept" />
+      <el-table-column label="商品编码" align="center" prop="goodsCoded" />
+      <el-table-column label="入库条数" align="center" prop="putNumber" />
+      <el-table-column label="案件二维码" align="center" prop="causeQr" />
+      <el-table-column label="存放库区" align="center" prop="whAreaCoded" />
+      <el-table-column label="存放库位" align="center" prop="whBitCoded" />
+      <el-table-column label="归属单位" align="center" prop="unitCoded" />
+      <el-table-column label="备注" align="center" prop="remark" />-->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['wmPut:putTemporary:edit']"
+          >修改</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="temporaryInfo(scope.row)"
+              v-hasPermi="['wmPut:putTemporary:edit']"
+            >详细信息</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['wmPut:putTemporary:remove']"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+    <el-dialog :title="infoTitle" :visible.sync="infoOpen" width="500px" append-to-body>
+    <el-descriptions title="入库详细信息">
+      <el-descriptions-item label="扣查部门"></el-descriptions-item>
+      <el-descriptions-item label="商品编码"></el-descriptions-item>
+      <el-descriptions-item label="入库条数"></el-descriptions-item>
+      <el-descriptions-item label="存放库区"></el-descriptions-item>
+      <el-descriptions-item label="归属单位"></el-descriptions-item>
+      <el-descriptions-item label="备注">
+<!--        <el-tag size="small">学校</el-tag>-->
+      </el-descriptions-item>
+<!--      <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>-->
+    </el-descriptions>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="infoCancel">关 闭</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 添加或修改暂存入库信息对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="1300px" append-to-body>
+      <el-steps :active="buzhou">
+        <el-step title="步骤 1" description="入库基本信息"></el-step>
+        <el-step title="步骤 2" description="暂存入库详细信息"></el-step>
+        <el-step title="步骤 3" description="上传附件"></el-step>
+      </el-steps>
+      <div>
+        <p></p>
+
+        <el-form ref="putBaseForm" :model="putBaseForm" :rules="putBaseRules" label-width="110px" v-if="buzhou==1">
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="入库单号" prop="wmPutCoded">
+                <el-input v-model="putBaseForm.wmPutCoded" placeholder="请输入入库单号" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="文书编号" prop="certificateCoded">
+                <el-input v-model="putBaseForm.certificateCoded" placeholder="请输入文书编号" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="入库日期" prop="whPutDate">
+                <el-date-picker clearable
+                                v-model="putBaseForm.whPutDate"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                placeholder="请选择入库日期">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="入库品种数" prop="varietyNumber">
+                <el-input v-model="putBaseForm.varietyNumber" placeholder="请输入入库品种数" type="number"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="入库数" prop="whPutNumber">
+                <el-input v-model="putBaseForm.whPutNumber" placeholder="请输入入库数" type="number" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="存放库位编码" prop="whBitCoded">
+                <el-select v-model="putBaseForm.whBitCoded" placeholder="请选择存放库位编码" clearable  @change="whouseAreaCode($event)">
+                  <el-option
+                    v-for="dict in this.whBitInfoList"
+                    :key="dict.whBitCoded"
+                    :label="dict.whBitCoded"
+                    :value="dict.whBitCoded"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="保管员" prop="storekeeper">
+                <el-input v-model="putBaseForm.storekeeper" placeholder="请输入保管员" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="综合管理员" prop="synthesisKeeper">
+                <el-input v-model="putBaseForm.synthesisKeeper" placeholder="请输入综合管理员" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="案件类型" prop="causeType">
+                <el-select v-model="putBaseForm.causeType" placeholder="请选择案件类型" clearable>
+                  <el-option
+                    v-for="dict in dict.type.cause_type"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="单据状态" prop="causeType">
+                <el-select v-model="putBaseForm.invoicesStatus" placeholder="请选择单据状态" clearable>
+                  <el-option
+                    v-for="dict in dict.type.invoices_status"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+<!--            <el-col :span="8">
+                          <el-form-item label="上传" prop="files">
+                            <el-upload
+                              ref="uploads"
+                              :auto-upload="false"
+                            class="upload-demo"
+                            action="http://101.205.19.108:8294/MCService/action/addmaterial"
+                            :data="editForm"
+                            :on-success="upFile"
+                            multiple
+                            :limit="2"
+                            name="files"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList"
+                            >
+                            <el-button size="mini" type="primary">点击上传</el-button>
+                            </el-upload>
+                          </el-form-item>
+            </el-col>-->
+          </el-row>
+        </el-form>
+        <!--     暂存入库详细信息 -->
+        <el-form ref="form" :model="form" :rules="rules" label-width="110px" v-if="buzhou==2">
+          <!--        <el-form-item label="入库信息id-暂存" prop="wmPutId">
+                    <el-input v-model="form.wmPutId" placeholder="请输入入库信息id-暂存" />
+                  </el-form-item>-->
+          <el-form-item label="当事人" prop="client">
+            <el-input v-model="form.client" placeholder="请输入当事人" />
+          </el-form-item>
+          <el-form-item label="案由" prop="cause">
+            <el-input v-model="form.cause" placeholder="请输入案由" />
+          </el-form-item>
+          <el-form-item label="查扣日期" prop="detainDate">
+            <el-date-picker clearable
+                            v-model="form.detainDate"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="请选择查扣日期">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="扣查部门" prop="detainDeptName">
+            <el-input v-model="form.detainDeptName" placeholder="请输入扣查部门" />
+          </el-form-item>
+          <el-form-item label="扣查部门id" prop="detainDept">
+            <el-input v-model="form.detainDept" placeholder="请输入扣查部门id" />
+          </el-form-item>
+          <el-form-item label="商品编码" prop="goodsCoded">
+            <el-input v-model="form.goodsCoded" placeholder="请输入商品编码" />
+          </el-form-item>
+          <el-form-item label="入库条数" prop="putNumber">
+            <el-input v-model="form.putNumber" placeholder="请输入入库条数" />
+          </el-form-item>
+          <el-form-item label="存放库区" prop="whAreaCoded">
+            <el-input v-model="form.whAreaCoded" placeholder="请输入存放库区" />
+          </el-form-item>
+          <el-form-item label="存放库位" prop="whBitCoded">
+            <el-input v-model="form.whBitCoded" placeholder="请输入存放库位" />
+          </el-form-item>
+          <el-form-item label="归属单位" prop="unitCoded">
+            <el-input v-model="form.unitCoded" placeholder="请输入归属单位" />
+          </el-form-item>
+          <el-form-item label="备注" prop="remark">
+            <el-input v-model="form.remark" placeholder="请输入备注" />
+          </el-form-item>
+        </el-form>
+      </div>
+<!--    入库基本信息  -->
+      <div style="align-content: center">
+        <el-button type="primary" @click="putBaseInfoSubmit" v-if="buzhou!=3" plain><span >下一步</span></el-button>
+        <el-button  type="warning" @click="stepSubmit" v-if="buzhou<3&&buzhou>1" plain><span >上一步</span></el-button>
+        <el-button  type="warning" @click="delPutBaseInfo" v-if="buzhou<3&&buzhou>1" plain><span >取消</span></el-button>
+        <el-button  type="success" @click=" submitForm" v-if="buzhou==3" plain><span>完成</span></el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { listPutTemporary, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary } from "@/api/wmPut/putTemporary";
+import { listPutInfo, getPutInfo, addPutInfo, updatePutInfo,delPutInfo } from "@/api/wmPut/putInfo";
+import { listWhBitInfo, getWhBitInfo,listWhBitAll} from "@/api/base/whBitInfo";
+
+export default {
+  name: "PutTemporary",
+  dicts: ['cause','cause_type','invoices_status'],
+  data() {
+    return {
+      //库位集合
+      whBitInfoList:[],
+      // 按钮loading
+      buttonLoading: false,
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 暂存入库信息表格数据
+      putTemporaryList: [],
+      // 弹出层标题
+      title: "",
+      infoTitle:"",
+      //步骤
+      buzhou:1,
+      // 是否显示弹出层
+      open: false,
+      infoOpen:false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        client: undefined,
+        cause: undefined,
+        goodsCoded: undefined,
+        goodsName:undefined,
+        betweenTime:undefined,
+        startTime:undefined,
+        endTime:undefined
+      },
+      //入库基本数据
+      putBaseForm: {},
+      // 表单参数
+      form: {},
+      //基础信息校验
+      putBaseRules: {
+        wmPutCoded: [
+          { required: true, message: "入库单号不能为空", trigger: "blur" }
+        ],
+        certificateCoded: [
+          { required: true, message: "文书编号不能为空", trigger: "blur" }
+        ],
+        causeType: [
+          { required: true, message: "案件类型不能为空", trigger: "change" }
+        ],
+        whPutDate: [
+          { required: true, message: "入库日期不能为空", trigger: "blur" }
+        ],
+        varietyNumber: [
+          { required: true, message: "入库品种数不能为空", trigger: "blur" }
+        ],
+        whPutNumber: [
+          { required: true, message: "入库数不能为空", trigger: "blur" }
+        ],
+        whBitCoded: [
+          { required: true, message: "存放库位编码不能为空", trigger: "blur" }
+        ],
+        invoicesStatus: [
+          { required: true, message: "单据状态不能为空", trigger: "blur" }
+        ],
+        storekeeper: [
+          { required: true, message: "保管员不能为空", trigger: "blur" }
+        ],
+        synthesisKeeper: [
+          { required: true, message: "综合管理员不能为空", trigger: "blur" }
+        ],
+        enclosure: [
+          { required: true, message: "附件不能为空", trigger: "blur" }
+        ]
+      },
+      // 表单校验
+      rules: {
+        wmPutId: [
+          { required: true, message: "入库信息id-暂存不能为空", trigger: "blur" }
+        ],
+        client: [
+          { required: true, message: "当事人不能为空", trigger: "blur" }
+        ],
+        cause: [
+          { required: true, message: "案由不能为空", trigger: "blur" }
+        ],
+        detainDate: [
+          { required: true, message: "查扣日期不能为空", trigger: "blur" }
+        ],
+        detainDeptName: [
+          { required: true, message: "扣查部门不能为空", trigger: "blur" }
+        ],
+        detainDept: [
+          { required: true, message: "扣查部门id不能为空", trigger: "blur" }
+        ],
+        goodsCoded: [
+          { required: true, message: "商品编码不能为空", trigger: "blur" }
+        ],
+        putNumber: [
+          { required: true, message: "入库条数不能为空", trigger: "blur" }
+        ],
+        causeQr: [
+          { required: true, message: "案件二维码不能为空", trigger: "blur" }
+        ],
+        whAreaCoded: [
+          { required: true, message: "存放库区不能为空", trigger: "blur" }
+        ],
+        whBitCoded: [
+          { required: true, message: "存放库位不能为空", trigger: "blur" }
+        ],
+        unitCoded: [
+          { required: true, message: "归属单位不能为空", trigger: "blur" }
+        ],
+        remark: [
+          { required: true, message: "备注不能为空", trigger: "blur" }
+        ]
+      },
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
+    };
+  },
+  created() {
+    this.getList();
+  },
+  methods: {
+    /*取消*/
+    delPutBaseInfo(){
+      delPutInfo(this.form.wmPutId).then(res=>{
+        this.$modal.msgSuccess("删除成功");
+      })
+    },
+    /*改变仓库 库区信息 */
+    whouseAreaCode(event){
+      console.log(event)
+      this.putBaseForm.whBitCoded=event;
+      let valueWhBitInfo= this.whBitInfoList.filter(t=>t.whBitCoded==event);
+      this.form.whAreaCoded=valueWhBitInfo[0].whAreaCoded;
+      this.form.whBitCoded=event;
+    },
+    /* 上传文件操作 */
+    upFile(res, file) {
+      console.log(res);
+      if (res.status == 200) {
+        // 文件上传成功后的回调，比如一些提示信息或者页面跳转都写在这里
+        this.$message.success(res.info);
+      } else {
+        this.$message.error(res.info);
+        let _this = this;
+        setTimeout(function() {
+          _this.$refs.uploads.clearFiles();
+        }, 1000);
+      }
+    },
+    //获取所有库位
+    getWhBitList(){
+      listWhBitAll({}).then(res=>{
+      this.whBitInfoList=res.data;
+      })
+    },
+    /*添加入库基本信息*/
+    putBaseInfoSubmit(){
+      this.$refs["putBaseForm"].validate(valid => {
+        if (valid) {
+          this.buttonLoading = true;
+          if (this.putBaseForm.id != null) {
+            updatePutInfo(this.putBaseForm).then(response => {
+              this.$modal.msgSuccess("修改成功");
+             // this.open = false;
+              this.getList();
+            }).finally(() => {
+              this.buttonLoading = false;
+              this.whBitInfo={};
+              this.buzhou=2;
+            });
+          } else {
+            addPutInfo(this.putBaseForm).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.form.wmPutId = response.msg;
+           //   this.open = false;
+              this.getList();
+            }).finally(() => {
+              this.buttonLoading = false;
+              this.buzhou=2;
+              this.whBitInfo={};
+            });
+          }
+        }
+      });
+    },
+    /*返回上一步*/
+    stepSubmit(){
+      this.buzhou=this.buzhou-1;
+    },
+    //关闭详细信息
+    infoCancel(){
+      this.infoOpen=false;
+    },
+    //展示详细信息
+    temporaryInfo(){
+    this.infoOpen=true;
+    },
+    /** 查询暂存入库信息列表 */
+    getList() {
+      this.loading = true;
+      listPutTemporary(this.queryParams).then(response => {
+        this.putTemporaryList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+        this.putBaseForm = {
+          id: undefined,
+          wmPutCoded: undefined,
+          certificateCoded: undefined,
+          causeType: undefined,
+          whPutDate: undefined,
+          varietyNumber: undefined,
+          whPutNumber: undefined,
+          whBitCoded: undefined,
+          invoicesStatus: undefined,
+          storekeeper: undefined,
+          synthesisKeeper: undefined,
+          createTime: undefined,
+          updateBy: undefined,
+          updateTime: undefined,
+          enclosure: undefined
+        };
+        this.resetForm("putBaseForm");
+      this.form = {
+        id: undefined,
+        wmPutId: undefined,
+        client: undefined,
+        cause: undefined,
+        detainDate: undefined,
+        detainDeptName: undefined,
+        detainDept: undefined,
+        goodsCoded: undefined,
+        putNumber: undefined,
+        causeQr: undefined,
+        whAreaCoded: undefined,
+        whBitCoded: undefined,
+        unitCoded: undefined,
+        remark: undefined
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length!==1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.getWhBitList()
+      this.open = true;
+      this.title = "添加暂存入库信息";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.loading = true;
+      this.getWhBitList()
+      this.reset();
+      const id = row.id || this.ids
+      getPutTemporary(id).then(response => {
+        this.loading = false;
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改暂存入库信息";
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.buttonLoading = true;
+          if (this.form.id != null) {
+            updatePutTemporary(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            }).finally(() => {
+              this.buttonLoading = false;
+              this.buzhou=3;
+              this.whBitInfo={};
+            });
+          } else {
+            addPutTemporary(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            }).finally(() => {
+              this.buttonLoading = false;
+              this.buzhou=3;
+              this.whBitInfo={};
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除暂存入库信息编号为"' + ids + '"的数据项？').then(() => {
+        this.loading = true;
+        return delPutTemporary(ids);
+      }).then(() => {
+        this.loading = false;
+        this.getList();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {
+      }).finally(() => {
+        this.loading = false;
+      });
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('wmPut/putTemporary/export', {
+        ...this.queryParams
+      }, `putTemporary_${new Date().getTime()}.xlsx`)
+    }
+  }
+};
+</script>

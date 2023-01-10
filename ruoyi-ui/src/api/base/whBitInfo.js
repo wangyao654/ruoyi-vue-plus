@@ -50,3 +50,11 @@ export function verifyWhBitCoded(query) {
     params: query
   })
 }
+//获取所有库位信息
+export function listWhBitAll(query) {
+  return request({
+    url: '/whBitInfo/whBitInfo/listAll',
+    method: 'get',
+    params: query
+  })
+}

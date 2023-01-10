@@ -112,4 +112,11 @@ public class BsWhBitInfoController extends BaseController {
     public R verifyWhBitCoded(BsWhBitInfoBo bo) {
         return iBsWhBitInfoService.verifyWhBitCoded(bo);
     }
+    /*
+    * 获取所有库位编号
+    * */
+    @GetMapping("/listAll")
+    public R listAll(BsWhBitInfoBo bo) {
+        return iBsWhBitInfoService.listAll(bo);
+    }
 }

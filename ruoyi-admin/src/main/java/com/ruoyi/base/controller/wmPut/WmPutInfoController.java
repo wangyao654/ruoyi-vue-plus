@@ -79,7 +79,7 @@ public class WmPutInfoController extends BaseController {
     @RepeatSubmit()
     @PostMapping()
     public R add(@Validated(AddGroup.class) @RequestBody WmPutInfoBo bo) {
-        return toAjax(iWmPutInfoService.insertGetId(bo));
+        return R.ok(iWmPutInfoService.insertGetId(bo));
     }
 
     /**
