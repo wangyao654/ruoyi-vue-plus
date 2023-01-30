@@ -45,7 +45,7 @@ public interface IBsWarehouseInfoService {
     /**
      * 校验并批量删除仓库管理信息
      */
-    Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+    R deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     R verifyWarehouseCoded(BsWarehouseInfoBo bo);
 }

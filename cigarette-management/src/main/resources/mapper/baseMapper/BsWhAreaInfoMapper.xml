@@ -22,5 +22,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateWarehouseNameByWarehouseCoded">
         update bs_wh_area_info set warehouse_name=#{warehouseName} where  warehouse_coded=#{warehouseCoded}
     </update>
-
+    <select id="selectListByIds" resultMap="BsWhAreaInfoResult">
+        select * from bs_wh_area_info
+        <where>
+            <if test="ids!=null and ids.size()>0">
+                id in
+                <foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            and wh_area_enabled ='0'
+        </where>
+    </select>
 </mapper>

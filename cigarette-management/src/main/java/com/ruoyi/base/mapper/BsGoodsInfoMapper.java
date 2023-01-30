@@ -1,8 +1,13 @@
 package com.ruoyi.base.mapper;
 
+import com.ruoyi.base.domain.BsBrandManage;
 import com.ruoyi.base.domain.BsGoodsInfo;
 import com.ruoyi.base.domain.vo.BsGoodsInfoVo;
 import com.ruoyi.common.core.mapper.BaseMapperPlus;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 商品信息Mapper接口
@@ -13,4 +18,6 @@ import com.ruoyi.common.core.mapper.BaseMapperPlus;
 public interface BsGoodsInfoMapper extends BaseMapperPlus<BsGoodsInfoMapper, BsGoodsInfo, BsGoodsInfoVo> {
 
     Long selectCoded();
+
+    List<BsGoodsInfo> selectListByIds(@Param("ids") Collection<Long> ids);
 }

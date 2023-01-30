@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="启用状态" prop="warehouseEnabled">
-        <el-select v-model="queryParams.warehouseEnabled" placeholder="请选择启用状态 0-正常 ，1-停用 " clearable @keyup.enter.native="handleQuery" style="width:100%">
+        <el-select v-model="queryParams.warehouseEnabled" placeholder="请选择启用状态" clearable @keyup.enter.native="handleQuery" style="width:100%">
           <el-option
             v-for="dict in dict.type.sys_normal_disable"
             :key="dict.value"
@@ -29,10 +29,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item  label="时间" prop="betweenTime">
+      <el-form-item  label="操作日期" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
@@ -171,9 +171,9 @@
           <el-input v-model="form.warehousePrincipal" placeholder="请输入仓库负责人" />
         </el-form-item>
         <el-form-item label="归属组织" prop="warehouseOrganization">
-          <el-select v-model="form.warehouseOrganization" placeholder="请选择仓库归属组织" style="width: 100%" >
+          <el-select v-model="form.warehouseOrganization" placeholder="请选择仓库归属组织" clearable style="width: 100%">
             <el-option
-              v-for="dict in dict.unitList"
+              v-for="dict in this.unitList"
               :key="dict.unitCode"
               :label="dict.unitName"
               :value="dict.unitCode"
@@ -181,7 +181,7 @@
           </el-select>
         </el-form-item>
           <el-form-item label="启用状态" prop="warehouseEnabled">
-            <el-select v-model="form.warehouseEnabled" placeholder="请选择启用状态"  style="width:100%">
+            <el-select v-model="form.warehouseEnabled" placeholder="请选择启用状态" clearable @change="ifWhAreaUse" style="width:100%">
               <el-option
                 v-for="dict in dict.type.sys_normal_disable"
                 :key="dict.value"
@@ -205,7 +205,8 @@
 
 <script>
 import { listWarehouseInfo, getWarehouseInfo, delWarehouseInfo, addWarehouseInfo, updateWarehouseInfo,verifyWarehouseCoded } from "@/api/base/warehouseInfo";
-
+import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
+import { listWhAreaInfo, getWhAreaInfo} from "@/api/base/whAreaInfo";
 export default {
   name: "WarehouseInfo",
   dicts: ['sys_normal_disable','warehouse_type'],
@@ -329,8 +330,34 @@ export default {
   },
   created() {
     this.getList();
+    this.getUnit();
   },
   methods: {
+    //该仓库下是否已有启用状态库区
+    ifWhAreaUse(){
+      if(this.form.warehouseEnabled!='0' && this.form.id!=undefined &&this.form.id!=null){
+        let whAreaList=[];
+        listWhAreaInfo({
+          pageNum: 1, pageSize: 10000, whouseCoded: this.form.warehouseCoded,whAreaEnabled:'0' }).then(res=>{
+          whAreaList=res.rows;
+          if (whAreaList.length > 0) {
+            this.form.warehouseEnabled='0';
+            this.$message({
+              message: '该仓库下已有启用状态库区',
+              type: 'warning'
+            });
+          }
+        })
+      }
+    },
+    //获取组织
+    getUnit(){
+      listDealingsunitInfo({pageNum: 1,
+        pageSize: 10000,unitEnabled:'0'}).then(response => {
+        this.unitList = response.rows;
+        console.log(this.unitList)
+      });
+    },
     /** 查询仓库管理列表 */
     getList() {
       this.loading = true;

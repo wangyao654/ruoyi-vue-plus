@@ -103,9 +103,9 @@ public class BsWarehouseInfoController extends BaseController {
     @SaCheckPermission("system:warehouseInfo:remove")
     @Log(title = "仓库管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public R<Void> remove(@NotEmpty(message = "主键不能为空")
+    public R remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
-        return toAjax(iBsWarehouseInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
+        return iBsWarehouseInfoService.deleteWithValidByIds(Arrays.asList(ids), true);
     }
     /**
      * 校验仓库编号

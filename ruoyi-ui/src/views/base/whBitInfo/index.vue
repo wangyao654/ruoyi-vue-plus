@@ -58,10 +58,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="时间" prop="betweenTime">
+      <el-form-item label="操作日期" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
@@ -142,15 +142,15 @@
       <el-table-column label="货架编号" align="center" prop="shelfCoded" />
       <el-table-column label="行号" align="center" prop="rowsNumber" />
       <el-table-column label="列号" align="center" prop="columnNumber" />
-      <el-table-column label="库位启用状态" align="center" prop="whBitEnabled" >
+      <el-table-column label="启用状态" align="center" prop="whBitEnabled" >
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.whBitEnabled"/>
         </template>
       </el-table-column>
       <el-table-column label="对象编号" align="center" prop="objectCoded" />
       <el-table-column label="对象名称" align="center" prop="objectName" />
-      <el-table-column label="操作人" align="center" prop="updateBy" />
-      <el-table-column label="更改时间" align="center" prop="updateTime" width="180"></el-table-column>
+      <el-table-column label="最后操作人" align="center" prop="updateBy" />
+      <el-table-column label="最后操作时间" align="center" prop="updateTime" width="180"></el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -195,44 +195,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="库位容量" prop="whBitCapacity">
-              <el-input v-model="form.whBitCapacity" placeholder="请输入库位容量" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="是否专属 " prop="isExclusive">
-              <el-select v-model="form.isExclusive" placeholder="请输入是否专属 " >
+            <el-form-item label="库位类型 " prop="whBitType">
+              <el-select v-model="form.whBitType" placeholder="请选择专属类型 " >
                 <el-option
-                  v-for="dict in dict.type.is_exclusive"
+                  v-for="dict in dict.type.wh_bit_type"
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="专属类型 " prop="exclusiveType">
-              <el-select v-model="form.exclusiveType" placeholder="请选择专属类型 " >
-                <el-option
-                  v-for="dict in dict.type.exclusive_type"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="所属库区" prop="whAreaInfo">
-              <el-select v-model="form.whAreaInfo" placeholder="请选择所属库区" style="width: 100%" clearable @change="addEditWhAreaRules($event)">
-                <el-option
-                  v-for="dict in this.whAreaList1"
-                  :key="dict.whAreaCoded"
-                  :label="dict.whAreaName"
-                  :value="dict.whAreaName+','+dict.whAreaCoded"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -249,6 +218,53 @@
                   :value="dict.warehouseName+','+dict.warehouseCoded"
                 ></el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="所属库区" prop="whAreaInfo">
+              <el-select v-model="form.whAreaInfo" placeholder="请选择所属库区" style="width: 100%" clearable @change="addEditWhAreaRules($event)">
+                <el-option
+                  v-for="dict in this.whAreaList1"
+                  :key="dict.whAreaCoded"
+                  :label="dict.whAreaName"
+                  :value="dict.whAreaName+','+dict.whAreaCoded"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="是否专属 " prop="isExclusive">
+              <el-select v-model="form.isExclusive" placeholder="请输入是否专属 " >
+                <el-option
+                  v-for="dict in dict.type.is_exclusive"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+          <el-col :span="8">
+            <el-form-item label="专属类型 " prop="exclusiveType">
+              <el-select v-model="form.exclusiveType" placeholder="请选择专属类型 " >
+                <el-option
+                  v-for="dict in dict.type.exclusive_type"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+
+        <el-row>
+
+          <el-col :span="8">
+            <el-form-item label="库位容量" prop="whBitCapacity">
+              <el-input v-model="form.whBitCapacity" placeholder="请输入库位容量" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -292,18 +308,7 @@
               <el-input v-model="form.objectName" placeholder="请输入对象名称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="库位类型 " prop="whBitType">
-              <el-select v-model="form.whBitType" placeholder="请选择专属类型 " >
-                <el-option
-                  v-for="dict in dict.type.wh_bit_type"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
+
           </el-row>
         <el-row>
           <el-col :span="24">
@@ -325,14 +330,6 @@
 <!--        <el-form-item label="所属仓库编号" prop="warehouseCoded">
           <el-input v-model="form.warehouseCoded" placeholder="请输入所属仓库编号" />
         </el-form-item>-->
-
-
-
-
-
-
-
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :loading="buttonLoading" type="primary" @click="submitForm">确 定</el-button>
@@ -580,7 +577,7 @@ export default {
     getWarehouseList(){
       this.loading = true;
       listWarehouseInfo({pageNum: 1,
-        pageSize: 1000}).then(res=>{
+        pageSize: 10000,warehouseEnabled:'0'}).then(res=>{
         this.warehouseList=res.rows
         this.warehouseList1=res.rows
         this.loading = false;
@@ -591,7 +588,7 @@ export default {
     getWhAreaList(){
       this.loading = true;
       listWhAreaInfo({pageNum: 1,
-        pageSize: 1000}).then(res=>{
+        pageSize: 10000,whAreaEnabled:'0'}).then(res=>{
         this.whAreaList=res.rows
         this.whAreaList1=res.rows
         this.loading = false;

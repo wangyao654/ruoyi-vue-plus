@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="warehouseName" column="warehouse_name"/>
         <result property="whBitType" column="wh_bit_type"/>
         <result property="shelfCoded" column="shelf_coded"/>
-        <result property="rowNumber" column="row_number"/>
+        <result property="rowsNumber" column="row_number"/>
         <result property="columnNumber" column="column_number"/>
         <result property="whBitEnabled" column="wh_bit_enabled"/>
         <result property="objectCoded" column="object_coded"/>
@@ -34,4 +34,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateWhAreaNameByWhAreaCoded">
            update bs_wh_bit_info set wh_area_name=#{whAreaName} where  wh_area_coded=#{whAreaCoded}
     </update>
+    <select id="selectListByIds" resultMap="BsWhBitInfoResult">
+        select * from bs_wh_bit_info
+        <where>
+            <if test="ids!=null and ids.size()>0">
+                id in
+                <foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            and wh_bit_enabled ='0'
+        </where>
+    </select>
 </mapper>

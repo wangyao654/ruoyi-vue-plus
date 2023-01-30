@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.domain.bo.BsGoodsInfoBo;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -124,11 +125,15 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
      * 批量删除商品信息
      */
     @Override
-    public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
+    public R deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         if(isValid){
             //TODO 做一些业务上的校验,判断是否需要校验
+            List<BsGoodsInfo> list =  baseMapper.selectListByIds(ids);
+            if(!CollectionUtils.isEmpty(list)){
+                return R.fail("已上市的商品不能删除！");
+            }
         }
-        return baseMapper.deleteBatchIds(ids) > 0;
+        return baseMapper.deleteBatchIds(ids) > 0? R.ok(): R.fail();
     }
 
     @Override
@@ -143,6 +148,9 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
     @Override
     public String createGoodsCoded() {
         Long  i = baseMapper.selectCoded();
+        if(i==null){
+            i=0L;
+        }
         Long coded=i+1;
         int count = businessUtils.getCount(coded);
         String goodsCoded;

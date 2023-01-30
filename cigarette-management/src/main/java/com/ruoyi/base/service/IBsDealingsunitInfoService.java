@@ -46,7 +46,7 @@ public interface IBsDealingsunitInfoService {
     /**
      * 校验并批量删除来往单位信息信息
      */
-    Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+    R deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     R verifyDealingsUnitCoded(BsDealingsunitInfoBo bo);
 

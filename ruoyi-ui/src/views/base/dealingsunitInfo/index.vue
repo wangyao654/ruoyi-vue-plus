@@ -27,10 +27,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="时间" prop="betweenTime">
+      <el-form-item label="操作日期" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
@@ -109,8 +109,8 @@
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.unitEnabled"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作者" align="center" prop="updateBy" />
-      <el-table-column label="操作时间" align="center" prop="updateTime" width="180">
+      <el-table-column label="最后操作人" align="center" prop="updateBy" />
+      <el-table-column label="最后操作时间" align="center" prop="updateTime" width="180">
 <!--        <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
         </template>-->
@@ -215,11 +215,11 @@ export default {
           callback(new Error('请输入数字！'))
         }
         console.log(value+"1232323")
-        verifyDealingsUnitCoded({whBitCoded:parseInt(value),id:id}).then(res=>{
+        verifyDealingsUnitCoded({unitCoded:parseInt(value),id:id}).then(res=>{
           this.verifyDealingsUnitList=res.data
           if(this.verifyDealingsUnitList.length>0){
             this.verifyDealingsUnitList=[];
-            callback(new Error('该仓库编号已存在'))
+            callback(new Error('该单位编号已存在'))
           }else{
             callback()
           }
@@ -229,28 +229,43 @@ export default {
       }
     }
     let phoneVerify=(rule, value, callback)=>{
-        let reg = /^1[0-9]{10}$/
+      let reg = /^1[0-9]{10}$/
+      if(value){
         if (!reg.test(value)) {
           callback(new Error('手机号格式错误'))
         } else {
           callback();
         }
+      }else {
+        callback();
+      }
+
     }
     let landlineNumberVerify=(rule, value, callback)=>{
       let reg = /^\d{3,4}[-]\d{8}$/
-      if (!reg.test(value)) {
-        callback(new Error('座机格式错误'))
-      } else {
-        callback();
-      }
+        if(value){
+          if (!reg.test(value)) {
+            callback(new Error('座机格式错误'))
+          } else {
+            callback();
+          }
+        }else {
+          callback();
+        }
+
     }
     let emailVerify=(rule, value, callback)=>{
       let reg = /^[a-zA-Z0-9][a-zA-Z0-9_]+\@[a-zA-Z0-9]+\.[a-zA-Z]{2,5}(\.[a-zA-Z]{2,5})*$/i
-      if (!reg.test(value)) {
-        callback(new Error('邮箱格式错误'))
-      } else {
+      if(value){
+        if (!reg.test(value)) {
+          callback(new Error('邮箱格式错误'))
+        } else {
+          callback();
+        }
+      }else {
         callback();
       }
+
     }
     return {
       pickerOptions: {

@@ -19,5 +19,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCoded" resultType="long">
     select MAX(CAST(brand_coded as unsigned)) from bs_brand_manage
     </select>
-
+    <select id="selectListByIds" resultMap="BsBrandManageResult">
+        select * from bs_brand_manage
+        <where>
+            <if test="ids!=null and ids.size()>0">
+                id in
+                <foreach collection="ids" separator="," index="index" close=")" open="(" item="id">
+                    #{id}
+                </foreach>
+            </if>
+            and brand_enabled = '0'
+        </where>
+    </select>
+    <update id="updateBrandName">
+      update  bs_goods_info set brand_name= #{bo.brandName}
+        where brand_coded=#{bo.brandCoded}
+    </update>
 </mapper>

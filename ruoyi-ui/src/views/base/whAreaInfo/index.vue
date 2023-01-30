@@ -35,10 +35,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="时间" prop="betweenTime">
+      <el-form-item label="操作日期" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
@@ -105,13 +105,13 @@
       <el-table-column label="库区类型" align="center" prop="whAreaType" />
       <el-table-column label="所属仓库编号" align="center" prop="warehouseCoded" />
       <el-table-column label="所属仓库名称" align="center" prop="warehouseName" />
-      <el-table-column label="库区启用状态" align="center" prop="whAreaEnabled" >
+      <el-table-column label="启用状态" align="center" prop="whAreaEnabled" >
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.whAreaEnabled"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作人" align="center" prop="updateBy" />
-      <el-table-column label="更改时间" align="center" prop="updateTime" width="180">
+      <el-table-column label="最后操作人" align="center" prop="updateBy" />
+      <el-table-column label="最后操作时间" align="center" prop="updateTime" width="180">
 <!--        <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
         </template>-->
@@ -198,7 +198,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="启用状态" prop="whAreaEnabled">
-          <el-select v-model="form.whAreaEnabled" placeholder="请选择库区启用状态"  style="width: 100%">
+          <el-select v-model="form.whAreaEnabled" placeholder="请选择库区启用状态" clearable @change="ifWhBitUse" style="width: 100%">
             <el-option
               v-for="dict in dict.type.sys_normal_disable"
               :key="dict.value"
@@ -222,6 +222,7 @@
 <script>
 import { listWhAreaInfo, getWhAreaInfo, delWhAreaInfo, addWhAreaInfo, updateWhAreaInfo,verifyWhAreaCoded } from "@/api/base/whAreaInfo";
 import { listWarehouseInfo} from "@/api/base/warehouseInfo";
+import { listWhBitInfo} from "@/api/base/whBitInfo";
 
 
 export default {
@@ -354,11 +355,29 @@ export default {
     this.getWarehouseList();
   },
   methods: {
+    //该库区下是否已有启用状态库位
+    ifWhBitUse(){
+      if(this.form.whAreaEnabled!='0' && this.form.id!=undefined &&this.form.id!=null){
+        let whBitList=[];
+        listWhBitInfo({
+          pageNum: 1, pageSize: 10000, whAreaCoded: this.form.whAreaCoded,whBitEnabled:'0'
+        }).then(res=>{
+          whBitList=res.rows;
+          if (whBitList.length > 0) {
+            this.form.whAreaEnabled='0';
+            this.$message({
+              message: '该库区下已有启用状态库位',
+              type: 'warning'
+            });
+          }
+        })
+      }
+    },
     /*所属仓库下拉框*/
     getWarehouseList(){
       this.loading = true;
       listWarehouseInfo({pageNum: 1,
-        pageSize: 1000}).then(res=>{
+        pageSize: 10000,warehouseEnabled:'0'}).then(res=>{
         this.warehouseList=res.rows
         this.loading = false;
       })

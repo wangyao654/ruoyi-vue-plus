@@ -102,9 +102,9 @@ public class BsDealingsunitInfoController extends BaseController {
     @SaCheckPermission("dealingsunitInfo:dealingsunitInfo:remove")
     @Log(title = "来往单位信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public R<Void> remove(@NotEmpty(message = "主键不能为空")
+    public R remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
-        return toAjax(iBsDealingsunitInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
+        return iBsDealingsunitInfoService.deleteWithValidByIds(Arrays.asList(ids), true);
     }
     /*
     * 校验编号

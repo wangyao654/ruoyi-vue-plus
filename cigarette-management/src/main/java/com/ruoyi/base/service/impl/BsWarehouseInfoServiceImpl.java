@@ -1,6 +1,7 @@
 package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.base.domain.BsDealingsunitInfo;
 import com.ruoyi.base.domain.BsWarehouseInfo;
 import com.ruoyi.base.domain.bo.BsWarehouseInfoBo;
 import com.ruoyi.base.domain.vo.BsWarehouseInfoVo;
@@ -17,6 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -123,11 +125,15 @@ public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
      * 批量删除仓库管理
      */
     @Override
-    public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
+    public R deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         if(isValid){
             //TODO 做一些业务上的校验,判断是否需要校验
+            List<BsWarehouseInfo> list =  baseMapper.selectListByIds(ids);
+            if(!CollectionUtils.isEmpty(list)){
+                return R.fail("已启用的仓库不能删除！");
+            }
         }
-        return baseMapper.deleteBatchIds(ids) > 0;
+        return baseMapper.deleteBatchIds(ids) > 0? R.ok():R.fail();
     }
 
     @Override

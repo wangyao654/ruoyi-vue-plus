@@ -17,6 +17,7 @@ import com.ruoyi.base.domain.vo.BsWhAreaInfoVo;
 import com.ruoyi.base.domain.BsWhAreaInfo;
 import com.ruoyi.base.mapper.BsWhAreaInfoMapper;
 import com.ruoyi.base.service.IBsWhAreaInfoService;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -116,11 +117,15 @@ public class BsWhAreaInfoServiceImpl implements IBsWhAreaInfoService {
      * 批量删除库区信息
      */
     @Override
-    public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
+    public R deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         if(isValid){
             //TODO 做一些业务上的校验,判断是否需要校验
+            List<BsWhAreaInfo> list =  baseMapper.selectListByIds(ids);
+            if(!CollectionUtils.isEmpty(list)){
+                return R.fail("已启用的库区不能删除！");
+            }
         }
-        return baseMapper.deleteBatchIds(ids) > 0;
+        return baseMapper.deleteBatchIds(ids) > 0? R.ok(): R.fail();
     }
 
     @Override

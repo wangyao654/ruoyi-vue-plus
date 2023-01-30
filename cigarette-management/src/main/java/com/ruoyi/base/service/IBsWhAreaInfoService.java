@@ -47,7 +47,7 @@ public interface IBsWhAreaInfoService {
     /**
      * 校验并批量删除库区信息信息
      */
-    Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+    R deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     BsWhAreaInfoVo getWhAreaInfoByWhAreaCoded(String whAreaCoded);
 

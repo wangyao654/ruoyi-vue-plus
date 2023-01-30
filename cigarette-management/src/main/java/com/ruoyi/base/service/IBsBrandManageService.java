@@ -2,6 +2,7 @@ package com.ruoyi.base.service;
 
 import com.ruoyi.base.domain.bo.BsBrandManageBo;
 import com.ruoyi.base.domain.vo.BsBrandManageVo;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
 
@@ -44,7 +45,7 @@ public interface IBsBrandManageService {
     /**
      * 校验并批量删除品牌管理/品牌详细信息信息
      */
-    Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+    R deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     List<BsBrandManageVo> verifyBrandCode(BsBrandManageBo bo);
 

@@ -34,5 +34,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCoded" resultType="long">
             select MAX(CAST(substring(goods_coded,4)as unsigned)) from bs_goods_info
     </select>
-
+    <select id="selectListByIds" resultMap="BsGoodsInfoResult">
+        select * from bs_goods_info
+        <where>
+            <if test="ids!=null and ids.size()>0">
+                id in
+                <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            and listing_status='0'
+        </where>
+    </select>
 </mapper>

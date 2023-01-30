@@ -45,7 +45,7 @@ public interface IBsWhBitInfoService {
     /**
      * 校验并批量删除库位信息信息
      */
-    Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+    R deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     R verifyWhBitCoded(BsWhBitInfoBo bo);
 

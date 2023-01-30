@@ -8,6 +8,7 @@ import com.ruoyi.base.domain.vo.BsBrandManageVo;
 import com.ruoyi.base.mapper.BsBrandManageMapper;
 import com.ruoyi.base.service.IBsBrandManageService;
 import com.ruoyi.common.businessUtils.businessUtils;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -16,6 +17,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -99,6 +101,8 @@ public class BsBrandManageServiceImpl implements IBsBrandManageService {
     public Boolean updateByBo(BsBrandManageBo bo) {
         BsBrandManage update = BeanUtil.toBean(bo, BsBrandManage.class);
         validEntityBeforeSave(update);
+        //修改商品中品牌的名字
+       int i= baseMapper.updateBrandName(bo);
         return baseMapper.updateById(update) > 0;
     }
 
@@ -113,11 +117,16 @@ public class BsBrandManageServiceImpl implements IBsBrandManageService {
      * 批量删除品牌管理/品牌详细信息
      */
     @Override
-    public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
+    public R deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
         if(isValid){
             //TODO 做一些业务上的校验,判断是否需要校验
+            List<BsBrandManage> list =  baseMapper.selectListByIds(ids);
+            if(!CollectionUtils.isEmpty(list)){
+            return R.fail("已启用的品牌不能删除！");
+            }
         }
-        return baseMapper.deleteBatchIds(ids) > 0;
+        return baseMapper.deleteBatchIds(ids) > 0? R.ok(): R.fail();
+
     }
 
     @Override
@@ -132,6 +141,9 @@ public class BsBrandManageServiceImpl implements IBsBrandManageService {
     @Override
     public String createBrandCode(BsBrandManageBo bo) {
        Long  i = baseMapper.selectCoded();
+       if(i==null){
+           i=0L;
+       }
        Long coded=i+1;
         int count =   businessUtils.getCount(coded);
         if(count==2){

@@ -20,17 +20,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 wpt.cigarette_type=#{bo.cigaretteType}
             </if>
             <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
-                wpt.client like concat('%',#{bo.client},'%')
+             and   wpt.client like concat('%',#{bo.client},'%')
             </if>
             <if test="bo.goodsName!=null and bo.goodsName!=''">
-                goods.goods_name  like concat('%',#{bo.goodsName},'%')
+             and   goods.goods_name  like concat('%',#{bo.goodsName},'%')
             </if>
             <if test="bo.invoicesStatus!=null and bo.invoicesStatus!=''">
-                wpin.invoices_status = #{bo.invoicesStatus}
+              and  wpin.invoices_status = #{bo.invoicesStatus}
             </if>
             <choose>
                 <when test="bo.startTime!=null and bo.endTime!=null ">
-                    wpin.update_time between #{bo.startTime} and #{bo.endTime}
+                 and   wpin.update_time between #{bo.startTime} and #{bo.endTime}
                 </when>
                 <when test="bo.startTime!=null">
                     wpin.update_time &gt;= #{bo.startTime}

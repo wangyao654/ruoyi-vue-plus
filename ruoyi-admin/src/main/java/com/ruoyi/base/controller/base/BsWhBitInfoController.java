@@ -101,9 +101,9 @@ public class BsWhBitInfoController extends BaseController {
     @SaCheckPermission("whBitInfo:whBitInfo:remove")
     @Log(title = "库位信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public R<Void> remove(@NotEmpty(message = "主键不能为空")
+    public R remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
-        return toAjax(iBsWhBitInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
+        return iBsWhBitInfoService.deleteWithValidByIds(Arrays.asList(ids), true);
     }
     /*
     * 校验库位编码

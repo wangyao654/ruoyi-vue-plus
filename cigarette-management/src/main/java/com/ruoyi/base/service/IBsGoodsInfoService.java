@@ -45,7 +45,7 @@ public interface IBsGoodsInfoService {
     /**
      * 校验并批量删除商品信息信息
      */
-    Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+    R deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     R verifyGoodsCoded(BsGoodsInfoBo bo);
 

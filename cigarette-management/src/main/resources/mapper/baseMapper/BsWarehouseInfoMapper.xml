@@ -19,6 +19,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark" column="remark"/>
         <result property="createBy" column="create_by"/>
     </resultMap>
-
+    <select id="selectListByIds" resultMap="BsWarehouseInfoResult">
+        select * from bs_warehouse_info
+        <where>
+            <if test="ids !=null and ids.size()>0">
+                id in
+                <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            and warehouse_enabled = '0'
+        </where>
+    </select>
 
 </mapper>

@@ -102,9 +102,9 @@ public class BsGoodsInfoController extends BaseController {
     @SaCheckPermission("base:goodsInfo:remove")
     @Log(title = "商品信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public R<Void> remove(@NotEmpty(message = "主键不能为空")
+    public R remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
-        return toAjax(iBsGoodsInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
+        return iBsGoodsInfoService.deleteWithValidByIds(Arrays.asList(ids), true);
     }
     /**
      * 校验商品编号

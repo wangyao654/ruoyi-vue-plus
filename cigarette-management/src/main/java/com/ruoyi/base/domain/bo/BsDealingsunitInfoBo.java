@@ -42,7 +42,7 @@ public class BsDealingsunitInfoBo extends BaseEntity {
     /**
      * 单位类型(1-行政机关、2-代管仓库、3-零售户、4-执法科、5-检验机构)
      */
-    @NotBlank(message = "单位类型(1-行政机关、2-代管仓库、3-零售户、4-执法科、5-检验机构)不能为空", groups = { AddGroup.class, EditGroup.class })
+    @NotBlank(message = "单位类型不能为空", groups = { AddGroup.class, EditGroup.class })
     private String unitType;
 
     /**
@@ -53,19 +53,19 @@ public class BsDealingsunitInfoBo extends BaseEntity {
     /**
      * 座机号码
      */
-    @NotBlank(message = "座机号码不能为空", groups = { AddGroup.class, EditGroup.class })
+/*    @NotBlank(message = "座机号码不能为空", groups = { AddGroup.class, EditGroup.class })*/
     private String landlineNumber;
 
     /**
      * 手机号
      */
-    @NotBlank(message = "手机号不能为空", groups = { AddGroup.class, EditGroup.class })
+/*    @NotBlank(message = "手机号不能为空", groups = { AddGroup.class, EditGroup.class })*/
     private String phone;
 
     /**
      * 邮箱
      */
-    @NotBlank(message = "邮箱不能为空", groups = { AddGroup.class, EditGroup.class })
+/*    @NotBlank(message = "邮箱不能为空", groups = { AddGroup.class, EditGroup.class })*/
     private String email;
 
     /**

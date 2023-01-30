@@ -5,6 +5,9 @@ import com.ruoyi.base.domain.vo.BsWhBitInfoVo;
 import com.ruoyi.common.core.mapper.BaseMapperPlus;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * 库位信息Mapper接口
  *
@@ -16,4 +19,6 @@ public interface BsWhBitInfoMapper extends BaseMapperPlus<BsWhBitInfoMapper, BsW
     int updateWarehouseNameByWarehouseCoded(@Param("warehouseCoded") String warehouseCoded, @Param("warehouseName") String warehouseName);
 
     int updateWhAreaNameByWhAreaCoded(@Param("whAreaCoded")String whAreaCoded,@Param("whAreaName") String whAreaName);
+
+    List<BsWhBitInfo> selectListByIds(@Param("ids") Collection<Long> ids);
 }

@@ -105,9 +105,9 @@ public class BsWhAreaInfoController extends BaseController {
     @SaCheckPermission("base:whAreaInfo:remove")
     @Log(title = "库区信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public R<Void> remove(@NotEmpty(message = "主键不能为空")
+    public R remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
-        return toAjax(iBsWhAreaInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
+        return iBsWhAreaInfoService.deleteWithValidByIds(Arrays.asList(ids), true);
     }
     /*
     * 校验库区编号

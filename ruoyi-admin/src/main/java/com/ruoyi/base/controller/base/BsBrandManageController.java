@@ -106,9 +106,9 @@ public class BsBrandManageController extends BaseController {
      */
     @Log(title = "品牌管理/品牌详细信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public R<Void> remove(@NotEmpty(message = "主键不能为空")
+    public R remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
-        return toAjax(iBsBrandManageService.deleteWithValidByIds(Arrays.asList(ids), true));
+        return iBsBrandManageService.deleteWithValidByIds(Arrays.asList(ids), true);
     }
     /*
     * 自动生成编号

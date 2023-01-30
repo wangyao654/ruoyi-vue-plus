@@ -43,10 +43,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item  label="时间" prop="betweenTime">
+      <el-form-item  label="操作日期" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
@@ -153,9 +153,15 @@
           <dict-tag :options="dict.type.listing_status" :value="scope.row.listingStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="焦油量" align="center" prop="tarContent" />
-      <el-table-column label="烟气烟碱量" align="center" prop="smokeNicotine" />
-      <el-table-column label="一氧化碳量" align="center" prop="monoxideCarbon" />
+      <el-table-column label="焦油量" align="center" prop="tarContent" >
+        <template slot-scope="scope">{{scope.row.tarContent+'mg'}}</template>
+      </el-table-column>
+      <el-table-column label="烟气烟碱量" align="center" prop="smokeNicotine" >
+        <template slot-scope="scope">{{scope.row.smokeNicotine+'mg'}}</template>
+      </el-table-column>
+      <el-table-column label="一氧化碳量" align="center" prop="monoxideCarbon" >
+        <template slot-scope="scope">{{scope.row.monoxideCarbon+'mg'}}</template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -190,10 +196,30 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="8">
+            <el-form-item label="品牌名称" prop="brandName">
+              <el-select v-model="form.brandName" placeholder="请选择品牌" filterable @change="getBrandInfo($event)">
+                <el-option
+                  v-for="dict in this.brandManageList"
+                  :key="dict.brandCoded"
+                  :label="dict.brandName"
+                  :value="dict.brandCoded"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="商品编码" prop="goodsCoded">
+              <el-input v-model="form.goodsCoded" placeholder="请输入商品编码" :disabled="ifEdit" />
+              <el-button size="mini" @click="getGoodsCoded" v-if="!ifEdit">生成商品编码</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="商品名称" prop="goodsName">
               <el-input v-model="form.goodsName" placeholder="请输入商品名称" />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="商品类型" prop="goodsType">
               <el-select v-model="form.goodsType" placeholder="请选择商品类型" >
@@ -207,38 +233,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="商品编码" prop="goodsCoded">
-              <el-input v-model="form.goodsCoded" placeholder="请输入商品编码" />
-              <el-button size="mini" @click="getGoodsCoded">生成商品编码</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="品牌名称" prop="brandName">
-              <el-select v-model="form.brandName" placeholder="请选择品牌" filterable @change="getBrandInfo($event)">
-                <el-option
-                  v-for="dict in this.brandManageList"
-                  :key="dict.brandCoded"
-                  :label="dict.brandName"
-                  :value="dict.brandCoded"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="小盒条码" prop="smallBoxBarcode">
-              <el-input v-model="form.smallBoxBarcode" placeholder="请输入小盒条码" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="条盒条码" prop="barboxBarcode">
-              <el-input v-model="form.barboxBarcode" placeholder="请输入条盒条码" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
             <el-form-item label="商品规格" prop="goodsSpecification">
               <el-select v-model="form.goodsSpecification" placeholder="请输入商品规格" >
                 <el-option
@@ -248,6 +242,18 @@
                   :value="dict.value"
                 ></el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="小盒条码" prop="smallBoxBarcode">
+              <el-input v-model="form.smallBoxBarcode" placeholder="请输入小盒条码" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="条盒条码" prop="barboxBarcode">
+              <el-input v-model="form.barboxBarcode" placeholder="请输入条盒条码" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -420,6 +426,8 @@ export default {
       }
     }
     return {
+      //修改禁用
+      ifEdit:false,
       brandManageList: [],
       verifyGoodsInfoList:[],
       brandInfo:{},
@@ -597,7 +605,7 @@ export default {
     getBrandInfoList(){
       this.loading = true;
       listBrandManage({pageNum: 1,
-        pageSize: 1000}).then(res=>{
+        pageSize: 10000,brandEnabled:'0'}).then(res=>{
         this.brandManageList=res.rows
         this.loading = false;
       })
@@ -620,6 +628,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.ifEdit=true;
       this.reset();
     },
     // 表单重置
@@ -679,6 +688,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.ifEdit=false;
       this.open = true;
       this.title = "添加商品信息";
     },
@@ -690,6 +700,7 @@ export default {
       getGoodsInfo(id).then(response => {
         this.loading = false;
         this.form = response.data;
+        this.ifEdit=true;
         this.open = true;
         this.title = "修改商品信息";
       });

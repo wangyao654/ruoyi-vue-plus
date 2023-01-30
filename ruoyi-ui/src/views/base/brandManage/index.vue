@@ -26,7 +26,7 @@
         />
       </el-form-item>
       <el-form-item label="启用状态" prop="brandEnabled">
-        <el-select v-model="queryParams.brandEnabled" placeholder="请选择启用状态 0-正常 ，1-停用 " clearable @keyup.enter.native="handleQuery" style="width:100%">
+        <el-select v-model="queryParams.brandEnabled" placeholder="请选择启用状态" clearable @keyup.enter.native="handleQuery" style="width:100%">
           <el-option
             v-for="dict in dict.type.sys_normal_disable"
             :key="dict.value"
@@ -35,10 +35,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item  label="时间" prop="betweenTime">
+      <el-form-item  label="操作日期" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
@@ -108,19 +108,18 @@
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.brandEnabled"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-<!--        <template slot-scope="scope">
+<!--      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime),'{y}-{m}-{d}' }}</span>
-        </template>-->
-      </el-table-column>
-      <el-table-column label="操作者" align="center" prop="updateBy" />
-      <el-table-column label="操作时间" align="center" prop="updateTime" width="180">
+        </template>
+      </el-table-column>-->
+      <el-table-column label="最后操作人" align="center" prop="updateBy" />
+      <el-table-column label="最后操作时间" align="center" prop="updateTime" width="180">
 <!--        <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>-->
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="创建者" align="center" prop="createBy" />
+<!--      <el-table-column label="创建者" align="center" prop="createBy" />-->
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -154,9 +153,9 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="品牌编号" prop="brandCoded">
-          <el-input v-model="form.brandCoded" placeholder="请输入品牌编号" >
+          <el-input v-model="form.brandCoded" placeholder="请输入品牌编号" :disabled="ifEdit" >
           </el-input>
-          <el-button size="mini" @click="getBrandCoded">生成品牌编码</el-button>
+          <el-button size="mini" @click="getBrandCoded" v-if="!ifEdit">生成品牌编码</el-button>
         </el-form-item>
         <el-form-item label="品牌名称" prop="brandName">
           <el-input v-model="form.brandName" placeholder="请输入品牌名称" />
@@ -165,7 +164,7 @@
           <el-input v-model="form.brandLocality" placeholder="请输入品牌所在地" />
         </el-form-item>
         <el-form-item label="启用状态" prop="brandEnabled">
-          <el-select v-model="form.brandEnabled" placeholder="请选择启用状态 0-正常 ，1-停用 "  style="width:100%">
+          <el-select v-model="form.brandEnabled" placeholder="请选择启用状态" @change="ifGoodsUse"  style="width:100%">
             <el-option
               v-for="dict in dict.type.sys_normal_disable"
               :key="dict.value"
@@ -189,7 +188,7 @@
 
 <script>
 import { listBrandManage, getBrandManage, delBrandManage, addBrandManage, updateBrandManage,verifyBrandCode,createBrandCoded } from "@/api/base/brandManage";
-
+import { listGoodsInfo, getGoodsInfo } from "@/api/base/goodsInfo";
 export default {
   name: "BrandManage",
   dicts: ['sys_normal_disable'],
@@ -215,6 +214,9 @@ export default {
       }
     }
     return {
+      goodsList:[],
+      //禁用
+      ifEdit:false,
       // 按钮loading
       buttonLoading: false,
       // 遮罩层
@@ -309,9 +311,25 @@ export default {
     this.getList();
   },
   methods: {
-    getBrandCoded(){
-      createBrandCoded().then(res=>{
-        this.form.brandCoded=res.msg;
+    //是否已有商品归属
+    ifGoodsUse() {
+      if(this.form.brandEnabled!='0'){
+        listGoodsInfo({
+          pageNum: 1, pageSize: 10000, brandCoded: this.form.brandCoded,listingStatus:'0' }).then(res => {
+          this.goodsList = res.rows;
+          if (this.goodsList.length > 0) {
+            this.form.brandEnabled='0';
+            this.$message({
+              message: '该品牌下已有商品上市',
+              type: 'warning'
+            });
+          }
+        })
+      }
+    },
+    getBrandCoded() {
+      createBrandCoded().then(res => {
+        this.form.brandCoded = res.msg;
       })
     },
     /** 查询品牌管理/品牌详细信息列表 */
@@ -326,6 +344,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.ifEdit = false;
       this.reset();
     },
     // 表单重置
@@ -345,12 +364,12 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-      let arr=[];
-      let r=this.queryParams.betweenTime;
-      if(r!=undefined&&r!=null&&r!=""){
-        arr=this.queryParams.betweenTime.toString().split(",")
-        this.queryParams.startTime=arr[0]
-        this.queryParams.endTime=arr[1];
+      let arr = [];
+      let r = this.queryParams.betweenTime;
+      if (r != undefined && r != null && r != "") {
+        arr = this.queryParams.betweenTime.toString().split(",")
+        this.queryParams.startTime = arr[0]
+        this.queryParams.endTime = arr[1];
       }
       this.getList();
     },
@@ -362,18 +381,20 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.codes=selection.map(item => item.brand_coded)
-      this.single = selection.length!==1
+      this.codes = selection.map(item => item.brand_coded)
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
+      this.ifEdit = false;
       this.title = "添加品牌管理/品牌详细信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.ifEdit = true;
       this.loading = true;
       this.reset();
       const id = row.id || this.ids
@@ -413,8 +434,8 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       let codes = row.brandCoded || this.codes;
-      if(codes==null||codes==""||codes==undefined){
-        codes=ids;
+      if (codes == null || codes == "" || codes == undefined) {
+        codes = ids;
       }
       this.$modal.confirm('是否确认删除品牌详细信息编号为"' + codes + '"的数据项？').then(() => {
         this.loading = true;
