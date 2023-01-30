@@ -1,9 +1,11 @@
 package com.ruoyi.base.controller.wmPut;
 
+import java.io.*;
 import java.util.List;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.base.domain.bo.BsWhAreaInfoBo;
 import com.ruoyi.wmPut.domain.bo.WmPutInfoBo;
 import com.ruoyi.wmPut.domain.vo.WmPutInfoVo;
 import com.ruoyi.wmPut.service.IWmPutInfoService;
@@ -24,6 +26,7 @@ import com.ruoyi.common.core.validate.QueryGroup;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 商品入库信息
@@ -104,5 +107,22 @@ public class WmPutInfoController extends BaseController {
     public R<Void> remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
         return toAjax(iWmPutInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
+    }
+    /*
+     * 校验入库编号
+     * */
+    @GetMapping("/verifyWmPutCoded")
+    public R verifyWmPutCoded(WmPutInfoBo bo) {
+        return iWmPutInfoService.verifyWmPutCoded(bo);
+    }
+    @PostMapping("/enclosure")
+    public R<Void> fileEnclosure(@RequestPart("file") MultipartFile file) throws IOException {
+        if(file==null){
+            return R.fail("上传失败文件为空");
+        }
+        byte[] bytes = file.getBytes();
+        WmPutInfoBo wmPutInfoBo = new WmPutInfoBo();
+        wmPutInfoBo.setEnclosure(file.getBytes());
+        return toAjax(iWmPutInfoService.updateByBo(wmPutInfoBo));
     }
 }

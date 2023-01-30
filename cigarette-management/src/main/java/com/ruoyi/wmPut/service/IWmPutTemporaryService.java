@@ -34,7 +34,7 @@ public interface IWmPutTemporaryService {
     /**
      * 新增暂存入库信息
      */
-    Boolean insertByBo(WmPutTemporaryBo bo);
+    Integer insertByBo(WmPutTemporaryBo bo);
 
     /**
      * 修改暂存入库信息

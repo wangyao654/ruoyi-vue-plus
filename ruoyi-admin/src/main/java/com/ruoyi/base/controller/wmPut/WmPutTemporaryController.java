@@ -78,8 +78,8 @@ public class WmPutTemporaryController extends BaseController {
     @Log(title = "暂存入库信息", businessType = BusinessType.INSERT)
     @RepeatSubmit()
     @PostMapping()
-    public R<Void> add(@Validated(AddGroup.class) @RequestBody WmPutTemporaryBo bo) {
-        return toAjax(iWmPutTemporaryService.insertByBo(bo));
+    public R add(@RequestBody WmPutTemporaryBo bo) {
+        return R.ok(iWmPutTemporaryService.insertByBo(bo));
     }
 
     /**
@@ -105,4 +105,8 @@ public class WmPutTemporaryController extends BaseController {
                           @PathVariable Long[] ids) {
         return toAjax(iWmPutTemporaryService.deleteWithValidByIds(Arrays.asList(ids), true));
     }
+    /*
+    * 上传附件
+    * */
+
 }

@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 暂存入库信息业务对象 wm_put_temporary
@@ -51,18 +52,21 @@ public class WmPutTemporaryBo extends WmPutInfoBo {
      * 查扣日期
      */
     @NotNull(message = "查扣日期不能为空", groups = { AddGroup.class, EditGroup.class })
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date detainDate;
 
     /**
      * 扣查部门
      */
-    @NotBlank(message = "扣查部门不能为空", groups = { AddGroup.class, EditGroup.class })
+
+   // @NotBlank(message = "扣查部门不能为空", groups = { AddGroup.class, EditGroup.class })
     private String detainDeptName;
 
     /**
      * 扣查部门id
      */
-    @NotNull(message = "扣查部门id不能为空", groups = { AddGroup.class, EditGroup.class })
+   // @NotNull(message = "扣查部门id不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long detainDept;
 
     /**

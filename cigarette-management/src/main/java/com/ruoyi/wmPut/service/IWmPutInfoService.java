@@ -1,5 +1,7 @@
 package com.ruoyi.wmPut.service;
 
+import com.ruoyi.base.domain.bo.BsWhAreaInfoBo;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.ruoyi.wmPut.domain.bo.WmPutInfoBo;
@@ -47,4 +49,6 @@ public interface IWmPutInfoService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     int insertGetId(WmPutInfoBo bo);
+
+    R verifyWmPutCoded(WmPutInfoBo bo);
 }

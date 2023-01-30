@@ -98,7 +98,9 @@ public class WmPutInfoBo extends BaseEntity {
      * 附件
      */
   //  @NotBlank(message = "附件不能为空", groups = { AddGroup.class, EditGroup.class })
-    private File enclosure;
+    // private File enclosure;
+    private File file;
+    private byte[] enclosure;
 
 
     private Date startTime;

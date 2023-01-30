@@ -73,14 +73,18 @@ public class WmPutTemporaryServiceImpl implements IWmPutTemporaryService {
      * 新增暂存入库信息
      */
     @Override
-    public Boolean insertByBo(WmPutTemporaryBo bo) {
+    public Integer insertByBo(WmPutTemporaryBo bo) {
         WmPutTemporary add = BeanUtil.toBean(bo, WmPutTemporary.class);
         validEntityBeforeSave(add);
-        boolean flag = baseMapper.insert(add) > 0;
-        if (flag) {
-            bo.setId(add.getId());
+       int id= baseMapper.insertWmPutTemporary(add);
+        boolean flag =false;
+        if(id!=0){
+            flag=true;
         }
-        return flag;
+        if (flag) {
+            return add.getId().intValue();
+        }
+        return 0;
     }
 
     /**

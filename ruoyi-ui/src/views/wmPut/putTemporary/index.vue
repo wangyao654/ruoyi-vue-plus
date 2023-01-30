@@ -191,7 +191,7 @@
     </el-dialog>
 
     <!-- 添加或修改暂存入库信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1300px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="1300px" append-to-body :show-close="false">
       <el-steps :active="buzhou">
         <el-step title="步骤 1" description="入库基本信息"></el-step>
         <el-step title="步骤 2" description="暂存入库详细信息"></el-step>
@@ -273,7 +273,7 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="单据状态" prop="causeType">
+              <el-form-item label="单据状态" prop="invoicesStatus">
                 <el-select v-model="putBaseForm.invoicesStatus" placeholder="请选择单据状态" clearable>
                   <el-option
                     v-for="dict in dict.type.invoices_status"
@@ -314,7 +314,14 @@
             <el-input v-model="form.client" placeholder="请输入当事人" />
           </el-form-item>
           <el-form-item label="案由" prop="cause">
-            <el-input v-model="form.cause" placeholder="请输入案由" />
+            <el-select v-model="form.cause" placeholder="请选择案由"  clearable>
+              <el-option
+                v-for="dict in dict.type.cause"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="查扣日期" prop="detainDate">
             <el-date-picker clearable
@@ -349,20 +356,32 @@
             <el-input v-model="form.remark" placeholder="请输入备注" />
           </el-form-item>
         </el-form>
-      </div>
-<!--    入库基本信息  -->
-      <div style="align-content: center">
-        <el-button type="primary" @click="putBaseInfoSubmit" v-if="buzhou!=3" plain><span >下一步</span></el-button>
-        <el-button  type="warning" @click="stepSubmit" v-if="buzhou<3&&buzhou>1" plain><span >上一步</span></el-button>
-        <el-button  type="warning" @click="delPutBaseInfo" v-if="buzhou<3&&buzhou>1" plain><span >取消</span></el-button>
-        <el-button  type="success" @click=" submitForm" v-if="buzhou==3" plain><span>完成</span></el-button>
+        <div v-if="this.buzhou==3">
+          <el-upload
+            class="upload-demo"
+          action="none"
+          multiple
+          accept=".h5ad"
+          :file-list="formOptions.data.addFileList"
+          :auto-upload="false"
+          >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
+        </div>
+        <div style="width: 100%; align-content: center" >
+          <el-button type="primary" @click="putBaseInfoSubmit" v-if="buzhou!=3" plain><span >下一步</span></el-button>
+          <el-button  type="warning" @click="stepSubmit" v-if="buzhou<=3&&buzhou>1" plain><span >上一步</span></el-button>
+          <el-button  type="warning" @click="delPutBaseInfo"  plain><span >取消</span></el-button>
+          <el-button  type="success" @click="submit" v-if="buzhou==3" plain><span>完成</span></el-button>
+        </div>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { listPutTemporary, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary } from "@/api/wmPut/putTemporary";
+import { listPutTemporary, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary,verifyWmPutCoded } from "@/api/wmPut/putTemporary";
 import { listPutInfo, getPutInfo, addPutInfo, updatePutInfo,delPutInfo } from "@/api/wmPut/putInfo";
 import { listWhBitInfo, getWhBitInfo,listWhBitAll} from "@/api/base/whBitInfo";
 
@@ -370,9 +389,31 @@ export default {
   name: "PutTemporary",
   dicts: ['cause','cause_type','invoices_status'],
   data() {
+    let wmPutCodedVerify=(rule, value, callback)=>{
+      let id = this.putBaseForm.id;
+      if(value){
+        let flag=/^([0-9]*)$/
+        if(!flag.test(value)){
+          callback(new Error('请输入数字！'))
+        }
+        console.log(value+"1232323")
+        verifyWmPutCoded({wmPutCoded:parseInt(value),id:id}).then(res=>{
+          this.verifyWmPutInfoList=res.data
+          if(this.verifyWmPutInfoList.length>0){
+            this.verifyWmPutInfoList=[];
+            callback(new Error('该仓库编号已存在'))
+          }else{
+            callback()
+          }
+        })
+      }else{
+        callback()
+      }
+    }
     return {
       //库位集合
       whBitInfoList:[],
+      verifyWmPutInfoList:[],
       // 按钮loading
       buttonLoading: false,
       // 遮罩层
@@ -416,7 +457,8 @@ export default {
       //基础信息校验
       putBaseRules: {
         wmPutCoded: [
-          { required: true, message: "入库单号不能为空", trigger: "blur" }
+          { required: true, message: "入库单号不能为空", trigger: "blur" },
+          { validator:wmPutCodedVerify, trigger: "blur"}
         ],
         certificateCoded: [
           { required: true, message: "文书编号不能为空", trigger: "blur" }
@@ -463,15 +505,15 @@ export default {
         detainDate: [
           { required: true, message: "查扣日期不能为空", trigger: "blur" }
         ],
-        detainDeptName: [
+/*        detainDeptName: [
           { required: true, message: "扣查部门不能为空", trigger: "blur" }
-        ],
-        detainDept: [
+        ],*/
+/*        detainDept: [
           { required: true, message: "扣查部门id不能为空", trigger: "blur" }
-        ],
-        goodsCoded: [
+        ],*/
+   /*     goodsCoded: [
           { required: true, message: "商品编码不能为空", trigger: "blur" }
-        ],
+        ],*/
         putNumber: [
           { required: true, message: "入库条数不能为空", trigger: "blur" }
         ],
@@ -524,11 +566,21 @@ export default {
     this.getList();
   },
   methods: {
+    submit(){
+      this.open=false;
+    },
     /*取消*/
     delPutBaseInfo(){
-      delPutInfo(this.form.wmPutId).then(res=>{
-        this.$modal.msgSuccess("删除成功");
-      })
+      if(this.form.wmPutId!=null&& this.form.wmPutId!=undefined ){
+        delPutInfo(parseInt(this.form.wmPutId));
+          this.$modal.msgSuccess("删除成功");
+
+      }
+    if(this.form.id!=null && this.form.id!=undefined){
+      delPutTemporary(parseInt(this.form.id));
+    }
+    this.open=false;
+    this.buzhou=1;
     },
     /*改变仓库 库区信息 */
     whouseAreaCode(event){
@@ -558,35 +610,60 @@ export default {
       this.whBitInfoList=res.data;
       })
     },
+    getFormData(){
+  // 要用FormData来承载文件！这是重点
+  const formData = new FormData();
+  // 向formData中添加数据
+  formData.append('wmPutCoded', String(this.putBaseForm.wmPutCoded));
+  formData.append('projectId', String(this.putBaseForm.certificateCoded));
+  formData.append('taskName', formOptions.data.taskName);
+  formData.append('taskMessage', formOptions.data.taskMessage);
+  formData.append('taskType', formOptions.data.taskType);
+  formData.append('creationMethod', formOptions.data.creationMethod);
+
+  // formData可以添加同名数据，在获取的时候可根据名称获得所有key为该名称的数据。
+  formOptions.data.addFileList.forEach(v => {
+    formData.append('addFiles', v.raw)
+  })
+  return formData;
+},
     /*添加入库基本信息*/
     putBaseInfoSubmit(){
-      this.$refs["putBaseForm"].validate(valid => {
-        if (valid) {
-          this.buttonLoading = true;
-          if (this.putBaseForm.id != null) {
-            updatePutInfo(this.putBaseForm).then(response => {
-              this.$modal.msgSuccess("修改成功");
-             // this.open = false;
-              this.getList();
-            }).finally(() => {
-              this.buttonLoading = false;
-              this.whBitInfo={};
-              this.buzhou=2;
-            });
-          } else {
-            addPutInfo(this.putBaseForm).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.form.wmPutId = response.msg;
-           //   this.open = false;
-              this.getList();
-            }).finally(() => {
-              this.buttonLoading = false;
-              this.buzhou=2;
-              this.whBitInfo={};
-            });
+      if(this.buzhou==1){
+        this.$refs["putBaseForm"].validate(valid => {
+          if (valid) {
+            this.buttonLoading = true;
+            if (this.putBaseForm.id != null) {
+              updatePutInfo(this.putBaseForm).then(response => {
+                this.$modal.msgSuccess("修改成功");
+                // this.open = false;
+                this.getList();
+              }).finally(() => {
+                this.buttonLoading = false;
+                this.whBitInfo={};
+                this.buzhou=2;
+              });
+            } else {
+              addPutInfo(this.putBaseForm).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                let id= parseInt(response.data)
+                this.form.wmPutId = id ;
+                this.putBaseForm.id= id;
+                console.log(response.data+"ididididididi")
+                //   this.open = false;
+                this.getList();
+              }).finally(() => {
+                this.buttonLoading = false;
+                this.buzhou=2;
+                this.whBitInfo={};
+              });
+            }
           }
-        }
-      });
+        });
+      } else if (this.buzhou==2){
+        this.submitForm();
+      }
+
     },
     /*返回上一步*/
     stepSubmit(){
@@ -696,7 +773,6 @@ export default {
           if (this.form.id != null) {
             updatePutTemporary(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
-              this.open = false;
               this.getList();
             }).finally(() => {
               this.buttonLoading = false;
@@ -706,7 +782,6 @@ export default {
           } else {
             addPutTemporary(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
-              this.open = false;
               this.getList();
             }).finally(() => {
               this.buttonLoading = false;

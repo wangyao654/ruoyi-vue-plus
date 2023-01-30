@@ -74,6 +74,7 @@ public class WmPutInfo extends BaseEntity {
     /**
      * 附件
      */
-    private File enclosure;
+    private byte[] enclosure;
+    //private File enclosure;
 
 }

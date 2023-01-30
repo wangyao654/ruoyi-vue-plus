@@ -1,6 +1,10 @@
 package com.ruoyi.wmPut.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.ruoyi.base.domain.BsWarehouseInfo;
+import com.ruoyi.base.domain.bo.BsWhAreaInfoBo;
+import com.ruoyi.base.domain.vo.BsWarehouseInfoVo;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -126,5 +130,14 @@ public class WmPutInfoServiceImpl implements IWmPutInfoService {
             return add.getId().intValue();
         }
         return 0;
+    }
+
+    @Override
+    public R verifyWmPutCoded(WmPutInfoBo bo) {
+        LambdaQueryWrapper<WmPutInfo> lqw = Wrappers.lambdaQuery();
+        lqw.ne(bo.getId() != null&&bo.getId() != 0  , WmPutInfo::getId, bo.getId());
+        lqw.eq(StringUtils.isNotBlank(bo.getWmPutCoded()), WmPutInfo::getWmPutCoded, bo.getWmPutCoded());
+        List<WmPutInfoVo> WmPutInfoVos = this.baseMapper.selectVoList(lqw);
+        return R.ok(WmPutInfoVos);
     }
 }

@@ -97,7 +97,8 @@ public class WmPutInfoVo extends BaseEntity {
      * 附件
      */
     @ExcelProperty(value = "附件")
-    private String enclosure;
+    //private String enclosure;
+    private byte[] enclosure;
 
 
 }

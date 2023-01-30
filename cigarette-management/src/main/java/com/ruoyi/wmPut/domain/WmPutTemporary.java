@@ -18,9 +18,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2023-01-09
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("wm_put_temporary")
-public class WmPutTemporary extends WmPutInfo {
+public class WmPutTemporary  {
 
     private static final long serialVersionUID=1L;
 

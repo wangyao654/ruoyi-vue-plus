@@ -42,3 +42,11 @@ export function delPutTemporary(id) {
     method: 'delete'
   })
 }
+// 校验入库编号
+export function verifyWmPutCoded(query) {
+  return request({
+    url: '/wmPut/putInfo/verifyWmPutCoded',
+    method: 'get',
+    params: query
+  })
+}

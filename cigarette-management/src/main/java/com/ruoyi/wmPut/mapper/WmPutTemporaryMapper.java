@@ -16,4 +16,6 @@ import org.apache.ibatis.annotations.Param;
 public interface WmPutTemporaryMapper extends BaseMapperPlus<WmPutTemporaryMapper, WmPutTemporary, WmPutTemporaryVo> {
 
     Page<WmPutTemporaryVo> selectPageList(@Param("page") Page<WmPutTemporaryVo> build,@Param("bo") WmPutTemporaryBo bo);
+
+    int insertWmPutTemporary(@Param("bo")WmPutTemporary add);
 }
