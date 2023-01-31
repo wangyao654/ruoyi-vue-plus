@@ -25,7 +25,7 @@ public class BsWhAreaInfoVo extends BaseEntity {
     /**
      * 主键
      */
-    @ExcelProperty(value = "主键")
+    //@ExcelProperty(value = "主键")
     private Long id;
 
     /**

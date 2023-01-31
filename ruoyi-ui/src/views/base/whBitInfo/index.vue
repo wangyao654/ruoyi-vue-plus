@@ -739,9 +739,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('whBitInfo/whBitInfo/export', {
+      this.download('base/whBitInfo/export', {
         ...this.queryParams
-      }, `whBitInfo_${new Date().getTime()}.xlsx`)
+      }, `库位信息_${new Date().getTime()}.xlsx`)
     }
   }
 };

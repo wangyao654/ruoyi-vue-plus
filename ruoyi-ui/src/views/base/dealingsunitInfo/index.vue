@@ -487,9 +487,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('dealingsunitInfo/dealingsunitInfo/export', {
+      this.download('base/dealingsunitInfo/export', {
         ...this.queryParams
-      }, `dealingsunitInfo_${new Date().getTime()}.xlsx`)
+      }, `单位信息_${new Date().getTime()}.xlsx`)
     }
   }
 };

@@ -5,11 +5,13 @@ import com.ruoyi.base.domain.BsDealingsunitInfo;
 import com.ruoyi.base.domain.BsWarehouseInfo;
 import com.ruoyi.base.domain.bo.BsWarehouseInfoBo;
 import com.ruoyi.base.domain.vo.BsWarehouseInfoVo;
+import com.ruoyi.base.mapper.BsDealingsunitInfoMapper;
 import com.ruoyi.base.mapper.BsWarehouseInfoMapper;
 import com.ruoyi.base.mapper.BsWhAreaInfoMapper;
 import com.ruoyi.base.mapper.BsWhBitInfoMapper;
 import com.ruoyi.base.service.IBsWarehouseInfoService;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
@@ -20,10 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 仓库管理Service业务层处理
@@ -38,6 +38,7 @@ public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
     private final BsWarehouseInfoMapper baseMapper;
     private final BsWhAreaInfoMapper bsWhAreaInfoMapper;
     private final BsWhBitInfoMapper bsWhBitInfoMapper;
+    private final BsDealingsunitInfoMapper bsDealingsunitInfoMapper;
 
     /**
      * 查询仓库管理
@@ -54,6 +55,11 @@ public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
     public TableDataInfo<BsWarehouseInfoVo> queryPageList(BsWarehouseInfoBo bo, PageQuery pageQuery) {
         LambdaQueryWrapper<BsWarehouseInfo> lqw = buildQueryWrapper(bo);
         Page<BsWarehouseInfoVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+        List<BsWarehouseInfoVo> records = result.getRecords();
+        List<BsDealingsunitInfo> bsDealingsunitInfos = bsDealingsunitInfoMapper.selectList();
+        result.setRecords(records.stream().peek(p->{
+            voFilter(bsDealingsunitInfos,p);
+        }).collect(Collectors.toList()));
         return TableDataInfo.build(result);
     }
 
@@ -63,7 +69,19 @@ public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
     @Override
     public List<BsWarehouseInfoVo> queryList(BsWarehouseInfoBo bo) {
         LambdaQueryWrapper<BsWarehouseInfo> lqw = buildQueryWrapper(bo);
-        return baseMapper.selectVoList(lqw);
+//        List<BsWarehouseInfoVo> listVo = baseMapper.selectVo(bo);
+        //需要导出的数据
+        List<BsWarehouseInfoVo> list = baseMapper.selectVoList(lqw);
+        List<BsWarehouseInfoVo> listVo=new ArrayList<>();
+        List<BsDealingsunitInfo> bsDealingsunitInfos = bsDealingsunitInfoMapper.selectList();
+        listVo=  list.stream().peek(p->{
+            voFilter(bsDealingsunitInfos,p);
+        }).collect(Collectors.toList());
+        return listVo;
+    }
+    private void  voFilter( List<BsDealingsunitInfo> bsDealingsunitInfos,BsWarehouseInfoVo p){
+        Optional<BsDealingsunitInfo> first =bsDealingsunitInfos.stream().filter(f->f.getUnitCoded().equals(String.valueOf(p.getWarehouseOrganization()))).findFirst();
+        first.ifPresent(f->p.setWarehouseOrganizationName(f.getUnitName()));
     }
 
     private LambdaQueryWrapper<BsWarehouseInfo> buildQueryWrapper(BsWarehouseInfoBo bo) {

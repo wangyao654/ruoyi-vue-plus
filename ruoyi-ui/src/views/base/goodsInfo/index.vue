@@ -747,9 +747,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/goodsInfo/export', {
+      this.download('base/goodsInfo/export', {
         ...this.queryParams
-      }, `goodsInfo_${new Date().getTime()}.xlsx`)
+      }, `商品信息_${new Date().getTime()}.xlsx`)
     }
   }
 };

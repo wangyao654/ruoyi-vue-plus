@@ -31,5 +31,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and warehouse_enabled = '0'
         </where>
     </select>
-
+    <select id="selectVo" resultType="com.ruoyi.base.domain.vo.BsWarehouseInfoVo">
+      select * from bs_warehouse_info
+        <where>
+            <if test="bo.warehouseCoded!=null and bo.warehouseCoded!=''">
+                warehouse_coded =#{bo.warehouseCoded}
+            </if>
+            <if test="bo.warehouseName!=null and bo.warehouseName!=''">
+              and  warehouse_name like concat('%',#{bo.warehouseName},'%')
+            </if>
+            <if test="bo.warehouseType!=null and bo.warehouseType!=''">
+                and warehouse_type =#{bo.warehouseType}
+            </if>
+            <if test="bo.warehouseOrganization!=null and bo.warehouseOrganization!=''">
+                and warehouse_organization =#{bo.warehouseOrganization}
+            </if>
+            <choose>
+                <when test="bo.startTime!=null and bo.endTime!=null ">
+                    and  update_time between #{bo.startTime} and #{bo.endTime}
+                </when>
+                <when test="bo.startTime!=null">
+                    update_time &gt;= #{bo.startTime}
+                </when>
+                <when test="bo.endTime!=null">
+                    update_time &lt;= #{bo.endTime}
+                </when>
+            </choose>
+        </where>
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.domain;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,12 +46,14 @@ public class BaseEntity implements Serializable {
      * 更新者
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @ExcelProperty(value = "最后操作者")
     private String updateBy;
 
     /**
      * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @ExcelProperty(value = "最后操作时间")
     private Date updateTime;
 
     /**

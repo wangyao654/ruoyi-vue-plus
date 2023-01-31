@@ -101,7 +101,7 @@
           <dict-tag :options="dict.type.warehouse_type" :value="scope.row.warehouseType"/>
         </template>
       </el-table-column>
-      <el-table-column label="仓库归属组织" align="center" prop="warehouseOrganization" />
+      <el-table-column label="仓库归属组织" align="center" prop="warehouseOrganizationName" />
       <el-table-column label="仓库地址" align="center" prop="warehouseAddress" />
       <el-table-column label="仓库负责人" align="center" prop="warehousePrincipal" />
       <el-table-column label="启用状态" align="center" prop="warehouseEnabled" >
@@ -174,9 +174,9 @@
           <el-select v-model="form.warehouseOrganization" placeholder="请选择仓库归属组织" clearable style="width: 100%">
             <el-option
               v-for="dict in this.unitList"
-              :key="dict.unitCode"
+              :key="dict.unitCoded"
               :label="dict.unitName"
-              :value="dict.unitCode"
+              :value="dict.unitCoded"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -476,9 +476,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/warehouseInfo/export', {
+      this.download('base/warehouseInfo/export', {
         ...this.queryParams
-      }, `warehouseInfo_${new Date().getTime()}.xlsx`)
+      }, `仓库信息_${new Date().getTime()}.xlsx`)
     }
   }
 };

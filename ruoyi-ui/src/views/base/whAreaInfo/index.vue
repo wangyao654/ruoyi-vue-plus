@@ -510,7 +510,7 @@ export default {
     handleExport() {
       this.download('base/whAreaInfo/export', {
         ...this.queryParams
-      }, `whAreaInfo_${new Date().getTime()}.xlsx`)
+      }, `库区信息_${new Date().getTime()}.xlsx`)
     }
   }
 };
