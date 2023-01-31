@@ -1,15 +1,26 @@
 package com.ruoyi.base.controller.base;
 
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.ruoyi.base.domain.bo.BsBrandManageBo;
 import com.ruoyi.base.domain.vo.BsBrandManageVo;
 import com.ruoyi.base.service.IBsBrandManageService;
+import com.ruoyi.common.businessUtils.ExcelConst;
+import com.ruoyi.common.businessUtils.ExcelUtilX;
+import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.excel.ExcelResult;
+import com.ruoyi.system.service.ISysDictDataService;
 import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.*;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import com.ruoyi.common.annotation.RepeatSubmit;
@@ -22,6 +33,7 @@ import com.ruoyi.common.core.validate.EditGroup;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 品牌管理/品牌详细信息
@@ -36,6 +48,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class BsBrandManageController extends BaseController {
 
     private final IBsBrandManageService iBsBrandManageService;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询品牌管理/品牌详细信息列表
@@ -118,4 +132,5 @@ public class BsBrandManageController extends BaseController {
         String BrandCoded = iBsBrandManageService.createBrandCode(bo);
         return R.ok(BrandCoded);
     }
+
 }

@@ -46,4 +46,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and listing_status='0'
         </where>
     </select>
+    <delete id="deleteByCoded">
+        delete from bs_goods_info where goods_coded=#{goodsCoded}
+    </delete>
+    <insert id="insertList">
+        insert into bs_brand_manage () values ();
+    </insert>
 </mapper>

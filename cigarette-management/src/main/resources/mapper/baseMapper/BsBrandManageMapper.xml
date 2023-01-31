@@ -35,4 +35,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       update  bs_goods_info set brand_name= #{bo.brandName}
         where brand_coded=#{bo.brandCoded}
     </update>
+
 </mapper>

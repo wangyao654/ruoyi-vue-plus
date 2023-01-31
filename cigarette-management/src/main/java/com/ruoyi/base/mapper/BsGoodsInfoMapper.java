@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品信息Mapper接口
@@ -20,4 +21,7 @@ public interface BsGoodsInfoMapper extends BaseMapperPlus<BsGoodsInfoMapper, BsG
     Long selectCoded();
 
     List<BsGoodsInfo> selectListByIds(@Param("ids") Collection<Long> ids);
+    void insertList(@Param("list") List<Map<String, String>> list);
+
+    int deleteByCoded(@Param("goodsCoded") String goodsCoded);
 }

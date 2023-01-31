@@ -1,16 +1,21 @@
 package com.ruoyi.base.controller.base;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.ruoyi.base.domain.bo.BsBrandManageBo;
 import com.ruoyi.base.service.IBsGoodsInfoService;
+import com.ruoyi.common.businessUtils.ExcelConst;
+import com.ruoyi.common.businessUtils.ExcelUtilX;
 import com.ruoyi.system.domain.bo.BsGoodsInfoBo;
 import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.*;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import com.ruoyi.common.annotation.RepeatSubmit;
@@ -25,6 +30,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.base.domain.vo.BsGoodsInfoVo;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 商品信息
@@ -120,5 +126,20 @@ public class BsGoodsInfoController extends BaseController {
     public R createGoodsCoded() {
         String GoodsCoded = iBsGoodsInfoService.createGoodsCoded();
         return R.ok(GoodsCoded);
+    }
+    /*
+    * 下载模板
+    * */
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response) throws Exception {
+        String fileName = URLEncoder.encode("品牌信息模板", "UTF-8");
+        Map<String, List<String>> dicSelectList = iBsGoodsInfoService.queryDiction();
+        XSSFWorkbook xssfWorkbook = ExcelUtilX.dynamicTemplate("品牌信息", ExcelConst.goodsTitle, dicSelectList, null);
+        ExcelUtilX.exportExcel(fileName, xssfWorkbook, response);
+    }
+    @PostMapping("/importData")
+    public R<Map<String, Object>> importData(@RequestPart("file") MultipartFile file, boolean updateSupport) throws Exception {
+        Map<String, Object> map = iBsGoodsInfoService.importData(file);
+        return R.ok(map);
     }
 }

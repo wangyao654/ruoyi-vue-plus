@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.mapper.BaseMapperPlus;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface SysDictDataMapper extends BaseMapperPlus<SysDictDataMapper, Sys
                 .eq(SysDictData::getDictType, dictType)
                 .orderByAsc(SysDictData::getDictSort));
     }
+
+    List<SysDictData> selectDictDataByTypeList(@Param("dicTypeList") List<String> dictType);
 }

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 品牌管理/品牌详细信息Mapper接口
@@ -22,4 +23,5 @@ public interface BsBrandManageMapper extends BaseMapperPlus<BsBrandManageMapper,
     List<BsBrandManage> selectListByIds(@Param("ids") Collection<Long> ids);
 
     int updateBrandName(@Param("bo")BsBrandManageBo bo);
+
 }

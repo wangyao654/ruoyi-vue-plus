@@ -1,29 +1,33 @@
 package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.ruoyi.base.domain.BsBrandManage;
 import com.ruoyi.base.domain.BsGoodsInfo;
 import com.ruoyi.base.domain.vo.BsGoodsInfoVo;
 import com.ruoyi.base.mapper.BsGoodsInfoMapper;
 import com.ruoyi.base.service.IBsGoodsInfoService;
+import com.ruoyi.common.businessUtils.ExcelConst;
 import com.ruoyi.common.businessUtils.businessUtils;
+import com.ruoyi.base.utils.goodsImportUtil;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.helper.LoginHelper;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.system.service.ISysDictDataService;
+import com.ruoyi.system.service.ISysDictTypeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.domain.bo.BsGoodsInfoBo;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 商品信息Service业务层处理
@@ -36,6 +40,10 @@ import java.util.Objects;
 public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
 
     private final BsGoodsInfoMapper baseMapper;
+    @Autowired
+    private ISysDictDataService dictDataService;
+    @Autowired
+    private ISysDictTypeService sysDictTypeService;
 
     /**
      * 查询商品信息
@@ -144,6 +152,46 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
         List<BsGoodsInfoVo> bsGoodsInfoVos = this.baseMapper.selectVoList(lqw);
         return R.ok(bsGoodsInfoVos);
     }
+
+    @Override
+    public Map<String, List<String>> queryDiction() {
+        //查询字典
+        List<SysDictData> list= dictDataService.selectDictDataByTypeList(ExcelConst.dictGoodsType);
+        Map<String, List<SysDictData>> map = list.stream().collect(Collectors.groupingBy(SysDictData::getDictType));
+        Iterator<Map.Entry<String, List<SysDictData>>> iterator = map.entrySet().iterator();
+        Map<String,List<String>> listMap = new HashMap<>();
+        while (iterator.hasNext()){
+            Map.Entry<String, List<SysDictData>> next = iterator.next();
+            List<SysDictData> value = next.getValue();
+            List<String> collect = value.stream().map(SysDictData::getDictLabel).collect(Collectors.toList());
+            listMap.put(next.getKey(),collect);
+        }
+        List<String> dictBrandType = ExcelConst.dictGoodsType;
+        List<String> dictBrandTypeName = ExcelConst.dictGoodsTypeName;
+        Map<String,List<String>> mapBrand =  new HashMap<>();
+        for (int i = 0; i < dictBrandType.size(); i++) {
+            mapBrand.put(dictBrandTypeName.get(i),listMap.get(dictBrandType.get(i)));
+        }
+        return mapBrand;
+    }
+
+    /*
+     * 导入校验
+     * */
+    @Override
+    public Map<String, Object> importData(MultipartFile file) throws Exception {
+        Map<String, Object> map = goodsImportUtil.importTemp( file, ExcelConst.goodsField,ExcelConst.goodsTitle,sysDictTypeService,false,baseMapper);
+        List<Map<String,String>> list= (List<Map<String, String>>) map.get("successData");
+        Long deptId = LoginHelper.getDeptId();
+        if(!CollectionUtils.isEmpty(list)){
+            //list = list.stream().peek(p->p.put("deptId",deptId+"")).collect(Collectors.toList());
+            //   baseMapper.insertList(list);
+            baseMapper.insertList(list);
+        }
+        return map;
+    }
+
+
 
     @Override
     public String createGoodsCoded() {

@@ -127,4 +127,9 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
         throw new ServiceException("操作失败");
     }
 
+    @Override
+    public List<SysDictData> selectDictDataByTypeList(List<String> dictType) {
+        return baseMapper.selectDictDataByTypeList(dictType);
+    }
+
 }

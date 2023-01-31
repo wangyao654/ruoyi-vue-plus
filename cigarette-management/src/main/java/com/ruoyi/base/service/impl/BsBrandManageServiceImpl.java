@@ -2,7 +2,6 @@ package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.ruoyi.base.domain.BsBrandManage;
-import com.ruoyi.base.domain.BsWarehouseInfo;
 import com.ruoyi.base.domain.bo.BsBrandManageBo;
 import com.ruoyi.base.domain.vo.BsBrandManageVo;
 import com.ruoyi.base.mapper.BsBrandManageMapper;
@@ -19,10 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 品牌管理/品牌详细信息Service业务层处理
@@ -35,6 +31,7 @@ import java.util.Objects;
 public class BsBrandManageServiceImpl implements IBsBrandManageService {
 
     private final BsBrandManageMapper baseMapper;
+
 
     /**
      * 查询品牌管理/品牌详细信息
@@ -153,6 +150,8 @@ public class BsBrandManageServiceImpl implements IBsBrandManageService {
         }
         return coded.toString();
     }
+
+
 /*    public int getCount(Long id){
         int count=1;
         while (id/10>0){

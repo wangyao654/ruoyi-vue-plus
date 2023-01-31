@@ -19,5 +19,16 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
-
-</mapper> 
+    <select id="selectDictDataByTypeList" resultMap="SysDictDataResult">
+        select * from sys_dict_data
+        <where>
+            status='0'
+            <if test="dicTypeList!=null and dicTypeList.size()>0">
+                and dict_type in
+                <foreach collection="dicTypeList" item="dictType" index="index" open="(" separator="," close=")">
+                    #{dictType}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

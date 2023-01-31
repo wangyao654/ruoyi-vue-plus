@@ -94,6 +94,7 @@
           v-hasPermi="['system:brandManage:export']"
         >导出</el-button>
       </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -149,6 +150,7 @@
       @pagination="getList"
     />
 
+
     <!-- 添加或修改品牌管理/品牌详细信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
@@ -189,6 +191,7 @@
 <script>
 import { listBrandManage, getBrandManage, delBrandManage, addBrandManage, updateBrandManage,verifyBrandCode,createBrandCoded } from "@/api/base/brandManage";
 import { listGoodsInfo, getGoodsInfo } from "@/api/base/goodsInfo";
+
 export default {
   name: "BrandManage",
   dicts: ['sys_normal_disable'],
@@ -449,12 +452,6 @@ export default {
         this.loading = false;
       });
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('base/brandManage/export', {
-        ...this.queryParams
-      }, `品牌信息_${new Date().getTime()}.xlsx`)
-    }
   }
 };
 </script>

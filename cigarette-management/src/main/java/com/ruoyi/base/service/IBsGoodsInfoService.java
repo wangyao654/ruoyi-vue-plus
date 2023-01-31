@@ -5,9 +5,11 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.bo.BsGoodsInfoBo;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品信息Service接口
@@ -50,4 +52,10 @@ public interface IBsGoodsInfoService {
     R verifyGoodsCoded(BsGoodsInfoBo bo);
 
     String createGoodsCoded();
+    /*
+     * 查询字典
+     * */
+    Map<String, List<String>> queryDiction();
+
+    Map<String, Object> importData(MultipartFile file) throws Exception;
 }

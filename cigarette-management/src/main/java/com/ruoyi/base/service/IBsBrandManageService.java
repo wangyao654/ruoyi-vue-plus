@@ -5,9 +5,11 @@ import com.ruoyi.base.domain.vo.BsBrandManageVo;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 品牌管理/品牌详细信息Service接口
@@ -50,4 +52,5 @@ public interface IBsBrandManageService {
     List<BsBrandManageVo> verifyBrandCode(BsBrandManageBo bo);
 
     String createBrandCode(BsBrandManageBo bo);
+
 }
