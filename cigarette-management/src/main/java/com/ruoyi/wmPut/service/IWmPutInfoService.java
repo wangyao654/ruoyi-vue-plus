@@ -51,4 +51,8 @@ public interface IWmPutInfoService {
     int insertGetId(WmPutInfoBo bo);
 
     R verifyWmPutCoded(WmPutInfoBo bo);
+
+    R createWmPutCoded(String type);
+
+    R getKeeperUser(String type);
 }

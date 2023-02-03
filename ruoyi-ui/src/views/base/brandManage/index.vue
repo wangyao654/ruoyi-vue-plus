@@ -452,6 +452,12 @@ export default {
         this.loading = false;
       });
     },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('base/brandManage/export', {
+        ...this.queryParams
+      }, `品牌信息_${new Date().getTime()}.xlsx`)
+    }
   }
 };
 </script>

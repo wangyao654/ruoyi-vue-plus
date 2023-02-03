@@ -68,7 +68,7 @@ public class WmPutInfoBo extends BaseEntity {
      * 入库数（条）
      */
 //    @NotNull(message = "入库数（条）不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long whPutNumber;
+    private Double whPutNumber;
 
     /**
      * 存放库位编码

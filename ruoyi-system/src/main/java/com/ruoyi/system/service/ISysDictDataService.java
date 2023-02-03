@@ -65,4 +65,6 @@ public interface ISysDictDataService {
     List<SysDictData> updateDictData(SysDictData dictData);
 
     List<SysDictData> selectDictDataByTypeList(List<String> dictType);
+
+    List<SysDictData> selectDictDataByType(String dictType);
 }

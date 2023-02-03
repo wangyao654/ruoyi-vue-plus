@@ -109,6 +109,13 @@ public class WmPutInfoController extends BaseController {
         return toAjax(iWmPutInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
     }
     /*
+    * 自动生成入库编号 zr-暂存 dr-代管 fmr-罚没 cjr-抽检
+    * */
+    @GetMapping("/createWmPutCoded")
+    public R createWmPutCoded(@RequestParam("type")String type) {
+        return iWmPutInfoService.createWmPutCoded(type);
+    }
+    /*
      * 校验入库编号
      * */
     @GetMapping("/verifyWmPutCoded")
@@ -125,4 +132,12 @@ public class WmPutInfoController extends BaseController {
         wmPutInfoBo.setEnclosure(file.getBytes());
         return toAjax(iWmPutInfoService.updateByBo(wmPutInfoBo));
     }
+/*
+* 查询职位
+* */
+    @GetMapping("/getKeeperUser")
+    public R getKeeperUser() {
+        return iWmPutInfoService.getKeeperUser("position");
+    }
+
 }

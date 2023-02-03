@@ -142,4 +142,9 @@ public class BsGoodsInfoController extends BaseController {
         Map<String, Object> map = iBsGoodsInfoService.importData(file);
         return R.ok(map);
     }
+    /**/
+    @GetMapping("/selectByBarcode")
+    public R selectByBarcode(@RequestParam("barcode")String barcode){
+        return iBsGoodsInfoService.selectBybarcode(barcode);
+    }
 }

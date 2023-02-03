@@ -132,4 +132,9 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
         return baseMapper.selectDictDataByTypeList(dictType);
     }
 
+    @Override
+    public List<SysDictData> selectDictDataByType(String dictType) {
+        return baseMapper.selectDictDataByType(dictType);
+    }
+
 }

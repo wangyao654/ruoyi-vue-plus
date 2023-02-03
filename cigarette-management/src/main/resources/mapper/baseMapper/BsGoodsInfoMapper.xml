@@ -50,6 +50,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from bs_goods_info where goods_coded=#{goodsCoded}
     </delete>
     <insert id="insertList">
-        insert into bs_brand_manage () values ();
+     insert into bs_goods_info (goods_coded, goods_name,
+      brand_name, brand_coded, small_box_barcode,
+      barbox_barcode, goods_type, goods_specification,
+      measure_unit, single_barbox_number, small_box_number,
+      single_box_price, barbox_price, barbox_wholesale_prices,
+      packaging_forms, listing_status, tar_content,
+      smoke_nicotine, monoxide_carbon, create_time,
+      update_by, update_time, remark,
+      create_by)
+    values
+        <foreach collection="list" index="index" item="map" separator=",">
+            ( #{map.goodsCoded}, #{map.goodsName},
+            #{map.brandName}, #{map.brandCoded}, #{map.smallBoxBarcode},
+            #{map.barboxBarcode}, #{map.goodsType}, #{map.goodsSpecification},
+            #{map.measureUnit}, #{map.singleBarboxNumber}, #{map.smallBoxNumber},
+            #{map.singleBoxPrice}, #{map.barboxPrice}, #{map.barboxWholesalePrices},
+            #{map.packagingForms}, #{map.listingStatus}, #{map.tarContent},
+            #{map.smokeNicotine}, #{map.monoxideCarbon}, #{map.createTime},
+            #{map.updateBy}, #{map.updateTime}, #{map.remark},
+            #{map.createBy})
+        </foreach>
     </insert>
 </mapper>

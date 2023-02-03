@@ -58,4 +58,6 @@ public interface IBsGoodsInfoService {
     Map<String, List<String>> queryDiction();
 
     Map<String, Object> importData(MultipartFile file) throws Exception;
+
+    R selectBybarcode(String barcode);
 }

@@ -134,6 +134,15 @@ public class BsBrandManageServiceImpl implements IBsBrandManageService {
 
         return baseMapper.selectVoList(queryWrapper);
     }
+  //根据名精确查询
+  public List<BsBrandManage> selectListByBrandName(BsBrandManageBo bo) {
+      LambdaQueryWrapper<BsBrandManage> lqw = Wrappers.lambdaQuery();
+      lqw.like(StringUtils.isNotBlank(bo.getBrandName()), BsBrandManage::getBrandName, bo.getBrandName());
+      lqw.eq(StringUtils.isNotBlank(bo.getBrandEnabled()), BsBrandManage::getBrandEnabled, bo.getBrandEnabled());
+      List<BsBrandManage> bsBrandManages = baseMapper.selectList(lqw);
+      return bsBrandManages;
+  }
+
 
     @Override
     public String createBrandCode(BsBrandManageBo bo) {

@@ -203,46 +203,44 @@
     </el-row>
 
     <!-- 添加或修改用户配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="900px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="用户昵称" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入用户昵称" maxlength="30" />
+              <el-input v-model="form.nickName" placeholder="请输入用户昵称" maxlength="60" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="归属部门" prop="deptId">
               <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="手机号码" prop="phonenumber">
-              <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11" />
+              <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="60" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row>
+          <el-col :span="8">
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item v-if="form.userId == undefined" label="用户名称" prop="userName">
               <el-input v-model="form.userName" placeholder="请输入用户名称" maxlength="30" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item v-if="form.userId == undefined" label="用户密码" prop="password">
               <el-input v-model="form.password" placeholder="请输入用户密码" type="password" maxlength="20" show-password/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="用户性别">
               <el-select v-model="form.sex" placeholder="请选择性别">
                 <el-option
@@ -254,7 +252,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
                 <el-radio
@@ -265,9 +263,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="岗位">
               <el-select v-model="form.postIds" multiple placeholder="请选择岗位">
                 <el-option
@@ -280,6 +276,8 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="角色">
               <el-select v-model="form.roleIds" multiple placeholder="请选择角色">
@@ -289,6 +287,18 @@
                   :label="item.roleName"
                   :value="item.roleId"
                   :disabled="item.status == 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="职位">
+              <el-select v-model="form.position"  placeholder="请选择职位">
+                <el-option
+                  v-for="dict in dict.type.position"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -348,7 +358,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "User",
-  dicts: ['sys_normal_disable', 'sys_user_sex'],
+  dicts: ['sys_normal_disable', 'sys_user_sex','position'],
   components: { Treeselect },
   data() {
     return {

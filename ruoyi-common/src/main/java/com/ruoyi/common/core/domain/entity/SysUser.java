@@ -149,6 +149,13 @@ public class SysUser extends BaseEntity {
     @TableField(exist = false)
     private Long roleId;
 
+    /*
+    * 职位
+    * */
+/*    @TableField(exist = false)*/
+    private String position;
+    private List<String> positions;
+
     public SysUser(Long userId) {
         this.userId = userId;
     }

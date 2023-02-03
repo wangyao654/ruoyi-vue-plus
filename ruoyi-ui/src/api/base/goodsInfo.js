@@ -57,3 +57,11 @@ export function createGoodsCoded() {
     method: 'get'
   })
 }
+//根据商品编号查询
+export function selectByBarcode(query){
+  return request({
+    url: '/base/goodsInfo/selectBybarcode',
+    method: 'get',
+    params:query
+  })
+}

@@ -2,6 +2,8 @@ package com.ruoyi.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.ruoyi.base.domain.BsGoodsInfo;
+import com.ruoyi.base.domain.bo.BsBrandManageBo;
+import com.ruoyi.base.domain.vo.BsBrandManageVo;
 import com.ruoyi.base.domain.vo.BsGoodsInfoVo;
 import com.ruoyi.base.mapper.BsGoodsInfoMapper;
 import com.ruoyi.base.service.IBsGoodsInfoService;
@@ -19,6 +21,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysDictTypeService;
+import com.ruoyi.wmPut.domain.bo.WmPutInfoBo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,7 @@ import java.util.stream.Collectors;
 public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
 
     private final BsGoodsInfoMapper baseMapper;
+    private final BsBrandManageServiceImpl bsBrandManageService;
     @Autowired
     private ISysDictDataService dictDataService;
     @Autowired
@@ -166,12 +170,17 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
             List<String> collect = value.stream().map(SysDictData::getDictLabel).collect(Collectors.toList());
             listMap.put(next.getKey(),collect);
         }
-        List<String> dictBrandType = ExcelConst.dictGoodsType;
-        List<String> dictBrandTypeName = ExcelConst.dictGoodsTypeName;
+        List<String> dictGoodsType = ExcelConst.dictGoodsType;
+        List<String> dictGoodsTypeName = ExcelConst.dictGoodsTypeName;
         Map<String,List<String>> mapBrand =  new HashMap<>();
-        for (int i = 0; i < dictBrandType.size(); i++) {
-            mapBrand.put(dictBrandTypeName.get(i),listMap.get(dictBrandType.get(i)));
+        for (int i = 0; i < dictGoodsType.size(); i++) {
+            mapBrand.put(dictGoodsTypeName.get(i),listMap.get(dictGoodsType.get(i)));
         }
+        //查询品牌字典
+        BsBrandManageBo bsBrandManageBo = new BsBrandManageBo();
+        bsBrandManageBo.setBrandEnabled("0");
+        List<BsBrandManageVo> list1 = bsBrandManageService.queryList(bsBrandManageBo);
+        mapBrand.put("品牌名称",list1.stream().map(BsBrandManageVo::getBrandName).collect(Collectors.toList()));
         return mapBrand;
     }
 
@@ -180,19 +189,75 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
      * */
     @Override
     public Map<String, Object> importData(MultipartFile file) throws Exception {
-        Map<String, Object> map = goodsImportUtil.importTemp( file, ExcelConst.goodsField,ExcelConst.goodsTitle,sysDictTypeService,false,baseMapper);
+        Map<String, Object> map = goodsImportUtil.importTemp( file, ExcelConst.goodsField,ExcelConst.goodsTitle,sysDictTypeService,false,baseMapper,bsBrandManageService);
         List<Map<String,String>> list= (List<Map<String, String>>) map.get("successData");
         Long deptId = LoginHelper.getDeptId();
         if(!CollectionUtils.isEmpty(list)){
             //list = list.stream().peek(p->p.put("deptId",deptId+"")).collect(Collectors.toList());
             //   baseMapper.insertList(list);
+            //商品名重复
+            //baseMapper.deleteByCoded();
             baseMapper.insertList(list);
         }
         return map;
     }
 
-
-
+    @Override
+    public R selectBybarcode(String barcode) {
+        LambdaQueryWrapper<BsGoodsInfo> lqw = Wrappers.lambdaQuery();
+        lqw.eq(BsGoodsInfo::getBarboxBarcode,barcode);
+        lqw.or().eq(BsGoodsInfo::getSmallBoxBarcode,barcode);
+        List<BsGoodsInfo> bsGoodsInfos = baseMapper.selectList(lqw);
+        if(CollectionUtils.isEmpty(bsGoodsInfos)){
+            return R.fail(504,"不存在，请先维护商品数据。");
+        }
+        //返回条数
+        BsGoodsInfo bsGoodsInfo = bsGoodsInfos.get(1);
+        WmPutInfoBo wmPutInfoBo = new WmPutInfoBo();
+        //条数
+         Double sum=Double.valueOf(0);
+        int i= Integer.parseInt(bsGoodsInfo.getMeasureUnit());
+        switch (i){
+            case 1: sum= Double.valueOf(1);
+                 break;
+            case 2: verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
+                 break;
+            case 3:verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
+                 break;
+      /*      case 4:tingVerdict(sum,bsGoodsInfo);
+                break;*/
+        }
+        //品种数
+        Long variety=1L;
+        wmPutInfoBo.setWhPutNumber(sum);
+        wmPutInfoBo.setVarietyNumber(variety);
+        return R.ok(bsGoodsInfos);
+    }
+private void verdict(Double sum,String singleBarboxNumber){
+        switch (Integer.parseInt(singleBarboxNumber)){
+            case 1: sum=Double.valueOf(1/10);
+            break;
+            case 2: sum=0.2;
+            break;
+            case 3:sum=Double.valueOf(1/6);
+            break;
+            case 4:sum=0.25;
+            break;
+        }
+}
+//查询一支的条数
+private void  tingVerdict(Double sum, BsGoodsInfo bsGoodsInfo){
+       switch (Integer.parseInt(bsGoodsInfo.getSmallBoxNumber())){
+           case 1: verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
+           sum=sum/20;
+           break;
+           case 2:verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
+               sum=sum/16;
+               break;
+           case 3:verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
+               break;
+       }
+}
     @Override
     public String createGoodsCoded() {
         Long  i = baseMapper.selectCoded();
