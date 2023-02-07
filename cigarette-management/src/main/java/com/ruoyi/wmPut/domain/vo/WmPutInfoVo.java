@@ -73,6 +73,7 @@ public class WmPutInfoVo extends BaseEntity {
      */
     @ExcelProperty(value = "存放库位编码")
     private String whBitCoded;
+    private String whBitName;
 
     /**
      * 单据状态（保存未提交、提交已入库、撤销待入库）
@@ -99,6 +100,11 @@ public class WmPutInfoVo extends BaseEntity {
     @ExcelProperty(value = "附件")
     //private String enclosure;
     private byte[] enclosure;
-
+    /*
+     * 入库类型
+     * */
+    private String putType;
+    private String whAreaCoded;
+    private String whAreaName;
 
 }

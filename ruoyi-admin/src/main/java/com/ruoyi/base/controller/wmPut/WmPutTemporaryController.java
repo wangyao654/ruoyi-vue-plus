@@ -106,7 +106,14 @@ public class WmPutTemporaryController extends BaseController {
         return toAjax(iWmPutTemporaryService.deleteWithValidByIds(Arrays.asList(ids), true));
     }
     /*
-    * 上传附件
+    * 查询副表 getPutTemporaryList
     * */
+    @GetMapping("/getPutTemporaryList")
+    public TableDataInfo<WmPutTemporaryVo> getPutTemporaryList(WmPutTemporaryBo bo, PageQuery pageQuery) {
+        return iWmPutTemporaryService.getPutTemporaryList(bo, pageQuery);
+    }
+
+
+
 
 }

@@ -114,4 +114,11 @@ public class WmPutTemporaryServiceImpl implements IWmPutTemporaryService {
         }
         return baseMapper.deleteBatchIds(ids) > 0;
     }
+
+    @Override
+    public TableDataInfo<WmPutTemporaryVo> getPutTemporaryList(WmPutTemporaryBo bo, PageQuery pageQuery) {
+        LambdaQueryWrapper<WmPutTemporary> lqw = buildQueryWrapper(bo);
+        Page<WmPutTemporaryVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+        return TableDataInfo.build(result);
+    }
 }

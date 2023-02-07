@@ -50,3 +50,11 @@ export function verifyWmPutCoded(query) {
     params: query
   })
 }
+//查询副表
+export function getPutTemporaryList(query){
+  return request({
+    url: '/wmPut/putTemporary/getPutTemporaryList',
+    method: 'get',
+    params: query
+  })
+}

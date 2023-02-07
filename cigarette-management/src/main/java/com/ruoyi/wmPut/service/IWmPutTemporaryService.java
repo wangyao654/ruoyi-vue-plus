@@ -45,4 +45,6 @@ public interface IWmPutTemporaryService {
      * 校验并批量删除暂存入库信息信息
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+
+    TableDataInfo<WmPutTemporaryVo> getPutTemporaryList(WmPutTemporaryBo bo, PageQuery pageQuery);
 }

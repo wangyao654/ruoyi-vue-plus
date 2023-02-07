@@ -11,13 +11,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="goodsCoded" column="goods_coded"/>
     </resultMap>
     <select id="selectPageList" resultType="WmPutPunishConfiscateVo" >
-        select wpin.*,wpt.*,goods.goods_name as goodsName,wpt.goods_coded as goodsCoded ,goods.goods_specification as goodsSpecification
-        from wm_put_punish_confiscate wpt
-        left join wm_put_info wpin on wpin.id= wpt.wm_put_id
+        select wpin.*,wpt.*,goods.goods_name,wpt.goods_coded,goods.goods_specification,whbit.wh_bit_name,whbit.wh_area_name
+        from  wm_put_info wpin
+        left join wm_put_punish_confiscate wpt on wpin.id= wpt.wm_put_id
         left join bs_goods_info goods on goods.goods_coded=wpt.goods_coded
+        left join  bs_wh_bit_info whbit on wpt.wh_bit_coded=whbit.wh_bit_coded
         <where>
+            wpin.put_type=3
             <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
-                wpt.cigarette_type=#{bo.cigaretteType}
+              and  wpt.cigarette_type=#{bo.cigaretteType}
             </if>
             <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
              and   wpt.client like concat('%',#{bo.client},'%')

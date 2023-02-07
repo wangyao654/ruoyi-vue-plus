@@ -23,6 +23,7 @@ import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysDictTypeService;
 import com.ruoyi.wmPut.domain.bo.WmPutInfoBo;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.domain.bo.BsGoodsInfoBo;
@@ -212,8 +213,10 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
             return R.fail(504,"不存在，请先维护商品数据。");
         }
         //返回条数
-        BsGoodsInfo bsGoodsInfo = bsGoodsInfos.get(1);
+        BsGoodsInfo bsGoodsInfo = bsGoodsInfos.get(0);
         WmPutInfoBo wmPutInfoBo = new WmPutInfoBo();
+        wmPutInfoBo.setGoodsCoded(bsGoodsInfo.getGoodsCoded());
+        wmPutInfoBo.setGoodsName(bsGoodsInfo.getGoodsName());
         //条数
          Double sum=Double.valueOf(0);
         int i= Integer.parseInt(bsGoodsInfo.getMeasureUnit());
@@ -231,7 +234,7 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
         Long variety=1L;
         wmPutInfoBo.setWhPutNumber(sum);
         wmPutInfoBo.setVarietyNumber(variety);
-        return R.ok(bsGoodsInfos);
+        return R.ok(wmPutInfoBo);
     }
 private void verdict(Double sum,String singleBarboxNumber){
         switch (Integer.parseInt(singleBarboxNumber)){

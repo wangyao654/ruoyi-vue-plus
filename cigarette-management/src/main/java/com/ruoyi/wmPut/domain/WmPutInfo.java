@@ -76,5 +76,11 @@ public class WmPutInfo extends BaseEntity {
      */
     private byte[] enclosure;
     //private File enclosure;
+    /*
+     * 入库类型
+     * */
+    private String putType;
 
+    private String goodsCoded;
+    private String goodsName;
 }

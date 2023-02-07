@@ -105,4 +105,8 @@ public class WmPutPunishConfiscateController extends BaseController {
                           @PathVariable Long[] ids) {
         return toAjax(iWmPutPunishConfiscateService.deleteWithValidByIds(Arrays.asList(ids), true));
     }
+    @GetMapping("/getPunishConfiscateList")
+    public TableDataInfo<WmPutPunishConfiscateVo> getPunishConfiscateList(WmPutPunishConfiscateBo bo, PageQuery pageQuery) {
+        return iWmPutPunishConfiscateService.queryPageList(bo, pageQuery);
+    }
 }

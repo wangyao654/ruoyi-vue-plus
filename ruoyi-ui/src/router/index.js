@@ -87,7 +87,21 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
+  },
+  {
+    path: '/putInfo',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'putTemporary/:wmPutCoded',
+        component: (resolve) => require(['@/views/wmPut/putTemporary/attached'], resolve),
+        name: 'AttachedInfo',
+        meta: { title: '暂存副表信息'}
+      },
+    ]
   }
+
 ]
 
 // 动态路由，基于用户权限动态去加载
