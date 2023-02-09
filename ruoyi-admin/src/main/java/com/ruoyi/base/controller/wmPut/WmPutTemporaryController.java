@@ -47,6 +47,13 @@ public class WmPutTemporaryController extends BaseController {
     public TableDataInfo<WmPutTemporaryVo> list(WmPutTemporaryBo bo, PageQuery pageQuery) {
         return iWmPutTemporaryService.queryPageList(bo, pageQuery);
     }
+    /*
+    * 查询附表
+    * */
+    @GetMapping("/attachedList")
+    public TableDataInfo<WmPutTemporaryVo> attachedList(WmPutTemporaryBo bo, PageQuery pageQuery) {
+        return iWmPutTemporaryService.attachedList(bo, pageQuery);
+    }
 
     /**
      * 导出暂存入库信息列表

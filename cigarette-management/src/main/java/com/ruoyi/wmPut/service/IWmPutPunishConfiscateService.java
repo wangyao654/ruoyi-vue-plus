@@ -46,4 +46,6 @@ public interface IWmPutPunishConfiscateService {
      * 校验并批量删除罚没入库信息信息
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+
+    TableDataInfo<WmPutPunishConfiscateVo> getPunishConfiscateList(WmPutPunishConfiscateBo bo, PageQuery pageQuery);
 }

@@ -18,4 +18,6 @@ public interface WmPutTemporaryMapper extends BaseMapperPlus<WmPutTemporaryMappe
     Page<WmPutTemporaryVo> selectPageList(@Param("page") Page<WmPutTemporaryVo> build,@Param("bo") WmPutTemporaryBo bo);
 
     int insertWmPutTemporary(@Param("bo")WmPutTemporary add);
+
+    Page<WmPutTemporaryVo> attachedList(@Param("page") Page<WmPutTemporaryVo> build,@Param("bo") WmPutTemporaryBo bo);
 }

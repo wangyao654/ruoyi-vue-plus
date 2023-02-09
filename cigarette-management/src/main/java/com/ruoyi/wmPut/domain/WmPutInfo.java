@@ -81,6 +81,5 @@ public class WmPutInfo extends BaseEntity {
      * */
     private String putType;
 
-    private String goodsCoded;
-    private String goodsName;
+
 }

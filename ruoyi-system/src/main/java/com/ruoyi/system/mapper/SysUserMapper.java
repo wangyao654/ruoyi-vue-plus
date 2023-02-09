@@ -84,4 +84,5 @@ public interface SysUserMapper extends BaseMapperPlus<SysUserMapper, SysUser, Sy
      */
     SysUser selectUserById(Long userId);
 
+    List<SysUser> selectByUserId(@Param("userIds") List<String> list);
 }

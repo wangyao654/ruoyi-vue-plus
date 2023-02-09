@@ -484,5 +484,10 @@ public class SysUserServiceImpl implements ISysUserService {
         userPostMapper.delete(new LambdaQueryWrapper<SysUserPost>().in(SysUserPost::getUserId, ids));
         return baseMapper.deleteBatchIds(ids);
     }
-
+/*
+* 根据职位查询用户
+* */
+    public List<SysUser> selectByUserId(List<String> list) {
+        return baseMapper.selectByUserId(list);
+    }
 }

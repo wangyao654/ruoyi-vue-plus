@@ -58,3 +58,10 @@ export function getPutTemporaryList(query){
     params: query
   })
 }
+export function attachedList(query) {
+  return request({
+    url: '/wmPut/putTemporary/attachedList',
+    method: 'get',
+    params: query
+  })
+}

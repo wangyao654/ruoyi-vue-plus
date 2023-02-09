@@ -47,4 +47,6 @@ public interface IWmPutTemporaryService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     TableDataInfo<WmPutTemporaryVo> getPutTemporaryList(WmPutTemporaryBo bo, PageQuery pageQuery);
+
+    TableDataInfo<WmPutTemporaryVo> attachedList(WmPutTemporaryBo bo, PageQuery pageQuery);
 }

@@ -19,4 +19,6 @@ import org.apache.ibatis.annotations.Param;
 public interface WmPutPunishConfiscateMapper extends BaseMapperPlus<WmPutPunishConfiscateMapper, WmPutPunishConfiscate, WmPutPunishConfiscateVo> {
     Page<WmPutPunishConfiscateVo> selectPageList(@Param("page") Page<WmPutPunishConfiscateVo> build, @Param("bo") WmPutPunishConfiscateBo bo);
     int insertWmPutPunishConfiscate(@Param("bo") WmPutPunishConfiscate add);
+
+    Page<WmPutPunishConfiscateVo> getPunishConfiscateList(@Param("page") Page<WmPutPunishConfiscateVo> build,@Param("bo") WmPutPunishConfiscateBo bo);
 }

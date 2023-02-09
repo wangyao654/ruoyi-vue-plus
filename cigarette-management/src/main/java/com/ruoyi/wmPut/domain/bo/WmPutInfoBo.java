@@ -110,7 +110,11 @@ public class WmPutInfoBo extends BaseEntity {
      * 入库类型
      * */
     private String putType;
-
+    private String whAreaCoded;
+    private String whAreaName;
+    private String singleBarboxNumber;
+    private String smallBoxNumber;
+    private String goodsSpecification;
     private String goodsCoded;
     private String goodsName;
 }

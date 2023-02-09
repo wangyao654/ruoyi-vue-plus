@@ -115,5 +115,6 @@ public class WmPutTemporaryBo extends WmPutInfoBo {
     //条码打印时间
 private Date printTime;
 
+private String wmPutCoded;
 
 }

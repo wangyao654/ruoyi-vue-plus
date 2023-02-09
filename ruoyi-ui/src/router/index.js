@@ -99,6 +99,12 @@ export const constantRoutes = [
         name: 'AttachedInfo',
         meta: { title: '暂存副表信息'}
       },
+      {
+        path: 'putPunishConfiscate/:wmPutCoded',
+        component: (resolve) => require(['@/views/wmPut/putPunishConfiscate/attached'], resolve),
+        name: 'AttachedInfo',
+        meta: { title: '罚没副表信息'}
+      },
     ]
   }
 

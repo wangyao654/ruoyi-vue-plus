@@ -57,7 +57,14 @@
         <el-table-column type="selection" width="100" align="center" />
         <el-table-column label="主键" align="center" prop="id" v-if="false"/>
         <el-table-column label="罚没入库信息" align="center" prop="wmPutId" v-if="false" />
-        <el-table-column label="入库单号" align="center" prop="wmPutCoded" />
+      <el-table-column label="入库单号" align="center" prop="wmPutCoded" >
+        <template slot-scope="scope">
+          <a @click="attachedList(scope.row)">
+            {{scope.row.wmPutCoded}}
+          </a>
+        </template>
+
+      </el-table-column>
         <el-table-column label="文书编号" align="center" prop="certificateCoded" />
         <el-table-column label="当事人" align="center" prop="client" />
         <el-table-column label="案由" align="center" prop="cause" >
@@ -456,9 +463,7 @@
 
 <script>
 import { listPutPunishConfiscate, getPutPunishConfiscate, delPutPunishConfiscate, addPutPunishConfiscate, updatePutPunishConfiscate,getPunishConfiscateList } from "@/api/wmPut/putPunishConfiscate";
-import { listPutTemporary, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary,verifyWmPutCoded,getPutTemporaryList } from "@/api/wmPut/putTemporary";
 import { createWmPutCoded, getKeeperUser, addPutInfo, updatePutInfo,delPutInfo,getPutInfo } from "@/api/wmPut/putInfo";
-import {listWhBitAll} from "@/api/base/whBitInfo";
 import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
 import { selectByBarcode } from "@/api/base/goodsInfo";
 export default {
@@ -622,6 +627,9 @@ export default {
     this.getUnit();
   },
   methods: {
+    attachedList(row){
+      this.$router.push('/putInfo/putPunishConfiscate/'+row.wmPutCoded);
+    },
     getWmPutCoded(){
       createWmPutCoded({type:"ZR"}).then(res=>{
         this.putBaseForm.wmPutCoded=res.msg;

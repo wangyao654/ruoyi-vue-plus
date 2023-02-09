@@ -206,7 +206,7 @@
 
 <script>
 import { listPutInfo, getPutInfo, delPutInfo, addPutInfo, updatePutInfo } from "@/api/wmPut/putInfo";
-import { attachedList, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary,verifyWmPutCoded,getPutTemporaryList } from "@/api/wmPut/putTemporary";
+import { listPutPunishConfiscate, getPutPunishConfiscate, delPutPunishConfiscate, addPutPunishConfiscate, updatePutPunishConfiscate,getPunishConfiscateList } from "@/api/wmPut/putPunishConfiscate";
 
 export default {
   name: "AttachedInfo",
@@ -313,7 +313,7 @@ export default {
     /** 查询商品入库信息列表 */
     getList() {
       this.loading = true;
-      attachedList(this.queryParams).then(response => {
+      getPunishConfiscateList(this.queryParams).then(response => {
         this.putInfoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -353,7 +353,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
-/*      this.queryParams.wmPutCoded=undefined;*/
+    /*  this.queryParams.wmPutCoded=undefined;*/
       this.handleQuery();
     },
     // 多选框选中数据

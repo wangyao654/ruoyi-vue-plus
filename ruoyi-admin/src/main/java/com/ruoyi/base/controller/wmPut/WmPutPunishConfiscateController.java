@@ -107,6 +107,6 @@ public class WmPutPunishConfiscateController extends BaseController {
     }
     @GetMapping("/getPunishConfiscateList")
     public TableDataInfo<WmPutPunishConfiscateVo> getPunishConfiscateList(WmPutPunishConfiscateBo bo, PageQuery pageQuery) {
-        return iWmPutPunishConfiscateService.queryPageList(bo, pageQuery);
+        return iWmPutPunishConfiscateService.getPunishConfiscateList(bo, pageQuery);
     }
 }

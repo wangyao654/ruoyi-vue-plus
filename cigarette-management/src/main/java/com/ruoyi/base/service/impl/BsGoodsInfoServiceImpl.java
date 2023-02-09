@@ -217,6 +217,7 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
         WmPutInfoBo wmPutInfoBo = new WmPutInfoBo();
         wmPutInfoBo.setGoodsCoded(bsGoodsInfo.getGoodsCoded());
         wmPutInfoBo.setGoodsName(bsGoodsInfo.getGoodsName());
+        wmPutInfoBo.setGoodsSpecification(bsGoodsInfo.getGoodsName());
         //条数
          Double sum=Double.valueOf(0);
         int i= Integer.parseInt(bsGoodsInfo.getMeasureUnit());

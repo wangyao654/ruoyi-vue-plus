@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wmPut.domain.bo.WmPutPunishConfiscateBo;
 import com.ruoyi.wmPut.domain.vo.WmPutPunishConfiscateVo;
@@ -30,6 +31,8 @@ import java.util.Collection;
 public class WmPutPunishConfiscateServiceImpl implements IWmPutPunishConfiscateService {
 
     private final WmPutPunishConfiscateMapper baseMapper;
+    @Autowired
+    private WmPutTemporaryServiceImpl wmPutTemporaryService;
 
     /**
      * 查询罚没入库信息
@@ -46,6 +49,10 @@ public class WmPutPunishConfiscateServiceImpl implements IWmPutPunishConfiscateS
     public TableDataInfo<WmPutPunishConfiscateVo> queryPageList(WmPutPunishConfiscateBo bo, PageQuery pageQuery) {
        /* LambdaQueryWrapper<WmPutPunishConfiscate> lqw = buildQueryWrapper(bo);*/
         Page<WmPutPunishConfiscateVo> result = baseMapper.selectPageList(pageQuery.build(), bo);
+        result.getRecords().forEach(t->{
+            t.setStorekeeper(wmPutTemporaryService.getKeeper(t.getStorekeeper(),null).get("2"));
+            t.setSynthesisKeeper(wmPutTemporaryService.getKeeper(null,t.getSynthesisKeeper()).get("1"));
+        });
         return TableDataInfo.build(result);
     }
 
@@ -109,5 +116,15 @@ public class WmPutPunishConfiscateServiceImpl implements IWmPutPunishConfiscateS
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteBatchIds(ids) > 0;
+    }
+
+    @Override
+    public TableDataInfo<WmPutPunishConfiscateVo> getPunishConfiscateList(WmPutPunishConfiscateBo bo, PageQuery pageQuery) {
+        Page<WmPutPunishConfiscateVo> result = baseMapper.getPunishConfiscateList(pageQuery.build(), bo);
+        result.getRecords().forEach(t->{
+            t.setStorekeeper(wmPutTemporaryService.getKeeper(t.getStorekeeper(),null).get("2"));
+            t.setSynthesisKeeper(wmPutTemporaryService.getKeeper(null,t.getSynthesisKeeper()).get("1"));
+        });
+        return TableDataInfo.build(result);
     }
 }

@@ -40,9 +40,7 @@ public class WmPutPunishConfiscateVo extends WmPutInfoVo {
     @ExcelDictFormat(readConverterExp = "1=-真烟，2-假烟")
     private String cigaretteType;
 
-    private String goodsCoded;
-    private String goodsName;
-    private String goodsSpecification;
+
 
 
 }

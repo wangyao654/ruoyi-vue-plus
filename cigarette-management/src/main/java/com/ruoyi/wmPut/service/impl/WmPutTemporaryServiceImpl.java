@@ -2,23 +2,27 @@ package com.ruoyi.wmPut.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.system.service.impl.SysUserServiceImpl;
 import com.ruoyi.wmPut.domain.WmPutTemporary;
 import com.ruoyi.wmPut.domain.bo.WmPutTemporaryBo;
 import com.ruoyi.wmPut.domain.vo.WmPutTemporaryVo;
 import com.ruoyi.wmPut.mapper.WmPutTemporaryMapper;
 import com.ruoyi.wmPut.service.IWmPutTemporaryService;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 暂存入库信息Service业务层处理
@@ -31,6 +35,10 @@ import java.util.Collection;
 public class WmPutTemporaryServiceImpl implements IWmPutTemporaryService {
 
     private final WmPutTemporaryMapper baseMapper;
+    @Autowired
+    private WmPutInfoServiceImpl wmPutInfoService;
+    @Autowired
+    private SysUserServiceImpl sysUserService;
 
     /**
      * 查询暂存入库信息
@@ -45,8 +53,12 @@ public class WmPutTemporaryServiceImpl implements IWmPutTemporaryService {
      */
     @Override
     public TableDataInfo<WmPutTemporaryVo> queryPageList(WmPutTemporaryBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<WmPutTemporary> lqw = buildQueryWrapper(bo);
+        //LambdaQueryWrapper<WmPutTemporary> lqw = buildQueryWrapper(bo);
         Page<WmPutTemporaryVo> result= baseMapper.selectPageList(pageQuery.build(), bo);
+        result.getRecords().forEach(t->{
+            t.setStorekeeper(getKeeper(t.getStorekeeper(),null).get("2"));
+            t.setSynthesisKeeper(getKeeper(null,t.getSynthesisKeeper()).get("1"));
+        });
         //  Page<WmPutTemporaryVo> result = baseMapper.selectVoPage(, lqw);
         return TableDataInfo.build(result);
     }
@@ -119,6 +131,51 @@ public class WmPutTemporaryServiceImpl implements IWmPutTemporaryService {
     public TableDataInfo<WmPutTemporaryVo> getPutTemporaryList(WmPutTemporaryBo bo, PageQuery pageQuery) {
         LambdaQueryWrapper<WmPutTemporary> lqw = buildQueryWrapper(bo);
         Page<WmPutTemporaryVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+        result.getRecords().forEach(t->{
+            t.setStorekeeper(getKeeper(t.getStorekeeper(),null).get("2"));
+            t.setSynthesisKeeper(getKeeper(null,t.getSynthesisKeeper()).get("1"));
+        });
         return TableDataInfo.build(result);
     }
+    /**
+     * 查询暂存入库信息列表
+     */
+    @Override
+    public TableDataInfo<WmPutTemporaryVo> attachedList(WmPutTemporaryBo bo, PageQuery pageQuery) {
+        //LambdaQueryWrapper<WmPutTemporary> lqw = buildQueryWrapper(bo);
+        Page<WmPutTemporaryVo> result= baseMapper.attachedList(pageQuery.build(), bo);
+        //  Page<WmPutTemporaryVo> result = baseMapper.selectVoPage(, lqw);
+        result.getRecords().forEach(t->{
+            t.setStorekeeper(getKeeper(t.getStorekeeper(),null).get("2"));
+            t.setSynthesisKeeper(getKeeper(null,t.getSynthesisKeeper()).get("1"));
+        });
+        return TableDataInfo.build(result);
+    }
+   /*
+   * 查询保管员 和综合保管员
+   *
+   * */
+    public Map<String,String>  getKeeper(String storekeeper,String synthesisKeeper){
+        Map<String,String> map = new HashMap<>();
+        List<String> list = new ArrayList<>();
+        if(!StringUtils.isEmpty(storekeeper)) {
+            String[] split = storekeeper.split(",");
+            list = Arrays.asList(split);
+        }
+        if(!StringUtils.isEmpty(synthesisKeeper)){
+            list.addAll(Arrays.asList(synthesisKeeper.split(",")));
+        }
+        if(CollectionUtils.isEmpty(list)){
+            map.put("1","");
+            map.put("2","");
+            return map;
+        }
+       List<SysUser>  listUser= sysUserService.selectByUserId(list);
+        List<String> synthesisKeepers = listUser.stream().filter(f -> f.getPosition().equals("1")).map(SysUser::getUserName).collect(Collectors.toList());
+        List<String> storekeepers = listUser.stream().filter(f -> f.getPosition().equals("2")).map(SysUser::getUserName).collect(Collectors.toList());
+        map.put("1",StringUtils.join(synthesisKeepers,","));
+        map.put("2",StringUtils.join(storekeepers,","));
+        return map;
+    }
+
 }

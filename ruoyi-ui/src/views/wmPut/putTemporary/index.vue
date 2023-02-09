@@ -504,7 +504,7 @@
         <div style="width: 100%; align-content: center" >
           <el-button type="primary" @click="putBaseInfoSubmit" v-if="buzhou!=3" plain><span >下一步</span></el-button>
           <el-button  type="warning" @click="stepSubmit" v-if="buzhou<=3&&buzhou>1" plain><span >上一步</span></el-button>
-          <el-button  type="warning" @click="delPutBaseInfo"  plain><span >取消</span></el-button>
+<!--          <el-button  type="warning" @click="delPutBaseInfo"  plain><span >取消</span></el-button>-->
           <el-button  type="success" @click="submit" v-if="buzhou==3" plain><span>完成</span></el-button>
         </div>
       </div>
@@ -735,7 +735,7 @@ export default {
             type: 'warning'
           });
         }else{
-          this.putBaseForm.varietyNumber=this.putBaseForm.varietyNumber+parseInt(res.data.varietyNumber);
+          //this.putBaseForm.varietyNumber=this.putBaseForm.varietyNumber+parseInt(res.data.varietyNumber);
           this.putBaseForm.whPutNumber= this.putBaseForm.whPutNumber + parseInt(res.data.whPutNumber);
           //this.form.goodsName=res.data.goodsName
           this.form.goodscoded=res.data.goodsCoded
