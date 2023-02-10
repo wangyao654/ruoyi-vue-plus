@@ -238,17 +238,15 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        wmPutCoded: undefined,
+        client: undefined,
+        cause: undefined,
+        goodsCoded: undefined,
+        goodsName:undefined,
         certificateCoded: undefined,
-        causeType: undefined,
-        whPutDate: undefined,
-        varietyNumber: undefined,
-        whPutNumber: undefined,
-        whBitCoded: undefined,
         invoicesStatus: undefined,
-        storekeeper: undefined,
-        synthesisKeeper: undefined,
-        enclosure: undefined
+        betweenTime:undefined,
+        startTime:undefined,
+        endTime:undefined
       },
       // 表单参数
       form: {},

@@ -13,9 +13,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2023-01-29
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("wm_put_punish_confiscate")
-public class WmPutPunishConfiscate extends BaseEntity {
+public class WmPutPunishConfiscate {
 
     private static final long serialVersionUID=1L;
 
@@ -33,5 +32,6 @@ public class WmPutPunishConfiscate extends BaseEntity {
      */
     private String cigaretteType;
     private String goodsCoded;
+    private String whBitCoded;
 
 }

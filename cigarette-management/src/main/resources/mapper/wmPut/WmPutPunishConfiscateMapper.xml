@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="wmPutId" column="wm_put_id"/>
         <result property="cigaretteType" column="cigarette_type"/>
         <result property="goodsCoded" column="goods_coded"/>
+        <result property="whBitCoded" column="wh_bit_coded"/>
     </resultMap>
     <select id="selectPageList" resultType="WmPutPunishConfiscateVo" >
         select wpin.*,wpt.*,goods.goods_name,goods.goods_coded,goods.goods_specification,whbit.wh_bit_name,whbit.wh_area_name,goods.single_barbox_number,goods.small_box_number
@@ -20,9 +21,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             wpin.put_type=3
             <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
               and  wpt.cigarette_type=#{bo.cigaretteType}
-            </if>
-            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
-             and   wpt.client like concat('%',#{bo.client},'%')
             </if>
             <if test="bo.goodsName!=null and bo.goodsName!=''">
              and   goods.goods_name  like concat('%',#{bo.goodsName},'%')
@@ -45,9 +43,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <insert id="insertWmPutPunishConfiscate" useGeneratedKeys="true" keyProperty="id">
     insert into wm_put_punish_confiscate ( wm_put_id, cigarette_type,
-      goods_coded)
+      goods_coded,wh_bit_coded)
     values ( #{bo.wmPutId}, #{bo.cigaretteType},
-      #{bo.goodsCoded})
+      #{bo.goodsCoded},#{bo.whBitCoded})
     </insert>
     <select id="getPunishConfiscateList" resultType="WmPutPunishConfiscateVo">
         select wpin.*,wpt.*,goods.goods_name,goods.goods_coded,goods.goods_specification,whbit.wh_bit_name,whbit.wh_area_name,goods.single_barbox_number,goods.small_box_number
@@ -62,9 +60,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
                 and  wpt.cigarette_type=#{bo.cigaretteType}
-            </if>
-            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
-                and   wpt.client like concat('%',#{bo.client},'%')
             </if>
             <if test="bo.goodsName!=null and bo.goodsName!=''">
                 and   goods.goods_name  like concat('%',#{bo.goodsName},'%')

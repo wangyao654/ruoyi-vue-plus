@@ -31,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
               and  wpin.certificate_coded=#{bo.certificateCoded}
             </if>
-            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+            <if test="bo.client!=null and bo.client!=''">
               and  wpt.client like concat('%',#{bo.client},'%')
             </if>
             <if test="bo.cause!=null and bo.cause!=''">

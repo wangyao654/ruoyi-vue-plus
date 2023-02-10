@@ -19,7 +19,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  */
 @Data
 @TableName("wm_put_temporary")
-public class WmPutTemporary  {
+public class WmPutTemporary   {
 
     private static final long serialVersionUID=1L;
 

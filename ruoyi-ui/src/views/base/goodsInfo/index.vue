@@ -185,6 +185,7 @@
       <el-table-column label="一氧化碳量" align="center" prop="monoxideCarbon" >
         <template slot-scope="scope">{{scope.row.monoxideCarbon+'mg'}}</template>
       </el-table-column>
+<!--      <el-table-column label="最后操作时间" align="center" prop="updateTime" ></el-table-column>-->
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">

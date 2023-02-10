@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="whPutDate" column="wh_put_date"/>
         <result property="varietyNumber" column="variety_number"/>
         <result property="whPutNumber" column="wh_put_number"/>
-        <result property="whBitCoded" column="wh_bit_coded"/>
+<!--        <result property="whBitCoded" column="wh_bit_coded"/>-->
         <result property="invoicesStatus" column="invoices_status"/>
         <result property="storekeeper" column="storekeeper"/>
         <result property="synthesisKeeper" column="synthesis_keeper"/>

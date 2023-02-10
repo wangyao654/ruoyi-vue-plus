@@ -1,10 +1,13 @@
 package com.ruoyi.wmPut.domain.vo;
 
-import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
-import com.alibaba.excel.annotation.ExcelProperty;
+import java.util.Date;
+
 import com.alibaba.excel.annotation.write.style.ContentStyle;
 import com.alibaba.excel.annotation.write.style.HeadStyle;
 import com.alibaba.excel.enums.poi.HorizontalAlignmentEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.ruoyi.common.annotation.ExcelDictFormat;
 import com.ruoyi.common.convert.ExcelDictConvert;
 import lombok.Data;
@@ -13,58 +16,60 @@ import java.util.Date;
 
 
 /**
- * 罚没入库信息视图对象 wm_put_punish_confiscate
+ * 代管入库信息视图对象 wm_put_escrow
  *
  * @author ruoyi
- * @date 2023-01-29
+ * @date 2023-02-09
  */
 @Data
 @ExcelIgnoreUnannotated
-public class WmPutPunishConfiscateVo extends WmPutInfoVo {
+public class WmPutEscrowVo extends WmPutInfoVo {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 主键
      */
-   // @ExcelProperty(value = "主键")
+    //@ExcelProperty(value = "主键")
     private Long id;
 
     /**
-     * 入库信息id-罚没
+     * 入库信息id-代管
      */
-    //@ExcelProperty(value = "入库信息id-罚没")
+    //@ExcelProperty(value = "入库信息id-代管")
     private Long wmPutId;
 
     /**
-     * 卷烟类型（1-真烟，2-假烟）
+     * 委托单位
      */
-    @ExcelProperty(value = "卷烟类型", converter = ExcelDictConvert.class)
-    @ExcelDictFormat(dictType = "cigarette_type")
+    @ExcelProperty(value = "委托单位")
+   // @ExcelDictFormat(dictType = "sys_common_status")
     @HeadStyle(horizontalAlignment= HorizontalAlignmentEnum.CENTER)
     @ContentStyle( horizontalAlignment = HorizontalAlignmentEnum.CENTER )
-    private String cigaretteType;
-
-
-    /**
-     * 商品名称
-     */
-    @ExcelProperty(value = "商品名称", converter = ExcelDictConvert.class)
-    @HeadStyle(horizontalAlignment= HorizontalAlignmentEnum.CENTER)
-    @ContentStyle( horizontalAlignment = HorizontalAlignmentEnum.CENTER )
-    private String goodsName;
+    private String entrustUnit;
 
     /**
-     * 商品编码
+     * 单位id
      */
-   // @ExcelProperty(value = "商品编码", converter = ExcelDictConvert.class)
-    private String goodsCoded;
-    /*
-    * 存放库位编码
-    * */
-  private String whBitCoded;
-    @ExcelProperty(value = "存放库位名称", converter = ExcelDictConvert.class)
+    //@ExcelProperty(value = "单位id")
+    private Long entrustUnitId;
+
+    /**
+     * 委托日期
+     */
+    @ExcelProperty(value = "委托日期")
     @HeadStyle(horizontalAlignment= HorizontalAlignmentEnum.CENTER)
     @ContentStyle( horizontalAlignment = HorizontalAlignmentEnum.CENTER )
-  private String whBitName;
+    private Date entrustDate;
+
+    /**
+     * 存放库位编码
+     */
+    //@ExcelProperty(value = "存放库位编码")
+    private String whBitCoded;
+    @ExcelProperty(value = "存放库位名称")
+    @HeadStyle(horizontalAlignment= HorizontalAlignmentEnum.CENTER)
+    @ContentStyle( horizontalAlignment = HorizontalAlignmentEnum.CENTER )
+    private String whBitName;
+
 }

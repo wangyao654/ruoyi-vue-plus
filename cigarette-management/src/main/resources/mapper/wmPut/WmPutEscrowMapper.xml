@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wmPut.mapper.WmPutEscrowMapper">
+
+    <resultMap type="com.ruoyi.wmPut.domain.WmPutEscrow" id="WmPutEscrowResult">
+        <result property="id" column="id"/>
+        <result property="wmPutId" column="wm_put_id"/>
+        <result property="entrustUnit" column="entrust_unit"/>
+        <result property="entrustUnitId" column="entrust_unit_id"/>
+        <result property="entrustDate" column="entrust_date"/>
+        <result property="whBitCoded" column="wh_bit_coded"/>
+    </resultMap>
+    <select id="selectPageList" resultType="wmPutEscrowVo">
+        select wpin.*,wpt.*,goods.goods_name,goods.goods_coded,goods.goods_specification,whbit.wh_bit_name,whbit.wh_area_name,goods.single_barbox_number,goods.small_box_number
+        from  wm_put_info wpin
+        left join wm_put_escrow wpt on wpin.id= wpt.wm_put_id
+        left join bs_goods_info goods on goods.goods_coded=wpt.goods_coded
+        left join  bs_wh_bit_info whbit on wpt.wh_bit_coded=whbit.wh_bit_coded
+        <where>
+            wpin.put_type=3
+            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+                and  wpt.cigarette_type=#{bo.cigaretteType}
+            </if>
+            <if test="bo.goodsName!=null and bo.goodsName!=''">
+                and   goods.goods_name  like concat('%',#{bo.goodsName},'%')
+            </if>
+            <if test="bo.invoicesStatus!=null and bo.invoicesStatus!=''">
+                and  wpin.invoices_status = #{bo.invoicesStatus}
+            </if>
+            <choose>
+                <when test="bo.startTime!=null and bo.endTime!=null ">
+                    and   wpin.update_time between #{bo.startTime} and #{bo.endTime}
+                </when>
+                <when test="bo.startTime!=null">
+                    wpin.update_time &gt;= #{bo.startTime}
+                </when>
+                <when test="bo.endTime!=null">
+                    wpin.update_time &lt;= #{bo.endTime}
+                </when>
+            </choose>
+        </where>
+    </select>
+    <select id="getEscrowList" resultType="wmPutEscrowVo">
+    select wpin.*,wpt.*,goods.goods_name,goods.goods_coded,whbit.wh_bit_name,whbit.wh_area_name,goods.single_barbox_number,goods.small_box_number,goods.goods_specification from
+        wm_put_escrow wpt
+    left join wm_put_info wpin  on wpin.id= wpt.wm_put_id
+    left join bs_goods_info goods on goods.goods_coded=wpt.goods_coded
+    left join  bs_wh_bit_info whbit on wpt.wh_bit_coded=whbit.wh_bit_coded
+    <where>
+        wpin.put_type=1
+        <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+            and  wpin.certificate_coded=#{bo.certificateCoded}
+        </if>
+        <if test="bo.cause!=null and bo.cause!=''">
+            and wpt.cause = #{bo.cause}
+        </if>
+        <if test="bo.goodsName!=null and bo.goodsName!=''">
+            and  goods.goods_name  like concat('%',#{bo.goodsName},'%')
+        </if>
+        <if test="bo.invoicesStatus!=null and bo.invoicesStatus!=''">
+            and   wpin.invoices_status = #{bo.invoicesStatus}
+        </if>
+        <if test="bo.wmPutCoded!=null and bo.wmPutCoded!=''">
+            and   wpin.wm_put_coded = #{bo.wmPutCoded}
+        </if>
+        <choose>
+            <when test="bo.startTime!=null and bo.endTime!=null ">
+                and  wpin.update_time between #{bo.startTime} and #{bo.endTime}
+            </when>
+            <when test="bo.startTime!=null">
+                wpin.update_time &gt;= #{bo.startTime}
+            </when>
+            <when test="bo.endTime!=null">
+                wpin.update_time &lt;= #{bo.endTime}
+            </when>
+        </choose>
+    </where>
+    </select>
+</mapper>

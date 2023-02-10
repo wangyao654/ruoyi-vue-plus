@@ -58,7 +58,7 @@ public class WmPutInfo extends BaseEntity {
     /**
      * 存放库位编码
      */
-    private String whBitCoded;
+   // private String whBitCoded;
     /**
      * 单据状态（保存未提交、提交已入库、撤销待入库）
      */

@@ -40,5 +40,5 @@ public class WmPutPunishConfiscateBo extends WmPutInfoBo {
     private String cigaretteType;
     private String goodsCoded;
     private String goodsName;
-
+    private String whBitCoded;
 }

@@ -8,9 +8,9 @@
     <artifactId>ruoyi-vue-plus</artifactId>
     <version>4.4.0</version>
 
-    <name>RuoYi-Vue-Plus</name>
-    <url>https://gitee.com/JavaLionLi/RuoYi-Vue-Plus</url>
-    <description>RuoYi-Vue-Plus后台管理系统</description>
+    <name>cigaretteManangement</name>
+    <!--<url>https://gitee.com/JavaLionLi/RuoYi-Vue-Plus</url>-->
+    <description>罚没烟草仓库管理系统</description>
 
     <properties>
         <ruoyi-vue-plus.version>4.4.0</ruoyi-vue-plus.version>

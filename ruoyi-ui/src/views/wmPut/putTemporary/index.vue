@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="文书编号" prop="certificateCoded">
+        <el-input
+          v-model="queryParams.certificateCoded"
+          placeholder="请输入文书编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="当事人" prop="client">
         <el-input
           v-model="queryParams.client"
@@ -26,6 +34,16 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
+      </el-form-item>
+      <el-form-item label="单据状态" prop="invoicesStatus">
+        <el-select v-model="queryParams.invoicesStatus" placeholder="请选择单据状态" clearable @keyup.enter.native="handleQuery">
+          <el-option
+            v-for="dict in dict.type.invoices_status"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item  label="时间" prop="betweenTime">
         <el-date-picker
@@ -137,6 +155,7 @@
       <el-table-column label="单据状态" align="center" prop="invoicesStatus" />
       <el-table-column label="保管员" align="center" prop="storekeeper" />
       <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
+      <el-table-column label="最后操作时间" align="center" prop="updateTime" />
       <el-table-column label="附件" align="center" prop="enclosure" v-if="false" />
 <!--      <el-table-column label="扣查部门" align="center" prop="detainDeptName" />
       <el-table-column label="扣查部门id" align="center" prop="detainDept" />
@@ -595,6 +614,8 @@ export default {
         cause: undefined,
         goodsCoded: undefined,
         goodsName:undefined,
+        certificateCoded: undefined,
+        invoicesStatus: undefined,
         betweenTime:undefined,
         startTime:undefined,
         endTime:undefined
@@ -959,6 +980,13 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      let arr = [];
+      let r = this.queryParams.betweenTime;
+      if (r != undefined && r != null && r != "") {
+        arr = this.queryParams.betweenTime.toString().split(",")
+        this.queryParams.startTime = arr[0]
+        this.queryParams.endTime = arr[1];
+      }
       this.getList();
     },
     /** 重置按钮操作 */

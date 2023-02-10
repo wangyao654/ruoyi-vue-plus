@@ -74,7 +74,7 @@ public class WmPutInfoBo extends BaseEntity {
      * 存放库位编码
      */
  //   @NotBlank(message = "存放库位编码不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String whBitCoded;
+    //private String whBitCoded;
 
     /**
      * 单据状态（保存未提交、提交已入库、撤销待入库）
@@ -111,6 +111,7 @@ public class WmPutInfoBo extends BaseEntity {
      * */
     private String putType;
     private String whAreaCoded;
+    private String whBitName;
     private String whAreaName;
     private String singleBarboxNumber;
     private String smallBoxNumber;
