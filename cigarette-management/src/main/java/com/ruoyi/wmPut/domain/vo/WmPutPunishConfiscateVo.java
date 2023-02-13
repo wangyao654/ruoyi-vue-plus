@@ -67,4 +67,5 @@ public class WmPutPunishConfiscateVo extends WmPutInfoVo {
     @HeadStyle(horizontalAlignment= HorizontalAlignmentEnum.CENTER)
     @ContentStyle( horizontalAlignment = HorizontalAlignmentEnum.CENTER )
   private String whBitName;
+    private String remark;
 }

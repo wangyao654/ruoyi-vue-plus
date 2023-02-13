@@ -206,7 +206,7 @@
 
 <script>
 import { listPutInfo, getPutInfo, delPutInfo, addPutInfo, updatePutInfo } from "@/api/wmPut/putInfo";
-import { attachedList, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary,verifyWmPutCoded,getPutTemporaryList } from "@/api/wmPut/putTemporary";
+import { listPutSampling, getPutSampling, delPutSampling, addPutSampling, updatePutSampling,getPutSamplingList,delSamplingByPutId } from "@/api/wmPut/putSampling";
 
 export default {
   name: "AttachedInfo",
@@ -313,7 +313,7 @@ export default {
     /** 查询商品入库信息列表 */
     getList() {
       this.loading = true;
-      attachedList(this.queryParams).then(response => {
+      getPutSamplingList(this.queryParams).then(response => {
         this.putInfoList = response.rows;
         this.total = response.total;
         this.loading = false;

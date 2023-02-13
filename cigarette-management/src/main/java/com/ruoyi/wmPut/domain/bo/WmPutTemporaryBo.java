@@ -73,8 +73,8 @@ public class WmPutTemporaryBo extends WmPutInfoBo {
      * 商品编码
      */
    // @NotBlank(message = "商品编码不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String goodsCoded;
-    private String goodsName;
+/*    private String goodsCoded;
+    private String goodsName;*/
 
     /**
      * 入库条数

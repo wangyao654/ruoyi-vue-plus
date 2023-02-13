@@ -39,7 +39,7 @@
         <p>
           <b>当前版本:</b> <span>v{{ version }}</span>
         </p>
-        <p>
+<!--        <p>
           <el-tag type="danger">&yen;免费开源</el-tag>
         </p>
         <p>
@@ -67,7 +67,7 @@
             @click="goTarget('https://gitee.com/JavaLionLi/RuoYi-Vue-Plus/wikis/pages?sort_id=4106467&doc_id=1469725')"
           >更新日志</el-button
           >
-        </p>
+        </p>-->
       </el-col>
 
       <el-col :sm="24" :lg="12" style="padding-left: 50px">

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wmPut.mapper.WmPutSamplingMapper">
+
+    <resultMap type="com.ruoyi.wmPut.domain.WmPutSampling" id="WmPutSamplingResult">
+        <result property="id" column="id"/>
+        <result property="wmPutId" column="wm_put_id"/>
+        <result property="wmOutCoded" column="wm_out_coded"/>
+        <result property="causeCoded" column="cause_coded"/>
+        <result property="cigaretteType" column="cigarette_type"/>
+        <result property="goodsCoded" column="goods_coded"/>
+    </resultMap>
+    <delete id="delSamplingByPutId">
+        delete from wm_put_sampling where wm_put_id in
+        <foreach collection="ids" item="id" index="index" close=")" separator="," open="(">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectPageList" resultType="wmPutSamplingVo">
+        select wpin.*,wpt.*,goods.goods_name,goods.goods_coded,whbit.wh_bit_name,whbit.wh_area_name,goods.single_barbox_number,goods.small_box_number,goods.goods_specification from
+        wm_put_info wpin
+        left join wm_put_sampling wpt  on wpin.id= wpt.wm_put_id
+        left join bs_goods_info goods on goods.goods_coded=wpt.goods_coded
+        left join  bs_wh_bit_info whbit on wpt.wh_bit_coded=whbit.wh_bit_coded
+        <where>
+            wpin.put_type=4
+            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+                and  wpin.certificate_coded=#{bo.certificateCoded}
+            </if>
+            <if test="bo.cigaretteType!=null and bo.cigaretteType!=''">
+                and wpt.cigarette_type = #{bo.cigaretteType}
+            </if>
+            <if test="bo.goodsName!=null and bo.goodsName!=''">
+                and  goods.goods_name  like concat('%',#{bo.goodsName},'%')
+            </if>
+            <if test="bo.invoicesStatus!=null and bo.invoicesStatus!=''">
+                and   wpin.invoices_status = #{bo.invoicesStatus}
+            </if>
+            <choose>
+                <when test="bo.startTime!=null and bo.endTime!=null ">
+                    and  wpin.update_time between #{bo.startTime} and #{bo.endTime}
+                </when>
+                <when test="bo.startTime!=null">
+                    wpin.update_time &gt;= #{bo.startTime}
+                </when>
+                <when test="bo.endTime!=null">
+                    wpin.update_time &lt;= #{bo.endTime}
+                </when>
+            </choose>
+        </where>
+    </select>
+    <select id="getPutSamplingList" resultType="wmPutSamplingVo">
+        select wpin.*,wpt.*,goods.goods_name,goods.goods_coded,whbit.wh_bit_name,whbit.wh_area_name,goods.single_barbox_number,goods.small_box_number,goods.goods_specification from
+        wm_put_sampling wpin
+        left join wm_put_info wpt  on wpin.id= wpt.wm_put_id
+        left join bs_goods_info goods on goods.goods_coded=wpt.goods_coded
+        left join  bs_wh_bit_info whbit on wpt.wh_bit_coded=whbit.wh_bit_coded
+        <where>
+            wpin.put_type=4
+            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+                and  wpt.certificate_coded=#{bo.certificateCoded}
+            </if>
+            <if test="bo.cigaretteType!=null and bo.cigaretteType!=''">
+                and wpin.cigarette_type = #{bo.cigaretteType}
+            </if>
+            <if test="bo.goodsName!=null and bo.goodsName!=''">
+                and  goods.goods_name  like concat('%',#{bo.goodsName},'%')
+            </if>
+            <if test="bo.invoicesStatus!=null and bo.invoicesStatus!=''">
+                and   wpt.invoices_status = #{bo.invoicesStatus}
+            </if>
+            <choose>
+                <when test="bo.startTime!=null and bo.endTime!=null ">
+                    and  wpin.update_time between #{bo.startTime} and #{bo.endTime}
+                </when>
+                <when test="bo.startTime!=null">
+                    wpin.update_time &gt;= #{bo.startTime}
+                </when>
+                <when test="bo.endTime!=null">
+                    wpin.update_time &lt;= #{bo.endTime}
+                </when>
+            </choose>
+        </where>
+    </select>
+</mapper>

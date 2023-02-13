@@ -38,7 +38,8 @@ public class WmPutPunishConfiscateBo extends WmPutInfoBo {
      */
     @NotBlank(message = "卷烟类型（1-真烟，2-假烟）不能为空", groups = { AddGroup.class, EditGroup.class })
     private String cigaretteType;
-    private String goodsCoded;
-    private String goodsName;
+/*    private String goodsCoded;
+    private String goodsName;*/
     private String whBitCoded;
+    private String remark;
 }

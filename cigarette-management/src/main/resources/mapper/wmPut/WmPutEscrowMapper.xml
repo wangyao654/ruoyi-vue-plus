@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join bs_goods_info goods on goods.goods_coded=wpt.goods_coded
         left join  bs_wh_bit_info whbit on wpt.wh_bit_coded=whbit.wh_bit_coded
         <where>
-            wpin.put_type=3
+            wpin.put_type=2
             <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
                 and  wpt.cigarette_type=#{bo.cigaretteType}
             </if>
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     left join bs_goods_info goods on goods.goods_coded=wpt.goods_coded
     left join  bs_wh_bit_info whbit on wpt.wh_bit_coded=whbit.wh_bit_coded
     <where>
-        wpin.put_type=1
+        wpin.put_type=2
         <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
             and  wpin.certificate_coded=#{bo.certificateCoded}
         </if>

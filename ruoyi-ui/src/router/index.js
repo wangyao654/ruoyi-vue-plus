@@ -105,6 +105,18 @@ export const constantRoutes = [
         name: 'AttachedInfo',
         meta: { title: '罚没副表信息'}
       },
+      {
+        path: 'putEscrow/:wmPutCoded',
+        component: (resolve) => require(['@/views/wmPut/putEscrow/attached'], resolve),
+        name: 'AttachedInfo',
+        meta: { title: '代管副表信息'}
+      },
+      {
+        path: 'putSampling/:wmPutCoded',
+        component: (resolve) => require(['@/views/wmPut/putSampling/attached'], resolve),
+        name: 'AttachedInfo',
+        meta: { title: '抽检副表信息'}
+      },
     ]
   }
 

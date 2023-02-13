@@ -59,5 +59,7 @@ public class WmPutEscrowBo  extends WmPutInfoBo {
     @NotBlank(message = "存放库位编码不能为空", groups = { AddGroup.class, EditGroup.class })
     private String whBitCoded;
 
-
+    private String goodsCoded;
+    private String goodsName;
+    private String remark;
 }

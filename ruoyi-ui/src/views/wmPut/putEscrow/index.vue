@@ -48,7 +48,7 @@
       <el-form-item  label="时间" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
@@ -571,6 +571,7 @@ export default {
       },
       // 表单参数
       form: {},
+      putBaseForm:{},
       //基础信息校验
       putBaseRules: {
         wmPutCoded: [
@@ -675,6 +676,8 @@ export default {
   },
   created() {
     this.getList();
+    this.getUnitRoleUser();
+    this.getUnit();
   },
   methods: {
     /*取消*/
@@ -708,7 +711,7 @@ export default {
     },
     //附表路由
     attachedList(row){
-      this.$router.push('/putInfo/putTemporary/'+row.wmPutCoded);
+      this.$router.push('/putInfo/putEscrow/'+row.wmPutCoded);
     },
     getStorekeeper(value){
       console.log(value)
@@ -767,7 +770,7 @@ export default {
     },
     //自动生成入库编号
     getWmPutCoded(){
-      createWmPutCoded({type:"ZR"}).then(res=>{
+      createWmPutCoded({type:"DG"}).then(res=>{
         this.putBaseForm.wmPutCoded=res.msg;
       })
     },

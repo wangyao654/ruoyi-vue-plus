@@ -1,31 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="文书编号" prop="certificateCoded">
+      <el-form-item label="关联出库单" prop="wmOutCoded">
         <el-input
-          v-model="queryParams.certificateCoded"
-          placeholder="请输入文书编号"
+          v-model="queryParams.wmOutCoded"
+          placeholder="请输入关联出库单"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="当事人" prop="client">
+      <el-form-item label="关联案件号(源自出库单涉及的案件编号)" prop="causeCoded">
         <el-input
-          v-model="queryParams.client"
-          placeholder="请输入当事人"
+          v-model="queryParams.causeCoded"
+          placeholder="请输入关联案件号(源自出库单涉及的案件编号)"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="案由" prop="cause">
-        <el-select v-model="queryParams.cause" placeholder="请选择案由" clearable @keyup.enter.native="handleQuery">
-          <el-option
-            v-for="dict in dict.type.cause"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          ></el-option>
-        </el-select>
       </el-form-item>
       <el-form-item label="商品名称" prop="goodsName">
         <el-input
@@ -34,16 +24,6 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="单据状态" prop="invoicesStatus">
-        <el-select v-model="queryParams.invoicesStatus" placeholder="请选择单据状态" clearable @keyup.enter.native="handleQuery">
-          <el-option
-            v-for="dict in dict.type.invoices_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          ></el-option>
-        </el-select>
       </el-form-item>
       <el-form-item  label="时间" prop="betweenTime">
         <el-date-picker
@@ -69,7 +49,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['wmPut:putPunishConfiscate:add']"
+          v-hasPermi="['wmPut:putSampling:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -80,7 +60,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['wmPut:putPunishConfiscate:edit']"
+          v-hasPermi="['wmPut:putSampling:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -91,7 +71,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['wmPut:putPunishConfiscate:remove']"
+          v-hasPermi="['wmPut:putSampling:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -101,16 +81,17 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['wmPut:putPunishConfiscate:export']"
+          v-hasPermi="['wmPut:putSampling:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="putPunishConfiscateList" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="100" align="center" />
-        <el-table-column label="主键" align="center" prop="id" v-if="false"/>
-        <el-table-column label="罚没入库信息" align="center" prop="wmPutId" v-if="false" />
+
+    <el-table v-loading="loading" :data="putSamplingList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="100" align="center" />
+      <el-table-column label="主键" align="center" prop="id" v-if="false"/>
+      <el-table-column label="罚没入库信息" align="center" prop="wmPutId" v-if="false" />
       <el-table-column label="入库单号" align="center" prop="wmPutCoded" >
         <template slot-scope="scope">
           <a @click="attachedList(scope.row)">
@@ -119,79 +100,71 @@
         </template>
 
       </el-table-column>
-        <el-table-column label="文书编号" align="center" prop="certificateCoded" />
-        <el-table-column label="当事人" align="center" prop="client" />
-        <el-table-column label="案由" align="center" prop="cause" >
-          <template slot-scope="scope">
-            <dict-tag :options="dict.type.cause" :value="scope.row.cause"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="入库数" align="center" prop="whPutNumber" />
-        <el-table-column label="案件类型" align="center" prop="causeType" >
-          <template slot-scope="scope">
-            <dict-tag :options="dict.type.cause_type" :value="scope.row.causeType"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="查扣日期" align="center" prop="detainDate" >
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.detainDate, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="入库日期" align="center" prop="whPutDate" >
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.whPutDate, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="入库品种数" align="center" prop="varietyNumber" />
-        <el-table-column label="库位编码" align="center" prop="whBitCoded" />
-        <el-table-column label="单据状态" align="center" prop="invoicesStatus" />
-        <el-table-column label="保管员" align="center" prop="storekeeper" />
-        <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
+      <el-table-column label="文书编号" align="center" prop="certificateCoded" />
+      <el-table-column label="当事人" align="center" prop="client" />
+      <el-table-column label="案由" align="center" prop="cause" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.cause" :value="scope.row.cause"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="入库数" align="center" prop="whPutNumber" />
+      <el-table-column label="案件类型" align="center" prop="causeType" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.cause_type" :value="scope.row.causeType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="查扣日期" align="center" prop="detainDate" >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.detainDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="入库日期" align="center" prop="whPutDate" >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.whPutDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="入库品种数" align="center" prop="varietyNumber" />
+      <el-table-column label="库位编码" align="center" prop="whBitCoded" />
+      <el-table-column label="单据状态" align="center" prop="invoicesStatus" />
+      <el-table-column label="保管员" align="center" prop="storekeeper" />
+      <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
       <el-table-column label="最后操作时间" align="center" prop="updateTime" />
-        <el-table-column label="附件" align="center" prop="enclosure" v-if="false" />
-        <!--      <el-table-column label="扣查部门" align="center" prop="detainDeptName" />
-              <el-table-column label="扣查部门id" align="center" prop="detainDept" />
-              <el-table-column label="商品编码" align="center" prop="goodsCoded" />
-              <el-table-column label="入库条数" align="center" prop="putNumber" />
-              <el-table-column label="案件二维码" align="center" prop="causeQr" />
-              <el-table-column label="存放库区" align="center" prop="whAreaCoded" />
-              <el-table-column label="存放库位" align="center" prop="whBitCoded" />
-              <el-table-column label="归属单位" align="center" prop="unitCoded" />
-              <el-table-column label="备注" align="center" prop="remark" />-->
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click="handleUpdate(scope.row)"
-              v-hasPermi="['wmPut:putTemporary:edit']"
-            >修改</el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click="temporaryInfo(scope.row)"
-              v-hasPermi="['wmPut:putTemporary:edit']"
-            >详细信息</el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-              v-hasPermi="['wmPut:putTemporary:remove']"
-            >删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="getList"
-      />
+      <el-table-column label="附件" align="center" prop="enclosure" v-if="false" />
+      <!--      <el-table-column label="扣查部门" align="center" prop="detainDeptName" />
+            <el-table-column label="扣查部门id" align="center" prop="detainDept" />
+            <el-table-column label="商品编码" align="center" prop="goodsCoded" />
+            <el-table-column label="入库条数" align="center" prop="putNumber" />
+            <el-table-column label="案件二维码" align="center" prop="causeQr" />
+            <el-table-column label="存放库区" align="center" prop="whAreaCoded" />
+            <el-table-column label="存放库位" align="center" prop="whBitCoded" />
+            <el-table-column label="归属单位" align="center" prop="unitCoded" />
+            <el-table-column label="备注" align="center" prop="remark" />-->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['wmPut:putTemporary:edit']"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="temporaryInfo(scope.row)"
+            v-hasPermi="['wmPut:putTemporary:edit']"
+          >详细信息</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['wmPut:putTemporary:remove']"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <pagination
       v-show="total>0"
@@ -201,8 +174,14 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改罚没入库信息对话框 -->
-    <!-- 添加或修改暂存入库信息对话框 -->
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+    <!-- 添加或修改抽检返还入库信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="1100px" append-to-body :show-close="false">
       <el-steps :active="buzhou">
         <el-step title="步骤 1" description="入库基本信息"></el-step>
@@ -337,18 +316,11 @@
                 <el-input v-model="form.detainDeptName" placeholder="请输入部门" size="mini" />
               </el-form-item>
             </el-col>
-                        <el-col :span="8">
-                          <el-form-item label="卷烟类型" prop="whAreaCoded" >
-                            <el-select v-model="form.cigaretteType" placeholder="请选择卷烟类型" size="mini" style="width: 100%">
-                              <el-option
-                                v-for="dict in this.cigarette_type"
-                                :key="dict.value"
-                                :label="dict.label"
-                                :value="dict.value">
-                              </el-option>
-                            </el-select>
+            <!--            <el-col :span="8">
+                          <el-form-item label="存放库区" prop="whAreaCoded" size="mini">
+                            <el-input v-model="form.whAreaCoded" placeholder="请输入存放库区" />
                           </el-form-item>
-                        </el-col>
+                        </el-col>-->
           </el-row>
 
           <el-row>
@@ -409,6 +381,12 @@
         </el-form>
         <!--     暂存入库详细信息 -->
         <el-form ref="form" :model="form" :rules="rules" label-width="110px" v-if="buzhou==2">
+          <!--        <el-form-item label="入库信息id-暂存" prop="wmPutId">
+                    <el-input v-model="form.wmPutId" placeholder="请输入入库信息id-暂存" />
+                  </el-form-item>-->
+          <el-row>
+
+          </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="存放库位编码" prop="whBitCoded">
@@ -416,7 +394,7 @@
                   <el-option
                     v-for="dict in this.whBitInfoList"
                     :key="dict.whBitCoded"
-                    :label="dict.whBitCoded"
+                    :label="dict.whBitName"
                     :value="dict.whBitCoded"
                   ></el-option>
                 </el-select>
@@ -479,7 +457,7 @@
           </el-upload>
         </div>
         <div v-if="buzhou==2">
-          <el-table v-loading="loading" :data="putPunishConfiscateListFM">
+          <el-table v-loading="loading" :data="putSamplingListCJ">
             <el-table-column label="主键" align="center" prop="id" v-if="false"/>
             <el-table-column label="暂存入库信息" align="center" prop="wmPutId" v-if="false" />
             <el-table-column label="入库单号" align="center" prop="wmPutCoded" />
@@ -525,17 +503,17 @@
 </template>
 
 <script>
-import { listPutPunishConfiscate, getPutPunishConfiscate, delPutPunishConfiscate,delPutPunishConfiscateByPutId, addPutPunishConfiscate, updatePutPunishConfiscate,getPunishConfiscateList } from "@/api/wmPut/putPunishConfiscate";
+import { listPutSampling, getPutSampling, delPutSampling, addPutSampling, updatePutSampling,getPutSamplingList,delSamplingByPutId } from "@/api/wmPut/putSampling";
 import { createWmPutCoded, getKeeperUser, addPutInfo, updatePutInfo,delPutInfo,getPutInfo } from "@/api/wmPut/putInfo";
+import {listWhBitAll} from "@/api/base/whBitInfo";
 import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
 import { selectByBarcode } from "@/api/base/goodsInfo";
+
 export default {
-  name: "PutPunishConfiscate",
+  name: "PutSampling",
   dicts: ['cause','cause_type','invoices_status','position','cigarette_type'],
   data() {
     return {
-      //步骤
-      buzhou:1,
       //标志是否更改
       //保管员集合
       storekeeperList:[],
@@ -565,9 +543,11 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 罚没入库信息表格数据
-      putPunishConfiscateList: [],
-      putPunishConfiscateListFM:[],
+      //步骤
+      buzhou:1,
+      // 抽检返还入库信息表格数据
+      putSamplingList: [],
+      putSamplingListCJ: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -576,7 +556,13 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        wmOutCoded: undefined,
+        causeCoded: undefined,
         cigaretteType: undefined,
+        goodsCoded: undefined,
+        goodsName:undefined,
+        certificateCoded: undefined,
+        invoicesStatus: undefined,
         betweenTime:undefined,
         startTime:undefined,
         endTime:undefined
@@ -684,7 +670,7 @@ export default {
             picker.$emit('pick', [start, end]);
           }
         }]
-      },
+      }
     };
   },
   created() {
@@ -693,14 +679,7 @@ export default {
     this.getUnit();
   },
   methods: {
-    attachedList(row){
-      this.$router.push('/putInfo/putPunishConfiscate/'+row.wmPutCoded);
-    },
-    getWmPutCoded(){
-      createWmPutCoded({type:"ZR"}).then(res=>{
-        this.putBaseForm.wmPutCoded=res.msg;
-      })
-    },
+
     /*添加入库基本信息*/
     putBaseInfoSubmit(){
       if(this.buzhou==1){
@@ -751,12 +730,15 @@ export default {
       }
 
     },
+
     /*返回上一步*/
     stepSubmit(){
       this.buzhou=this.buzhou-1;
     },
-
-
+    //附表路由
+    attachedList(row){
+      this.$router.push('/putInfo/putSampling/'+row.wmPutCoded);
+    },
     getStorekeeper(value){
       console.log(value)
       this.storekeeperList=value;
@@ -769,27 +751,27 @@ export default {
     selectAddInfo(){
       this.buttonLoading = true;
       //查询商品
-      selectByBarcode({barcode: this.form.barcode,}).then(res=>{
+      selectByBarcode({barcode: this.form.barcode}).then(res=>{
         if(res.code!=200){
           this.$message({
             message: '请扫描商品信息内的商品',
             type: 'warning'
           });
         }else{
-          this.putBaseForm.varietyNumber=this.putBaseForm.varietyNumber+parseInt(res.data.varietyNumber);
+          //this.putBaseForm.varietyNumber=this.putBaseForm.varietyNumber+parseInt(res.data.varietyNumber);
           this.putBaseForm.whPutNumber= this.putBaseForm.whPutNumber + parseInt(res.data.whPutNumber);
           //this.form.goodsName=res.data.goodsName
           this.form.goodscoded=res.data.goodsCoded
           //新增入库
-          addPutPunishConfiscate(this.form).then(response => {
+          addPutSampling(this.form).then(response => {
             this.$modal.msgSuccess("新增成功");
           }).finally(() => {
             this.buttonLoading = false;
             this.buzhou=3;
             this.reset();
             //查询最新
-            getPunishConfiscateList({pageNum: 1, pageSize: 5,}).then(res=>{
-              this.putPunishConfiscateListFM = res.rows;
+            getPutSamplingList({pageNum: 1, pageSize: 5,}).then(res=>{
+              this.putTemporaryListZR = res.rows;
               this.totalF = res.total;
               this.loading = false;
             })
@@ -797,10 +779,34 @@ export default {
         }
       })
     },
+    //获取组织
+    getUnit(){
+      listDealingsunitInfo({pageNum: 1,
+        pageSize: 10000,unitEnabled:'0'}).then(response => {
+        this.unitList = response.rows;
+      });
+    },
+    //获取组织下的角色人员
+    getUnitRoleUser(){
+      getKeeperUser().then(res=>{
+        let obj=res.data;
+        this.synthesisKeeperUser =obj[1];
+        this.keeperUser=obj[2];
+      });
+    },
+    //自动生成入库编号
+    getWmPutCoded(){
+      createWmPutCoded({type:"CJ"}).then(res=>{
+        this.putBaseForm.wmPutCoded=res.msg;
+      })
+    },
+    submit(){
+      this.open=false;
+    },
     /*取消*/
     delPutBaseInfo(){
       if(this.form.wmPutId!=null&& this.form.wmPutId!=undefined ){
-        delPutPunishConfiscateByPutId(parseInt(this.form.id));
+        delSamplingByPutId(parseInt(this.form.wmPutId));
         this.$modal.msgSuccess("删除成功");
 
       }
@@ -815,27 +821,11 @@ export default {
       this.form.whAreaCoded=valueWhBitInfo[0].whAreaCoded;
       this.form.whBitCoded=event;
     },
-    //获取组织
-    getUnit(){
-      listDealingsunitInfo({pageNum: 1,
-        pageSize: 10000,unitEnabled:'0'}).then(response => {
-        this.unitList = response.rows;
-        console.log(this.unitList)
-      });
-    },
-    //获取组织下的角色人员
-    getUnitRoleUser(){
-      getKeeperUser().then(res=>{
-        let obj=res.data;
-        this.synthesisKeeperUser =obj[1];
-        this.keeperUser=obj[2];
-      });
-    },
-    /** 查询罚没入库信息列表 */
+    /** 查询抽检返还入库信息列表 */
     getList() {
       this.loading = true;
-      listPutPunishConfiscate(this.queryParams).then(response => {
-        this.putPunishConfiscateList = response.rows;
+      listPutSampling(this.queryParams).then(response => {
+        this.putSamplingList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -862,26 +852,25 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         enclosure: undefined,
-        putType:3
+        putType:1
       };
       this.resetForm("putBaseForm");
       this.form = {
         id: undefined,
         wmPutId: undefined,
-        client: undefined,
-        cause: undefined,
         detainDate: undefined,
         detainDeptName: undefined,
         detainDept: undefined,
         goodsCoded: undefined,
         barcode:undefined,
         putNumber: undefined,
-        causeQr: undefined,
         whAreaCoded: undefined,
         whBitCoded: undefined,
         unitCoded: undefined,
+        wmOutCoded: undefined,
+        causeCoded: undefined,
         cigaretteType: undefined,
-        remark: undefined
+        remark:undefined
       };
       this.resetForm("form");
     },
@@ -912,19 +901,18 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加罚没入库信息";
-      this.getWmPutCoded();
+      this.title = "添加抽检返还入库信息";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.loading = true;
       this.reset();
       const id = row.id || this.ids
-      getPutPunishConfiscate(id).then(response => {
+      getPutSampling(id).then(response => {
         this.loading = false;
         this.form = response.data;
         this.open = true;
-        this.title = "修改罚没入库信息";
+        this.title = "修改抽检返还入库信息";
       });
     },
     /** 提交按钮 */
@@ -933,7 +921,7 @@ export default {
         if (valid) {
           this.buttonLoading = true;
           if (this.form.id != null) {
-            updatePutPunishConfiscate(this.form).then(response => {
+            updatePutSampling(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -941,7 +929,7 @@ export default {
               this.buttonLoading = false;
             });
           } else {
-            addPutPunishConfiscate(this.form).then(response => {
+            addPutSampling(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -955,9 +943,9 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除罚没入库信息编号为"' + ids + '"的数据项？').then(() => {
+      this.$modal.confirm('是否确认删除抽检返还入库信息编号为"' + ids + '"的数据项？').then(() => {
         this.loading = true;
-        return delPutPunishConfiscateByPutId(ids);
+        return delSamplingByPutId(ids);
       }).then(() => {
         this.loading = false;
         this.getList();
@@ -969,9 +957,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('wmPut/putPunishConfiscate/export', {
+      this.download('wmPut/putSampling/export', {
         ...this.queryParams
-      }, `putPunishConfiscate_${new Date().getTime()}.xlsx`)
+      }, `putSampling_${new Date().getTime()}.xlsx`)
     }
   }
 };

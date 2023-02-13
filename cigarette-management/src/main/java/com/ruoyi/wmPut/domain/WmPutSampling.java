@@ -7,18 +7,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
 
-import java.util.Date;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 代管入库信息对象 wm_put_escrow
+ * 抽检返还入库信息对象 wm_put_sampling
  *
  * @author ruoyi
- * @date 2023-02-09
+ * @date 2023-02-13
  */
 @Data
-@TableName("wm_put_escrow")
-public class WmPutEscrow {
+@TableName("wm_put_sampling")
+public class WmPutSampling {
 
     private static final long serialVersionUID=1L;
 
@@ -28,29 +27,27 @@ public class WmPutEscrow {
     @TableId(value = "id")
     private Long id;
     /**
-     * 入库信息id-代管
+     * 入库信息id-抽检返还
      */
     private Long wmPutId;
     /**
-     * 委托单位
+     * 关联出库单
      */
-    private String entrustUnit;
+    private String wmOutCoded;
     /**
-     * 单位id
+     * 关联案件号(源自出库单涉及的案件编号)
      */
-    private Long entrustUnitId;
+    private String causeCoded;
     /**
-     * 委托日期
+     * 卷烟类型（1-真烟，2-假烟）
      */
-    private Date entrustDate;
+    private String cigaretteType;
     /**
-     * 存放库位编码
+     * 商品编号
      */
-    private String whBitCoded;
+    private String goodsCoded;
 
-    /*
-    * 备注
-    * */
+    private String whBitCoded;
     private String remark;
 
 }

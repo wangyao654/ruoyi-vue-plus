@@ -33,5 +33,6 @@ public class WmPutPunishConfiscate {
     private String cigaretteType;
     private String goodsCoded;
     private String whBitCoded;
+    private String remark;
 
 }

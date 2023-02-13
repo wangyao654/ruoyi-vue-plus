@@ -48,7 +48,7 @@
       <el-form-item  label="时间" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
-          type="datetimerange"
+          type="daterange"
           :picker-options="pickerOptions"
           range-separator="至"
           start-placeholder="开始日期"
@@ -94,15 +94,6 @@
           v-hasPermi="['wmPut:putTemporary:remove']"
         >删除</el-button>
       </el-col>
-<!--      <el-col :span="1.5">
-        <el-button
-          size="mini"
-          type="text"
-          icon="el-icon-edit"
-          @click="temporaryInfo()"
-          v-hasPermi="['wmPut:putTemporary:edit']"
-        >详细信息</el-button>
-      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -591,7 +582,6 @@ export default {
       putTemporaryListZR:[],
       // 弹出层标题
       title: "",
-      infoTitle:"",
       //步骤
       buzhou:1,
       // 是否显示弹出层
@@ -1058,7 +1048,7 @@ export default {
     handleExport() {
       this.download('wmPut/putTemporary/export', {
         ...this.queryParams
-      }, `putTemporary_${new Date().getTime()}.xlsx`)
+      }, `暂存入库_${new Date().getTime()}.xlsx`)
     }
   }
 };

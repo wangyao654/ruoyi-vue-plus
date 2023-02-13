@@ -51,5 +51,5 @@ public interface IWmPutEscrowService {
 
     TableDataInfo<WmPutEscrowVo> getEscrowList(WmPutEscrowBo bo, PageQuery pageQuery);
 
-    boolean delPutEscrowByPutId(Collection<Long> asList, boolean b);
+    Boolean delPutEscrowByPutId(Collection<Long> asList, boolean b);
 }

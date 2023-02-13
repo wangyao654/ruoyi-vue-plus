@@ -206,7 +206,7 @@
 
 <script>
 import { listPutInfo, getPutInfo, delPutInfo, addPutInfo, updatePutInfo } from "@/api/wmPut/putInfo";
-import { attachedList, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary,verifyWmPutCoded,getPutTemporaryList } from "@/api/wmPut/putTemporary";
+import { listPutEscrow, getPutEscrow, delPutEscrow,delPutEscrowByPutId,addPutEscrow, updatePutEscrow,getEscrowList } from "@/api/wmPut/putEscrow";
 
 export default {
   name: "AttachedInfo",
@@ -238,25 +238,23 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        wmPutCoded: undefined,
+        client: undefined,
+        cause: undefined,
+        goodsCoded: undefined,
+        goodsName:undefined,
         certificateCoded: undefined,
-        causeType: undefined,
-        whPutDate: undefined,
-        varietyNumber: undefined,
-        whPutNumber: undefined,
-        whBitCoded: undefined,
         invoicesStatus: undefined,
-        storekeeper: undefined,
-        synthesisKeeper: undefined,
-        enclosure: undefined
+        betweenTime:undefined,
+        startTime:undefined,
+        endTime:undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        id: [
+/*        id: [
           { required: true, message: "主键不能为空", trigger: "blur" }
-        ],
+        ],*/
         wmPutCoded: [
           { required: true, message: "入库单号不能为空", trigger: "blur" }
         ],
@@ -313,7 +311,7 @@ export default {
     /** 查询商品入库信息列表 */
     getList() {
       this.loading = true;
-      attachedList(this.queryParams).then(response => {
+      getEscrowList(this.queryParams).then(response => {
         this.putInfoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -353,7 +351,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
-/*      this.queryParams.wmPutCoded=undefined;*/
+    /*  this.queryParams.wmPutCoded=undefined;*/
       this.handleQuery();
     },
     // 多选框选中数据

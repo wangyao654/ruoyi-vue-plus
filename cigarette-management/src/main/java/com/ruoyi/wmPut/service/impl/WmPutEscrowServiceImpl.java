@@ -130,7 +130,7 @@ public class WmPutEscrowServiceImpl implements IWmPutEscrowService {
     }
 
     @Override
-    public boolean delPutEscrowByPutId(Collection<Long> asList, boolean b) {
+    public Boolean delPutEscrowByPutId(Collection<Long> asList, boolean b) {
          baseMapper.deleteByPutId(asList);
         return wmPutInfoService.deleteWithValidByIds(asList,b);
     }

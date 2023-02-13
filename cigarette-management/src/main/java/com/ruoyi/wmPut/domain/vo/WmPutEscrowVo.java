@@ -72,4 +72,9 @@ public class WmPutEscrowVo extends WmPutInfoVo {
     @ContentStyle( horizontalAlignment = HorizontalAlignmentEnum.CENTER )
     private String whBitName;
 
+    @ExcelProperty(value = "备注")
+    @HeadStyle(horizontalAlignment= HorizontalAlignmentEnum.CENTER)
+    @ContentStyle( horizontalAlignment = HorizontalAlignmentEnum.CENTER )
+    private String remark;
+
 }
