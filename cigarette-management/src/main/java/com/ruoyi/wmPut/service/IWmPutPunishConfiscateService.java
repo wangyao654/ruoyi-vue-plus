@@ -48,4 +48,6 @@ public interface IWmPutPunishConfiscateService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     TableDataInfo<WmPutPunishConfiscateVo> getPunishConfiscateList(WmPutPunishConfiscateBo bo, PageQuery pageQuery);
+
+    Boolean delPutPunishConfiscateByPutId(Collection<Long> ids, Boolean isValid);
 }

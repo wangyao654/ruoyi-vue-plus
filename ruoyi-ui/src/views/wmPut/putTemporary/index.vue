@@ -200,22 +200,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <el-dialog :title="infoTitle" :visible.sync="infoOpen" width="500px" append-to-body>
-    <el-descriptions title="入库详细信息">
-      <el-descriptions-item label="扣查部门"></el-descriptions-item>
-      <el-descriptions-item label="商品编码"></el-descriptions-item>
-      <el-descriptions-item label="入库条数"></el-descriptions-item>
-      <el-descriptions-item label="存放库区"></el-descriptions-item>
-      <el-descriptions-item label="归属单位"></el-descriptions-item>
-      <el-descriptions-item label="备注">
-<!--        <el-tag size="small">学校</el-tag>-->
-      </el-descriptions-item>
-<!--      <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>-->
-    </el-descriptions>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="infoCancel">关 闭</el-button>
-      </div>
-    </el-dialog>
 
     <!-- 添加或修改暂存入库信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="1100px" append-to-body :show-close="false">
@@ -425,8 +409,15 @@
           </el-row>
           <el-row>
           <el-col :span="12">
-            <el-form-item label="存放库位" prop="whBitCoded" size="mini">
-              <el-input v-model="form.whBitCoded" placeholder="请输入存放库位" />
+            <el-form-item label="存放库位编码" prop="whBitCoded">
+              <el-select v-model="form.whBitCoded" placeholder="请选择存放库位编码" clearable  @change="whouseAreaCode($event)" size="mini" style="width: 100%">
+                <el-option
+                  v-for="dict in this.whBitInfoList"
+                  :key="dict.whBitCoded"
+                  :label="dict.whBitName"
+                  :value="dict.whBitCoded"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
             <el-col :span="12">
@@ -523,7 +514,7 @@
         <div style="width: 100%; align-content: center" >
           <el-button type="primary" @click="putBaseInfoSubmit" v-if="buzhou!=3" plain><span >下一步</span></el-button>
           <el-button  type="warning" @click="stepSubmit" v-if="buzhou<=3&&buzhou>1" plain><span >上一步</span></el-button>
-<!--          <el-button  type="warning" @click="delPutBaseInfo"  plain><span >取消</span></el-button>-->
+          <el-button  type="warning" @click="delPutBaseInfo"  plain><span >取消</span></el-button>
           <el-button  type="success" @click="submit" v-if="buzhou==3" plain><span>完成</span></el-button>
         </div>
       </div>
@@ -532,7 +523,7 @@
 </template>
 
 <script>
-import { listPutTemporary, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary,verifyWmPutCoded,getPutTemporaryList } from "@/api/wmPut/putTemporary";
+import { listPutTemporary, getPutTemporary, delPutTemporary, addPutTemporary, updatePutTemporary,delPutTemporaryByPutId,getPutTemporaryList } from "@/api/wmPut/putTemporary";
 import { createWmPutCoded, getKeeperUser, addPutInfo, updatePutInfo,delPutInfo,getPutInfo } from "@/api/wmPut/putInfo";
 import {listWhBitAll} from "@/api/base/whBitInfo";
 import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
@@ -776,8 +767,6 @@ export default {
           });
         }
       })
-
-
     },
     //获取组织
     getUnit(){
@@ -806,13 +795,10 @@ export default {
     /*取消*/
     delPutBaseInfo(){
       if(this.form.wmPutId!=null&& this.form.wmPutId!=undefined ){
-        delPutInfo(parseInt(this.form.wmPutId));
+        delPutTemporaryByPutId(parseInt(this.form.wmPutId));
           this.$modal.msgSuccess("删除成功");
 
       }
-    if(this.form.id!=null && this.form.id!=undefined){
-      delPutTemporary(parseInt(this.form.id));
-    }
     this.open=false;
     this.buzhou=1;
     },
@@ -947,7 +933,6 @@ export default {
           whPutDate: undefined,
           varietyNumber: 0,
           whPutNumber: undefined,
-          whBitCoded: undefined,
           invoicesStatus: undefined,
           storekeeper: undefined,
           synthesisKeeper: undefined,
@@ -1059,7 +1044,7 @@ export default {
       const ids = row.id || this.ids;
       this.$modal.confirm('是否确认删除暂存入库信息编号为"' + ids + '"的数据项？').then(() => {
         this.loading = true;
-        return delPutTemporary(ids);
+        return delPutTemporaryByPutId(ids);
       }).then(() => {
         this.loading = false;
         this.getList();

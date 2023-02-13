@@ -42,3 +42,21 @@ export function delPutEscrow(id) {
     method: 'delete'
   })
 }
+
+// 扫描入库信息列表
+export function getEscrowList(query) {
+  return request({
+    url: '/wmPut/putEscrow/getEscrowList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 删除代管入库信息
+export function delPutEscrowByPutId(id) {
+  return request({
+    url: '/wmPut/putEscrow/delPutEscrowByPutId/' + id,
+    method: 'delete'
+  })
+}
+

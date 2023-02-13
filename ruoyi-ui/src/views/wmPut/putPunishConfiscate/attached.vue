@@ -252,9 +252,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        id: [
+/*        id: [
           { required: true, message: "主键不能为空", trigger: "blur" }
-        ],
+        ],*/
         wmPutCoded: [
           { required: true, message: "入库单号不能为空", trigger: "blur" }
         ],

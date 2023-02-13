@@ -80,4 +80,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </choose>
         </where>
     </select>
+    <delete id="deleteByPutId">
+        delete from wm_put_punish_confiscate where wm_put_id in
+        <foreach collection="ids" item="id" index="index" close=")" separator="," open="(">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

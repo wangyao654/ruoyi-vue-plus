@@ -7,6 +7,8 @@ import com.ruoyi.wmPut.domain.bo.WmPutTemporaryBo;
 import com.ruoyi.wmPut.domain.vo.WmPutTemporaryVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
+
 /**
  * 暂存入库信息Mapper接口
  *
@@ -20,4 +22,6 @@ public interface WmPutTemporaryMapper extends BaseMapperPlus<WmPutTemporaryMappe
     int insertWmPutTemporary(@Param("bo")WmPutTemporary add);
 
     Page<WmPutTemporaryVo> attachedList(@Param("page") Page<WmPutTemporaryVo> build,@Param("bo") WmPutTemporaryBo bo);
+
+    void deleteByPutId(@Param("ids") Collection<Long> ids);
 }

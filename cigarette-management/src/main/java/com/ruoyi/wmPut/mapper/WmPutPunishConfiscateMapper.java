@@ -10,6 +10,8 @@ import com.ruoyi.common.core.mapper.BaseMapperPlus;
 import com.ruoyi.wmPut.domain.vo.WmPutTemporaryVo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
+
 /**
  * 罚没入库信息Mapper接口
  *
@@ -21,4 +23,6 @@ public interface WmPutPunishConfiscateMapper extends BaseMapperPlus<WmPutPunishC
     int insertWmPutPunishConfiscate(@Param("bo") WmPutPunishConfiscate add);
 
     Page<WmPutPunishConfiscateVo> getPunishConfiscateList(@Param("page") Page<WmPutPunishConfiscateVo> build,@Param("bo") WmPutPunishConfiscateBo bo);
+
+    void deleteByPutId(@Param("ids") Collection<Long> ids);
 }

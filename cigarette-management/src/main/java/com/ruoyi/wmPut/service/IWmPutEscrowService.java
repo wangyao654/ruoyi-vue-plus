@@ -50,4 +50,6 @@ public interface IWmPutEscrowService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     TableDataInfo<WmPutEscrowVo> getEscrowList(WmPutEscrowBo bo, PageQuery pageQuery);
+
+    boolean delPutEscrowByPutId(Collection<Long> asList, boolean b);
 }

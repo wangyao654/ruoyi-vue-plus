@@ -49,4 +49,6 @@ public interface IWmPutTemporaryService {
     TableDataInfo<WmPutTemporaryVo> getPutTemporaryList(WmPutTemporaryBo bo, PageQuery pageQuery);
 
     TableDataInfo<WmPutTemporaryVo> attachedList(WmPutTemporaryBo bo, PageQuery pageQuery);
+
+    Boolean delPutTemporaryByPutId(Collection<Long> ids, boolean b);
 }

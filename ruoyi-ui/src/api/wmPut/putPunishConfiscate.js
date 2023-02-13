@@ -50,4 +50,11 @@ export function getPunishConfiscateList(query) {
     params: query
   })
 }
+// 删除罚没入库信息
+export function delPutPunishConfiscateByPutId(id) {
+  return request({
+    url: '/wmPut/putPunishConfiscate/delPutPunishConfiscateByPutId/' + id,
+    method: 'delete'
+  })
+}
 

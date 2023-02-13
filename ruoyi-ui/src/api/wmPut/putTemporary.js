@@ -65,3 +65,10 @@ export function attachedList(query) {
     params: query
   })
 }
+// 删除暂存入库信息
+export function delPutTemporaryByPutId(id) {
+  return request({
+    url: '/wmPut/putTemporary/delPutTemporaryByPutId/' + id,
+    method: 'delete'
+  })
+}

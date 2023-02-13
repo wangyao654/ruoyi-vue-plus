@@ -222,7 +222,7 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
          Double sum=Double.valueOf(0);
         int i= Integer.parseInt(bsGoodsInfo.getMeasureUnit());
         switch (i){
-            case 1: sum= Double.valueOf(1);
+            case 1: sum= num(1.0);
                  break;
             case 2: verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
                  break;
@@ -239,24 +239,24 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
     }
 private void verdict(Double sum,String singleBarboxNumber){
         switch (Integer.parseInt(singleBarboxNumber)){
-            case 1: sum=Double.valueOf(1/10);
+            case 1: sum=num(1.00/10.00);
             break;
-            case 2: sum=0.2;
+            case 2: sum=0.20;
             break;
-            case 3:sum=Double.valueOf(1/6);
+            case 3:sum=num(1.00/6.00);
             break;
             case 4:sum=0.25;
             break;
         }
 }
-//查询一支的条数
+
 private void  tingVerdict(Double sum, BsGoodsInfo bsGoodsInfo){
        switch (Integer.parseInt(bsGoodsInfo.getSmallBoxNumber())){
            case 1: verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
-           sum=sum/20;
+           sum= num(sum/20.00);
            break;
            case 2:verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
-               sum=sum/16;
+               sum=num(sum/16.00);
                break;
            case 3:verdict(sum,bsGoodsInfo.getSingleBarboxNumber());
                break;
@@ -287,5 +287,8 @@ private void  tingVerdict(Double sum, BsGoodsInfo bsGoodsInfo){
             default:goodsCoded=coded.toString();
         }
         return goodsCoded;
+    }
+    private Double num (Double d){
+        return Double.valueOf(String.format("%.2f",d));
     }
 }

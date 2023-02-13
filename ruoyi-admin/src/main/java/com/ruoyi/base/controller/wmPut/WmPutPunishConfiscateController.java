@@ -98,8 +98,7 @@ public class WmPutPunishConfiscateController extends BaseController {
      *
      * @param ids 主键串
      */
-    @SaCheckPermission("wmPut:putPunishConfiscate:remove")
-    @Log(title = "罚没入库信息", businessType = BusinessType.DELETE)
+
     @DeleteMapping("/{ids}")
     public R<Void> remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
@@ -108,5 +107,12 @@ public class WmPutPunishConfiscateController extends BaseController {
     @GetMapping("/getPunishConfiscateList")
     public TableDataInfo<WmPutPunishConfiscateVo> getPunishConfiscateList(WmPutPunishConfiscateBo bo, PageQuery pageQuery) {
         return iWmPutPunishConfiscateService.getPunishConfiscateList(bo, pageQuery);
+    }
+    @SaCheckPermission("wmPut:putPunishConfiscate:remove")
+    @Log(title = "罚没入库信息", businessType = BusinessType.DELETE)
+    @DeleteMapping("/delPutPunishConfiscateByPutId/{ids}")
+    public R<Void> delPutPunishConfiscateByPutId(@NotEmpty(message = "主键不能为空")
+                          @PathVariable Long[] ids) {
+        return toAjax(iWmPutPunishConfiscateService.delPutPunishConfiscateByPutId(Arrays.asList(ids), true));
     }
 }

@@ -119,8 +119,9 @@ public class WmPutTemporaryController extends BaseController {
     public TableDataInfo<WmPutTemporaryVo> getPutTemporaryList(WmPutTemporaryBo bo, PageQuery pageQuery) {
         return iWmPutTemporaryService.getPutTemporaryList(bo, pageQuery);
     }
-
-
-
-
+    @DeleteMapping("/delPutTemporaryByPutId/{ids}")
+    public R<Void> delPutTemporaryByPutId(@NotEmpty(message = "主键不能为空")
+                          @PathVariable Long[] ids) {
+        return toAjax(iWmPutTemporaryService.delPutTemporaryByPutId(Arrays.asList(ids), true));
+    }
 }

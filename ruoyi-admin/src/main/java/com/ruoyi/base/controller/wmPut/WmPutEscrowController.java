@@ -100,8 +100,6 @@ public class WmPutEscrowController extends BaseController {
      *
      * @param ids 主键串
      */
-    @SaCheckPermission("putEscrow:putEscrow:remove")
-    @Log(title = "代管入库信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public R<Void> remove(@NotEmpty(message = "主键不能为空")
                           @PathVariable Long[] ids) {
@@ -113,5 +111,12 @@ public class WmPutEscrowController extends BaseController {
     @GetMapping("/getEscrowList")
     public TableDataInfo<WmPutEscrowVo> getEscrowList(WmPutEscrowBo bo, PageQuery pageQuery) {
         return iWmPutEscrowService.getEscrowList(bo, pageQuery);
+    }
+    @SaCheckPermission("putEscrow:putEscrow:remove")
+    @Log(title = "代管入库信息", businessType = BusinessType.DELETE)
+    @DeleteMapping("/delPutEscrowByPutId/{ids}")
+    public R<Void> delPutEscrowByPutId(@NotEmpty(message = "主键不能为空")
+                          @PathVariable Long[] ids) {
+        return toAjax(iWmPutEscrowService.delPutEscrowByPutId(Arrays.asList(ids), true));
     }
 }

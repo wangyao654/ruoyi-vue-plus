@@ -7,10 +7,6 @@ import com.ruoyi.common.core.domain.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.ruoyi.wmPut.domain.WmPutInfo;
-import com.ruoyi.wmPut.domain.bo.WmPutPunishConfiscateBo;
-import com.ruoyi.wmPut.domain.vo.WmPutPunishConfiscateVo;
-import com.ruoyi.wmPut.mapper.WmPutInfoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,9 +32,9 @@ public class WmPutEscrowServiceImpl implements IWmPutEscrowService {
 
     private final WmPutEscrowMapper baseMapper;
     @Autowired
-    private WmPutInfoMapper wmPutInfoMapper;
-    @Autowired
     private WmPutTemporaryServiceImpl wmPutTemporaryService;
+    @Autowired
+    private WmPutInfoServiceImpl wmPutInfoService;
 
     /**
      * 查询代管入库信息
@@ -131,5 +127,11 @@ public class WmPutEscrowServiceImpl implements IWmPutEscrowService {
             t.setSynthesisKeeper(wmPutTemporaryService.getKeeper(null,t.getSynthesisKeeper()).get("1"));
         });
         return TableDataInfo.build(result);
+    }
+
+    @Override
+    public boolean delPutEscrowByPutId(Collection<Long> asList, boolean b) {
+         baseMapper.deleteByPutId(asList);
+        return wmPutInfoService.deleteWithValidByIds(asList,b);
     }
 }

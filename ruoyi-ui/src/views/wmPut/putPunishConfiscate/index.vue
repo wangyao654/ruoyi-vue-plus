@@ -402,16 +402,17 @@
         </el-form>
         <!--     暂存入库详细信息 -->
         <el-form ref="form" :model="form" :rules="rules" label-width="110px" v-if="buzhou==2">
-          <!--        <el-form-item label="入库信息id-暂存" prop="wmPutId">
-                    <el-input v-model="form.wmPutId" placeholder="请输入入库信息id-暂存" />
-                  </el-form-item>-->
-          <el-row>
-
-          </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="存放库位" prop="whBitCoded" size="mini">
-                <el-input v-model="form.whBitCoded" placeholder="请输入存放库位" />
+              <el-form-item label="存放库位编码" prop="whBitCoded">
+                <el-select v-model="form.whBitCoded" placeholder="请选择存放库位编码" clearable  @change="whouseAreaCode($event)" size="mini" style="width: 100%">
+                  <el-option
+                    v-for="dict in this.whBitInfoList"
+                    :key="dict.whBitCoded"
+                    :label="dict.whBitCoded"
+                    :value="dict.whBitCoded"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -517,7 +518,7 @@
 </template>
 
 <script>
-import { listPutPunishConfiscate, getPutPunishConfiscate, delPutPunishConfiscate, addPutPunishConfiscate, updatePutPunishConfiscate,getPunishConfiscateList } from "@/api/wmPut/putPunishConfiscate";
+import { listPutPunishConfiscate, getPutPunishConfiscate, delPutPunishConfiscate,delPutPunishConfiscateByPutId, addPutPunishConfiscate, updatePutPunishConfiscate,getPunishConfiscateList } from "@/api/wmPut/putPunishConfiscate";
 import { createWmPutCoded, getKeeperUser, addPutInfo, updatePutInfo,delPutInfo,getPutInfo } from "@/api/wmPut/putInfo";
 import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
 import { selectByBarcode } from "@/api/base/goodsInfo";
@@ -792,15 +793,20 @@ export default {
     /*取消*/
     delPutBaseInfo(){
       if(this.form.wmPutId!=null&& this.form.wmPutId!=undefined ){
-        delPutInfo(parseInt(this.form.wmPutId));
+        delPutPunishConfiscateByPutId(parseInt(this.form.id));
         this.$modal.msgSuccess("删除成功");
 
       }
-      if(this.form.id!=null && this.form.id!=undefined){
-        delPutPunishConfiscate(parseInt(this.form.id));
-      }
       this.open=false;
       this.buzhou=1;
+    },
+    /*改变仓库 库区信息 */
+    whouseAreaCode(event){
+      console.log(event)
+      this.putBaseForm.whBitCoded=event;
+      let valueWhBitInfo= this.whBitInfoList.filter(t=>t.whBitCoded==event);
+      this.form.whAreaCoded=valueWhBitInfo[0].whAreaCoded;
+      this.form.whBitCoded=event;
     },
     //获取组织
     getUnit(){
@@ -842,7 +848,6 @@ export default {
         whPutDate: undefined,
         varietyNumber: 0,
         whPutNumber: undefined,
-        whBitCoded: undefined,
         invoicesStatus: undefined,
         storekeeper: undefined,
         synthesisKeeper: undefined,
@@ -944,7 +949,7 @@ export default {
       const ids = row.id || this.ids;
       this.$modal.confirm('是否确认删除罚没入库信息编号为"' + ids + '"的数据项？').then(() => {
         this.loading = true;
-        return delPutPunishConfiscate(ids);
+        return delPutPunishConfiscateByPutId(ids);
       }).then(() => {
         this.loading = false;
         this.getList();

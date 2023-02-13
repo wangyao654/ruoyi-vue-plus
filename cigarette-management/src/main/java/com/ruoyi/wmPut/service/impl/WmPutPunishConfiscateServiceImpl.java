@@ -33,6 +33,8 @@ public class WmPutPunishConfiscateServiceImpl implements IWmPutPunishConfiscateS
     private final WmPutPunishConfiscateMapper baseMapper;
     @Autowired
     private WmPutTemporaryServiceImpl wmPutTemporaryService;
+    @Autowired
+    private WmPutInfoServiceImpl wmPutInfoService;
 
     /**
      * 查询罚没入库信息
@@ -126,5 +128,12 @@ public class WmPutPunishConfiscateServiceImpl implements IWmPutPunishConfiscateS
             t.setSynthesisKeeper(wmPutTemporaryService.getKeeper(null,t.getSynthesisKeeper()).get("1"));
         });
         return TableDataInfo.build(result);
+    }
+
+    @Override
+    public Boolean delPutPunishConfiscateByPutId(Collection<Long> ids, Boolean isValid) {
+        //删除副表数据
+        baseMapper.deleteByPutId(ids);
+        return wmPutInfoService.deleteWithValidByIds(ids,isValid);
     }
 }

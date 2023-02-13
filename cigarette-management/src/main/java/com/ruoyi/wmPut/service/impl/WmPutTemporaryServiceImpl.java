@@ -151,7 +151,15 @@ public class WmPutTemporaryServiceImpl implements IWmPutTemporaryService {
         });
         return TableDataInfo.build(result);
     }
-   /*
+
+    @Override
+    public Boolean delPutTemporaryByPutId(Collection<Long> ids, boolean b) {
+        baseMapper.deleteByPutId(ids);
+
+        return  wmPutInfoService.deleteWithValidByIds(ids,b);
+    }
+
+    /*
    * 查询保管员 和综合保管员
    *
    * */
