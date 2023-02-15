@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wmOut.mapper.WmOutInfoMapper">
+
+    <resultMap type="com.ruoyi.wmOut.domain.WmOutInfo" id="WmOutInfoResult">
+        <result property="id" column="id"/>
+        <result property="wmOutCoded" column="wm_out_coded"/>
+        <result property="certificateCoded" column="certificate_coded"/>
+     <!--   <result property="goodsName" column="goods_name"/>-->
+        <result property="goodsId" column="goods_id"/>
+<!--        <result property="goodsSpecification" column="goods_specification"/>-->
+        <result property="wmOutNumber" column="wm_out_number"/>
+        <result property="invoicesStatus" column="invoices_status"/>
+        <result property="wmOutDate" column="wm_out_date"/>
+        <result property="storekeeper" column="storekeeper"/>
+        <result property="storekeeperId" column="storekeeper_id"/>
+        <result property="synthesisKeeper" column="synthesis_keeper"/>
+        <result property="synthesisKeeperId" column="synthesis_keeper_id"/>
+        <result property="receiver" column="receiver"/>
+        <result property="receiverId" column="receiver_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="enclosure" column="enclosure"/>
+        <result property="createBy" column="create_by"/>
+        <result property="outType" column="out_type"/>
+    </resultMap>
+
+
+</mapper>

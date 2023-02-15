@@ -9,10 +9,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="关联案件号(源自出库单涉及的案件编号)" prop="causeCoded">
-        <el-input
-          v-model="queryParams.causeCoded"
-          placeholder="请输入关联案件号(源自出库单涉及的案件编号)"
+      <el-form-item label="关联案件号" prop="causeCoded">
+          <el-input
+            v-model="queryParams.causeCoded"
+            placeholder="请输入关联案件号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -511,7 +511,7 @@ import { selectByBarcode } from "@/api/base/goodsInfo";
 
 export default {
   name: "PutSampling",
-  dicts: ['cause','cause_type','invoices_status','position','cigarette_type'],
+  dicts: ['cause','cause_type','invoices_status','cigarette_type'],
   data() {
     return {
       //标志是否更改
@@ -796,7 +796,7 @@ export default {
     },
     //自动生成入库编号
     getWmPutCoded(){
-      createWmPutCoded({type:"CJ"}).then(res=>{
+      createWmPutCoded({type:"CJR"}).then(res=>{
         this.putBaseForm.wmPutCoded=res.msg;
       })
     },
@@ -852,7 +852,7 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         enclosure: undefined,
-        putType:1
+        putType:4
       };
       this.resetForm("putBaseForm");
       this.form = {

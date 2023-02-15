@@ -143,7 +143,11 @@
       </el-table-column>
       <el-table-column label="入库品种数" align="center" prop="varietyNumber" />
       <el-table-column label="库位编码" align="center" prop="whBitCoded" />
-      <el-table-column label="单据状态" align="center" prop="invoicesStatus" />
+      <el-table-column label="单据状态" align="center" prop="invoicesStatus" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.invoices_status" :value="scope.row.invoicesStatus"/>
+        </template>
+      </el-table-column>
       <el-table-column label="保管员" align="center" prop="storekeeper" />
       <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
       <el-table-column label="最后操作时间" align="center" prop="updateTime" />
@@ -497,7 +501,11 @@
             </el-table-column>
             <el-table-column label="入库品种数" align="center" prop="varietyNumber" />
             <el-table-column label="库位编码" align="center" prop="whBitCoded" />
-            <el-table-column label="单据状态" align="center" prop="invoicesStatus" />
+            <el-table-column label="单据状态" align="center" prop="invoicesStatus" >
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.invoices_status" :value="scope.row.invoicesStatus"/>
+              </template>
+            </el-table-column>
             <el-table-column label="保管员" align="center" prop="storekeeper" />
             <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
           </el-table>
@@ -522,7 +530,7 @@ import { selectByBarcode } from "@/api/base/goodsInfo";
 
 export default {
   name: "PutTemporary",
-  dicts: ['cause','cause_type','invoices_status','position'],
+  dicts: ['cause','cause_type','invoices_status'],
   data() {
 /*    let wmPutCodedVerify=(rule, value, callback)=>{
       let id = this.putBaseForm.id;

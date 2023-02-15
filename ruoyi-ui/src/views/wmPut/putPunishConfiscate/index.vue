@@ -531,7 +531,7 @@ import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
 import { selectByBarcode } from "@/api/base/goodsInfo";
 export default {
   name: "PutPunishConfiscate",
-  dicts: ['cause','cause_type','invoices_status','position','cigarette_type'],
+  dicts: ['cause','cause_type','invoices_status','cigarette_type'],
   data() {
     return {
       //步骤

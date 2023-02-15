@@ -109,7 +109,7 @@ public class WmPutInfoController extends BaseController {
         return toAjax(iWmPutInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
     }
     /*
-    * 自动生成入库编号 zr-暂存 dr-代管 fmr-罚没 cjr-抽检
+    * 自动生成入库编号 ZR-暂存 DR-代管 FMR-罚没 CJR-抽检
     * */
     @GetMapping("/createWmPutCoded")
     public R createWmPutCoded(@RequestParam("type")String type) {

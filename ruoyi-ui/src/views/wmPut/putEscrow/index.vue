@@ -770,7 +770,7 @@ export default {
     },
     //自动生成入库编号
     getWmPutCoded(){
-      createWmPutCoded({type:"DG"}).then(res=>{
+      createWmPutCoded({type:"DR"}).then(res=>{
         this.putBaseForm.wmPutCoded=res.msg;
       })
     },
@@ -812,7 +812,7 @@ export default {
         updateBy: undefined,
         updateTime: undefined,
         enclosure: undefined,
-        putType:1
+        putType:2
       };
       this.resetForm("putBaseForm");
       this.form = {

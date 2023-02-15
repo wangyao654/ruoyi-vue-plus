@@ -119,13 +119,19 @@
 
     <el-table v-loading="loading" :data="putInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" v-if="true"/>
-      <el-table-column label="入库单号" align="center" prop="wmPutCoded" />
+      <el-table-column label="主键" align="center" prop="id" v-if="false"/>
+      <el-table-column label="入库单号" align="center" prop="wmPutCoded" v-if="false" />
       <el-table-column label="文书编号" align="center" prop="certificateCoded" />
-      <el-table-column label="案件类型" align="center" prop="causeType" />
+<!--      <el-table-column label="案件类型" align="center" prop="causeType" />
       <el-table-column label="入库日期" align="center" prop="whPutDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.whPutDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>-->
+      <el-table-column label="商品名称" align="center" prop="goodsName" />
+      <el-table-column label="商品规格" align="center" prop="goodsSpecification" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.goods_specification" :value="scope.row.goodsSpecification"/>
         </template>
       </el-table-column>
       <el-table-column label="入库品种数" align="center" prop="varietyNumber" />
@@ -210,6 +216,7 @@ import { listPutSampling, getPutSampling, delPutSampling, addPutSampling, update
 
 export default {
   name: "AttachedInfo",
+  dicts: ['goods_type','goods_specification','measure_unit','single_barbox_number'],
   data() {
     return {
       //入库编号
