@@ -60,4 +60,6 @@ public interface IBsGoodsInfoService {
     Map<String, Object> importData(MultipartFile file) throws Exception;
 
     R selectBybarcode(String barcode);
+
+    R getAllGoodsInfoList(BsGoodsInfoBo bo);
 }

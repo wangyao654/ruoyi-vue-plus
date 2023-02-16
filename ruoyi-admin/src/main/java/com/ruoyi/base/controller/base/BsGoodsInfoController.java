@@ -147,4 +147,9 @@ public class BsGoodsInfoController extends BaseController {
     public R selectByBarcode(@RequestParam("barcode")String barcode){
         return iBsGoodsInfoService.selectBybarcode(barcode);
     }
+
+    @GetMapping("/getAllGoodsInfoList")
+    public R getAllGoodsInfoList(BsGoodsInfoBo bo) {
+        return iBsGoodsInfoService.getAllGoodsInfoList(bo);
+    }
 }

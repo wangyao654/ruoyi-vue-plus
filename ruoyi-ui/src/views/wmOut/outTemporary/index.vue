@@ -164,68 +164,158 @@
     />
 
     <!-- 添加或修改商品出库信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="出库单号" prop="wmOutCoded">
-          <el-input v-model="form.wmOutCoded" placeholder="请输入出库单号" />
-        </el-form-item>
-        <el-form-item label="文书编号" prop="certificateCoded">
-          <el-input v-model="form.certificateCoded" placeholder="请输入文书编号" />
-        </el-form-item>
-        <el-form-item label="商品名称" prop="goodsName">
-          <el-select v-model="form.goodsName" placeholder="请输入商品名称" >
-            <el-option
-              v-for="dict in dict.type.goods_specification"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="商品规格" prop="goodsSpecification">
-          <el-select v-model="form.goodsSpecification" placeholder="请输入商品规格" >
-            <el-option
-              v-for="dict in dict.type.goods_specification"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="出库数量" prop="wmOutNumber">
-          <el-input v-model="form.wmOutNumber" placeholder="请输入出库数量" />
-        </el-form-item>
-        <el-form-item label="出库日期" prop="wmOutDate">
-          <el-date-picker clearable
-            v-model="form.wmOutDate"
-            type="datetime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="请选择出库日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="保管员" prop="storekeeper">
-          <el-select v-model="storekeeperList" multiple  placeholder="请选择人员" size="mini" @change="getStorekeeper" style="width: 100%">
-            <el-option
-              v-for="dict in this.keeperUser"
-              :key="dict.userId"
-              :label="dict.userName"
-              :value="dict.userId"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="综合管理员" prop="synthesisKeeper">
-          <el-select v-model="synthesisKeeperList" multiple placeholder="请选择人员" size="mini" @change="getSynthesisKeeper" style="width: 100%">
-            <el-option
-              v-for="dict in this.synthesisKeeperUser"
-              :key="dict.userId"
-              :label="dict.userName"
-              :value="dict.userId"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="接收人员" prop="receiver">
-          <el-input v-model="form.receiver" placeholder="请输入接收人员" />
-        </el-form-item>
+    <el-dialog :title="title" :visible.sync="open" width="1300px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-row >
+          <el-col :span="8">
+            <el-form-item label="出库单号" prop="wmOutCoded">
+              <el-input v-model="form.wmOutCoded" placeholder="请输入出库单号" />
+            </el-form-item>
+        </el-col>
+          <el-col :span="8">
+            <el-form-item label="文书编号" prop="certificateCoded">
+              <el-input v-model="form.certificateCoded" placeholder="请输入文书编号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="商品名称" prop="goodsName">
+              <el-select v-model="form.goodsId" placeholder="请选择商品名称" filterable clearable style="width: 100%">
+                <el-option
+                  v-for="dict in goodsList"
+                  :key="dict.id"
+                  :label="dict.goodsName"
+                  :value="dict.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="商品规格" prop="goodsSpecification">
+              <el-select v-model="form.goodsSpecification" placeholder="请选择商品规格" clearable style="width: 100%" >
+                <el-option
+                  v-for="dict in dict.type.goods_specification"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="出库数量" prop="wmOutNumber">
+              <el-input v-model="form.wmOutNumber" placeholder="请输入出库数量" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="当事人" prop="client">
+              <el-input v-model="form.client" placeholder="请输入当事人" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="案由" prop="cause">
+              <el-select v-model="form.cause" placeholder="请输入案由" style="width: 100%" >
+                <el-option
+                  v-for="dict in dict.type.cause"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="关联文书编号" prop="certificateCodedAssaciation">
+<!--              (入库且未结案的文书编号，有效数据筛选)-->
+              <el-input v-model="form.certificateCodedAssaciation" placeholder="请输入关联文书编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="出库原因" prop="wmOutReason">
+              <el-select v-model="form.wmOutReason" placeholder="请输入出库原因" style="width: 100%" >
+                <el-option
+                  v-for="dict in dict.type.wm_out_reason"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="烟卷质量" prop="cigaretteQuality">
+              <el-select v-model="form.cigaretteQuality" placeholder="请选择烟卷质量" style="width: 100%" >
+                <el-option
+                  v-for="dict in dict.type.cigarette_quality"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="所属单位编号" prop="unitCoded">
+              <el-input v-model="form.unitCoded" placeholder="请输入所属单位编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="出库日期" prop="wmOutDate">
+              <el-date-picker clearable
+                              v-model="form.wmOutDate"
+                              type="datetime"
+                              value-format="yyyy-MM-dd"
+                              style="width: 100%"
+                              placeholder="请选择出库日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="接收人员" prop="receiver">
+              <el-input v-model="form.receiver" placeholder="请输入接收人员" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="保管员" prop="storekeeper">
+              <el-select v-model="storekeeperList" multiple  placeholder="请选择人员" size="mini" @change="getStorekeeper" style="width: 100%">
+                <el-option
+                  v-for="dict in this.keeperUser"
+                  :key="dict.userId"
+                  :label="dict.userName"
+                  :value="dict.userId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="综合管理员" prop="synthesisKeeper">
+              <el-select v-model="synthesisKeeperList" multiple placeholder="请选择人员" size="mini" @change="getSynthesisKeeper" style="width: 100%">
+                <el-option
+                  v-for="dict in this.synthesisKeeperUser"
+                  :key="dict.userId"
+                  :label="dict.userName"
+                  :value="dict.userId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :loading="buttonLoading" type="primary" @click="submitForm">确 定</el-button>
@@ -236,14 +326,18 @@
 </template>
 
 <script>
-import { listOutInfo, getOutInfo, delOutInfo, addOutInfo, updateOutInfo } from "@/api/wmOut/outInfo";
+import { listOutInfo, getOutInfo,createWmOutCoded } from "@/api/wmOut/outInfo";
+import { getAllGoodsInfoList } from "@/api/base/goodsInfo";
+import {listWhBitAll} from "@/api/base/whBitInfo";
 import { listOutTemporary, getOutTemporary, delOutTemporary, addOutTemporary, updateOutTemporary } from "@/api/wmOut/outTemporary";
 
 export default {
   name: "outTemporary",
-  dicts: ['cause','invoices_status','goods_specification'],
+  dicts: ['cause','invoices_status','goods_specification','wm_out_reason','cigarette_quality'],
   data() {
     return {
+      //库位集合
+      whBitInfoList:[],
       //保管员集合
       storekeeperList:[],
       //综合保管员集合
@@ -326,26 +420,32 @@ export default {
         storekeeper: [
           { required: true, message: "保管员不能为空", trigger: "blur" }
         ],
-        storekeeperId: [
-          { required: true, message: "保管员-用户id不能为空", trigger: "blur" }
-        ],
         synthesisKeeper: [
           { required: true, message: "综合管理员不能为空", trigger: "blur" }
-        ],
-        synthesisKeeperId: [
-          { required: true, message: "综合管理员-用户id不能为空", trigger: "blur" }
         ],
         receiver: [
           { required: true, message: "接收人员不能为空", trigger: "blur" }
         ],
-        receiverId: [
-          { required: true, message: "接收人员-用户id不能为空", trigger: "blur" }
-        ],
         enclosure: [
           { required: true, message: "附件不能为空", trigger: "blur" }
         ],
-        outType: [
-          { required: true, message: "出库类型不能为空", trigger: "change" }
+        client: [
+          { required: true, message: "当事人不能为空", trigger: "blur" }
+        ],
+        cause: [
+          { required: true, message: "案由不能为空", trigger: "blur" }
+        ],
+        certificateCodedAssaciation: [
+          { required: true, message: "关联文书编号(入库且未结案的文书编号，有效数据筛选)不能为空", trigger: "blur" }
+        ],
+        wmOutReason: [
+          { required: true, message: "出库原因(返还，移送，转罚没)不能为空", trigger: "blur" }
+        ],
+        cigaretteQuality: [
+          { required: true, message: "烟卷质量不能为空", trigger: "blur" }
+        ],
+        unitCoded: [
+          { required: true, message: "所属单位编号不能为空", trigger: "blur" }
         ]
       },
       pickerOptions: {
@@ -379,6 +479,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getGoodsAll();
   },
   methods: {
     getStorekeeper(value){
@@ -392,7 +493,9 @@ export default {
     },
     /*查询所有商品*/
     getGoodsAll(){
-
+      getAllGoodsInfoList({}).then(response=>{
+        this.goodsList=response.data;
+      })
     },
     /** 查询商品出库信息列表 */
     getList() {
@@ -414,7 +517,6 @@ export default {
         id: undefined,
         wmOutCoded: undefined,
         certificateCoded: undefined,
-        goodsName: undefined,
         goodsId: undefined,
         goodsSpecification: undefined,
         wmOutNumber: undefined,
@@ -455,9 +557,22 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
+    getWmOutCoded(){
+      createWmOutCoded({type:"ZO"}).then(res=>{
+        this.form.wmOutCoded=res.msg;
+      })
+    },
+    //获取所有库位
+    getWhBitList(){
+      listWhBitAll({}).then(res=>{
+        this.whBitInfoList=res.data;
+      })
+    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getWmOutCoded();
+      this.getWhBitList()
       this.open = true;
       this.title = "添加商品出库信息";
     },
@@ -466,7 +581,7 @@ export default {
       this.loading = true;
       this.reset();
       const id = row.id || this.ids
-      getOutInfo(id).then(response => {
+      getOutTemporary(id).then(response => {
         this.loading = false;
         this.form = response.data;
         this.open = true;
@@ -479,7 +594,7 @@ export default {
         if (valid) {
           this.buttonLoading = true;
           if (this.form.id != null) {
-            updateOutInfo(this.form).then(response => {
+            updateOutTemporary(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -487,7 +602,7 @@ export default {
               this.buttonLoading = false;
             });
           } else {
-            addOutInfo(this.form).then(response => {
+            addOutTemporary(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();

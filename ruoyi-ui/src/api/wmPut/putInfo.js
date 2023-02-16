@@ -42,8 +42,6 @@ export function delPutInfo(id) {
     method: 'delete'
   })
 }
-createWmPutCoded
-// 删除商品入库信息
 export function createWmPutCoded(query) {
   return request({
     url: '/wmPut/putInfo/createWmPutCoded',

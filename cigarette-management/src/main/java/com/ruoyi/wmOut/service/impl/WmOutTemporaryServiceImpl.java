@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.wmOut.domain.WmOutInfo;
 import com.ruoyi.wmPut.service.impl.WmPutTemporaryServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import com.ruoyi.wmOut.domain.vo.WmOutTemporaryVo;
 import com.ruoyi.wmOut.domain.WmOutTemporary;
 import com.ruoyi.wmOut.mapper.WmOutTemporaryMapper;
 import com.ruoyi.wmOut.service.IWmOutTemporaryService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -85,9 +87,12 @@ public class WmOutTemporaryServiceImpl implements IWmOutTemporaryService {
      * 新增暂存出库信息
      */
     @Override
+    @Transactional
     public Boolean insertByBo(WmOutTemporaryBo bo) {
         WmOutTemporary add = BeanUtil.toBean(bo, WmOutTemporary.class);
         validEntityBeforeSave(add);
+        WmOutInfo wmOutInfo = BeanUtil.toBean(bo, WmOutInfo.class);
+        baseMapper.insertOutInfo(wmOutInfo);
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setId(add.getId());

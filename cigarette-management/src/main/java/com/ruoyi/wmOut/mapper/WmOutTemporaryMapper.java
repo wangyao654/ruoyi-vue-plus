@@ -1,6 +1,7 @@
 package com.ruoyi.wmOut.mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.wmOut.domain.WmOutInfo;
 import com.ruoyi.wmOut.domain.WmOutTemporary;
 import com.ruoyi.wmOut.domain.bo.WmOutTemporaryBo;
 import com.ruoyi.wmOut.domain.vo.WmOutTemporaryVo;
@@ -20,4 +21,6 @@ public interface WmOutTemporaryMapper extends BaseMapperPlus<WmOutTemporaryMappe
     Page<WmOutTemporaryVo> selectPageList(@Param("page") Page<WmOutTemporaryVo> build,@Param("bo") WmOutTemporaryBo bo);
 
     void deleteByOutId(@Param("ids") Collection<Long> ids);
+
+    void insertOutInfo(@Param("info") WmOutInfo wmOutInfo);
 }

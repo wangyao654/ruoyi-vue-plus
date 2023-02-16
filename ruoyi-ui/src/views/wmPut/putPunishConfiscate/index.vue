@@ -529,6 +529,7 @@ import { listPutPunishConfiscate, getPutPunishConfiscate, delPutPunishConfiscate
 import { createWmPutCoded, getKeeperUser, addPutInfo, updatePutInfo,delPutInfo,getPutInfo } from "@/api/wmPut/putInfo";
 import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
 import { selectByBarcode } from "@/api/base/goodsInfo";
+import {listWhBitAll} from "@/api/base/whBitInfo";
 export default {
   name: "PutPunishConfiscate",
   dicts: ['cause','cause_type','invoices_status','cigarette_type'],
@@ -693,6 +694,12 @@ export default {
     this.getUnit();
   },
   methods: {
+    //获取所有库位
+    getWhBitList(){
+      listWhBitAll({}).then(res=>{
+        this.whBitInfoList=res.data;
+      })
+    },
     attachedList(row){
       this.$router.push('/putInfo/putPunishConfiscate/'+row.wmPutCoded);
     },
@@ -911,6 +918,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getWhBitList()
       this.open = true;
       this.title = "添加罚没入库信息";
       this.getWmPutCoded();
@@ -918,6 +926,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.loading = true;
+      this.getWhBitList()
       this.reset();
       const id = row.id || this.ids
       getPutPunishConfiscate(id).then(response => {

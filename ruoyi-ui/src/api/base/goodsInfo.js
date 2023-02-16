@@ -65,3 +65,11 @@ export function selectByBarcode(query){
     params:query
   })
 }
+
+export function getAllGoodsInfoList(query) {
+  return request({
+    url: '/base/goodsInfo/getAllGoodsInfoList',
+    method: 'get',
+    params: query
+  })
+}

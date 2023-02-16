@@ -66,4 +66,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <insert id="insertOutInfo">
+        insert into wm_out_info (wm_out_coded, certificate_coded,
+      goods_id, wm_out_number, invoices_status,
+      wm_out_date, storekeeper, storekeeper_id,
+      synthesis_keeper, synthesis_keeper_id, receiver,
+      receiver_id, create_time, update_by,
+      update_time, create_by, out_type)
+    values (#{id}, #{wmOutCoded}, #{certificateCoded},
+      #{goodsId}, #{wmOutNumber}, #{invoicesStatus},
+      #{wmOutDate}, #{storekeeper}, #{storekeeperId},
+      #{synthesisKeeper}, #{synthesisKeeperId}, #{receiver},
+      #{receiverId}, #{createTime}, #{updateBy},
+      #{updateTime}, #{createBy}, #{outType})
+    </insert>
 </mapper>

@@ -34,7 +34,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/system/outInfo")
+@RequestMapping("/wmOut/outInfo")
 public class WmOutInfoController extends BaseController {
 
     private final IWmOutInfoService iWmOutInfoService;

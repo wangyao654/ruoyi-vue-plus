@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询商品出库信息列表
 export function listOutInfo(query) {
   return request({
-    url: '/system/outInfo/list',
+    url: '/wmOut/outInfo/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listOutInfo(query) {
 // 查询商品出库信息详细
 export function getOutInfo(id) {
   return request({
-    url: '/system/outInfo/' + id,
+    url: '/wmOut/outInfo/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getOutInfo(id) {
 // 新增商品出库信息
 export function addOutInfo(data) {
   return request({
-    url: '/system/outInfo',
+    url: '/wmOut/outInfo',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addOutInfo(data) {
 // 修改商品出库信息
 export function updateOutInfo(data) {
   return request({
-    url: '/system/outInfo',
+    url: '/wmOut/outInfo',
     method: 'put',
     data: data
   })
@@ -38,7 +38,15 @@ export function updateOutInfo(data) {
 // 删除商品出库信息
 export function delOutInfo(id) {
   return request({
-    url: '/system/outInfo/' + id,
+    url: '/wmOut/outInfo/' + id,
     method: 'delete'
   })
 }
+export function createWmOutCoded(query) {
+  return request({
+    url: '/wmOut/outInfo/createWmOutCoded',
+    method: 'get',
+    params: query
+  })
+}
+

@@ -237,7 +237,15 @@ public class BsGoodsInfoServiceImpl implements IBsGoodsInfoService {
         wmPutInfoBo.setVarietyNumber(variety);
         return R.ok(wmPutInfoBo);
     }
-private void verdict(Double sum,String singleBarboxNumber){
+
+    @Override
+    public R getAllGoodsInfoList(BsGoodsInfoBo bo) {
+        LambdaQueryWrapper<BsGoodsInfo> lqw = buildQueryWrapper(bo);
+        List<BsGoodsInfoVo> bsGoodsInfos = baseMapper.selectVoList(lqw);
+        return R.ok(bsGoodsInfos);
+    }
+
+    private void verdict(Double sum,String singleBarboxNumber){
         switch (Integer.parseInt(singleBarboxNumber)){
             case 1: sum=num(1.00/10.00);
             break;

@@ -679,7 +679,12 @@ export default {
     this.getUnit();
   },
   methods: {
-
+    //获取所有库位
+    getWhBitList(){
+      listWhBitAll({}).then(res=>{
+        this.whBitInfoList=res.data;
+      })
+    },
     /*添加入库基本信息*/
     putBaseInfoSubmit(){
       if(this.buzhou==1){
@@ -900,13 +905,16 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getWhBitList()
       this.open = true;
       this.title = "添加抽检返还入库信息";
+      this.getWmPutCoded();
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.loading = true;
       this.reset();
+      this.getWhBitList()
       const id = row.id || this.ids
       getPutSampling(id).then(response => {
         this.loading = false;

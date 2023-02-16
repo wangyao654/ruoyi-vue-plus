@@ -737,14 +737,14 @@ export default {
           //this.form.goodsName=res.data.goodsName
           this.form.goodscoded=res.data.goodsCoded
           //新增入库
-          addPutTemporary(this.form).then(response => {
+          addPutEscrow(this.form).then(response => {
             this.$modal.msgSuccess("新增成功");
           }).finally(() => {
             this.buttonLoading = false;
             this.buzhou=3;
             this.reset();
             //查询最新
-            getPutTemporaryList({pageNum: 1, pageSize: 5,}).then(res=>{
+            getEscrowList({pageNum: 1, pageSize: 5,}).then(res=>{
               this.putTemporaryListZR = res.rows;
               this.totalF = res.total;
               this.loading = false;
@@ -916,6 +916,7 @@ export default {
     handleUpdate(row) {
       this.loading = true;
       this.reset();
+      this.getWhBitList();
       const id = row.id || this.ids
       getPutEscrow(id).then(response => {
         this.loading = false;
