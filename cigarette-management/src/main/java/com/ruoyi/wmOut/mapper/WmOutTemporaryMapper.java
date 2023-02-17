@@ -23,4 +23,6 @@ public interface WmOutTemporaryMapper extends BaseMapperPlus<WmOutTemporaryMappe
     void deleteByOutId(@Param("ids") Collection<Long> ids);
 
     void insertOutInfo(@Param("info") WmOutInfo wmOutInfo);
+
+    WmOutTemporaryVo selectWmOutTemporaryById(@Param("id") Long id);
 }

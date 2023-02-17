@@ -1,39 +1,45 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
-      <el-form-item label="文书编号" prop="certificateCoded">
+<!--      <el-form-item label="关联文书编号(入库且未结案的文书编号，有效数据筛选)" prop="certificateCodedAssaciation">
         <el-input
-          v-model="queryParams.certificateCoded"
-          placeholder="请输入文书编号"
+          v-model="queryParams.certificateCodedAssaciation"
+          placeholder="请输入关联文书编号(入库且未结案的文书编号，有效数据筛选)"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>-->
+      <el-form-item label="出库单号" prop="wmOutCoded">
+        <el-input
+          v-model="queryParams.wmOutCoded"
+          placeholder="请输入出库单号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="商品名称" prop="goodsName">
+      <el-form-item label="所属单位编号" prop="unitCoded">
         <el-input
-          v-model="queryParams.goodsName"
-          placeholder="请输入商品名称"
+          v-model="queryParams.unitCoded"
+          placeholder="请输入所属单位编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="当事人" prop="client">
+      <el-form-item label="入库日期" prop="whPutDate">
+        <el-date-picker clearable
+          v-model="queryParams.whPutDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择入库日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="入库单位" prop="measureUnit">
         <el-input
-          v-model="queryParams.client"
-          placeholder="请输入当事人"
+          v-model="queryParams.measureUnit"
+          placeholder="请输入入库单位"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="单据状态" prop="invoicesStatus">
-        <el-select v-model="queryParams.invoicesStatus" placeholder="请选择单据状态" clearable @keyup.enter.native="handleQuery">
-          <el-option
-            v-for="dict in dict.type.invoices_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          ></el-option>
-        </el-select>
       </el-form-item>
       <el-form-item  label="时间" prop="betweenTime">
         <el-date-picker
@@ -45,8 +51,6 @@
           end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
-
-
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -61,7 +65,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:outInfo:add']"
+          v-hasPermi="['outEscrow:outEscrow:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -72,7 +76,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:outInfo:edit']"
+          v-hasPermi="['outEscrow:outEscrow:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -83,7 +87,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:outInfo:remove']"
+          v-hasPermi="['outEscrow:outEscrow:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -93,67 +97,57 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:outInfo:export']"
+          v-hasPermi="['outEscrow:outEscrow:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="outInfoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" v-if="true"/>
-      <el-table-column label="出库单号" align="center" prop="wmOutCoded" />
-      <el-table-column label="文书编号" align="center" prop="certificateCoded" />
-      <el-table-column label="商品名称" align="center" prop="goodsName" />
-      <el-table-column label="商品规格" align="center" prop="goodsSpecification" >
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.goods_specification" :value="scope.row.goodsSpecification"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="出库数量" align="center" prop="wmOutNumber" />
-      <el-table-column label="单据状态" align="center" prop="invoicesStatus" >
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.invoices_status" :value="scope.row.invoicesStatus"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="出库日期" align="center" prop="wmOutDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.wmOutDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="保管员" align="center" prop="storekeeper" />
-      <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
-      <el-table-column label="接收人员" align="center" prop="receiver" />
-      <el-table-column label="附件" align="center" prop="enclosure" />
-      <el-table-column label="出库类型" align="center" prop="outType" >
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.out_type" :value="scope.row.outType"/>
-        </template>
-      </el-table-column>
-
-<!--      <el-table-column label="暂存出库信息id" align="center" prop="wmOutId" />
-      <el-table-column label="当事人" align="center" prop="client" />
-      <el-table-column label="案由" align="center" prop="cause" />
-      <el-table-column label="关联文书编号(入库且未结案的文书编号，有效数据筛选)" align="center" prop="certificateCodedAssaciation" />
-      <el-table-column label="出库原因(返还，移送，转罚没)" align="center" prop="wmOutReason" />
-      <el-table-column label="烟卷质量" align="center" prop="cigaretteQuality" />
-      <el-table-column label="所属单位编号" align="center" prop="unitCoded" />-->
-
+    <el-table v-loading="loading" :data="outEscrowList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="60" align="center" />
+      <el-table-column label="主键" align="center" prop="id" v-if="false"/>
+        <el-table-column label="出库单号" align="center" prop="wmOutCoded" />
+        <el-table-column label="文书编号" align="center" prop="certificateCoded" />
+        <el-table-column label="关联文书编号" align="center" prop="certificateCodedAssaciation" />
+        <el-table-column label="所属单位编号" align="center" prop="unitCoded" />
+        <el-table-column label="商品名称" align="center" prop="goodsName" />
+        <el-table-column label="商品规格" align="center" prop="goodsSpecification" />
+        <el-table-column label="出库数量" align="center" prop="wmOutNumber" />
+        <el-table-column label="单据状态" align="center" prop="invoicesStatus" />
+        <el-table-column label="出库日期" align="center" prop="wmOutDate" width="180">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.wmOutDate, '{y}-{m}-{d}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="入库单位" align="center" prop="measureUnit" />
+        <el-table-column label="入库品种数" align="center" prop="varietyNumber" />
+        <el-table-column label="入库数" align="center" prop="whPutNumber" />
+        <el-table-column label="入库日期" align="center" prop="whPutDate" width="180">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.whPutDate, '{y}-{m}-{d}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="保管员" align="center" prop="storekeeper" />
+        <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
+        <el-table-column label="接收人员" align="center" prop="receiver" />
+        <el-table-column label="附件" align="center" prop="enclosure" />
+        <el-table-column label="出库类型" align="center" prop="outType" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:outInfo:edit']"
+            v-hasPermi="['outEscrow:outEscrow:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:outInfo:remove']"
+            v-hasPermi="['outEscrow:outEscrow:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -167,15 +161,34 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改商品出库信息对话框 -->
+    <!-- 添加或修改代管出库信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="1300px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-row >
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-row>
           <el-col :span="8">
             <el-form-item label="出库单号" prop="wmOutCoded">
               <el-input v-model="form.wmOutCoded" placeholder="请输入出库单号" />
             </el-form-item>
-        </el-col>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="入库单位" prop="measureUnit">
+              <el-input v-model="form.measureUnit" placeholder="请输入入库单位" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="入库日期" prop="whPutDate">
+              <el-date-picker clearable
+                              v-model="form.whPutDate"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              style="width: 100%"
+                              placeholder="请选择入库日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
           <el-col :span="8">
             <el-form-item label="文书编号" prop="certificateCoded">
               <el-input v-model="form.certificateCoded" placeholder="请输入文书编号" />
@@ -193,8 +206,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="商品规格" prop="goodsSpecification">
               <el-select v-model="form.goodsSpecification" placeholder="请选择商品规格" clearable style="width: 100%" >
@@ -207,88 +218,53 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+
+
+
+
+
+        <el-row>
+          <el-col :span="8">
+              <el-form-item label="所属单位编号" prop="unitCoded">
+                <el-input v-model="form.unitCoded" placeholder="请输入所属单位编号"  type="number"/>
+              </el-form-item>
+            </el-col>
+          <el-col :span="8">
+            <el-form-item label="入库数" prop="whPutNumber">
+              <el-input v-model="form.whPutNumber" placeholder="请输入入库数" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="入库品种数" prop="varietyNumber">
+              <el-input v-model="form.varietyNumber" placeholder="请输入入库品种数" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="关联文书编号" prop="certificateCodedAssaciation">
+              <el-input v-model="form.certificateCodedAssaciation" placeholder="请输入关联文书编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+
+
+
+        <el-row>
           <el-col :span="8">
             <el-form-item label="出库数量" prop="wmOutNumber">
               <el-input v-model="form.wmOutNumber" placeholder="请输入出库数量" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="单据状态" prop="invoicesStatus">
-              <el-select v-model="form.invoicesStatus" placeholder="请选择单据状态" clearable style="width: 100%">
-                <el-option
-                  v-for="dict in dict.type.invoices_status"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="当事人" prop="client">
-              <el-input v-model="form.client" placeholder="请输入当事人" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="案由" prop="cause">
-              <el-select v-model="form.cause" placeholder="请输入案由" style="width: 100%" >
-                <el-option
-                  v-for="dict in dict.type.cause"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="关联文书编号" prop="certificateCodedAssaciation">
-<!--              (入库且未结案的文书编号，有效数据筛选)-->
-              <el-input v-model="form.certificateCodedAssaciation" placeholder="请输入关联文书编号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="出库原因" prop="wmOutReason">
-              <el-select v-model="form.wmOutReason" placeholder="请输入出库原因" style="width: 100%" >
-                <el-option
-                  v-for="dict in dict.type.wm_out_reason"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="烟卷质量" prop="cigaretteQuality">
-              <el-select v-model="form.cigaretteQuality" placeholder="请选择烟卷质量" style="width: 100%" >
-                <el-option
-                  v-for="dict in dict.type.cigarette_quality"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="所属单位编号" prop="unitCoded">
-              <el-input v-model="form.unitCoded" placeholder="请输入所属单位编号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
             <el-form-item label="出库日期" prop="wmOutDate">
               <el-date-picker clearable
                               v-model="form.wmOutDate"
                               type="date"
-                              value-format="yyyy-MM-dd"
                               style="width: 100%"
+                              value-format="yyyy-MM-dd"
                               placeholder="请选择出库日期">
               </el-date-picker>
             </el-form-item>
@@ -297,9 +273,6 @@
             <el-form-item label="接收人员" prop="receiver">
               <el-input v-model="form.receiver" placeholder="请输入接收人员" />
             </el-form-item>
-          </el-col>
-          <el-col :span="8">
-
           </el-col>
         </el-row>
         <el-row>
@@ -339,15 +312,14 @@
 </template>
 
 <script>
+import { listOutEscrow, getOutEscrow, delOutEscrow, addOutEscrow, updateOutEscrow } from "@/api/wmOut/outEscrow";
 import { listOutInfo, getOutInfo,createWmOutCoded } from "@/api/wmOut/outInfo";
 import { getKeeperUser} from "@/api/wmPut/putInfo";
 import { getAllGoodsInfoList } from "@/api/base/goodsInfo";
 import {listWhBitAll} from "@/api/base/whBitInfo";
-import { listOutTemporary, getOutTemporary, delOutTemporary, addOutTemporary, updateOutTemporary } from "@/api/wmOut/outTemporary";
 import store from '@/store'
-
 export default {
-  name: "outTemporary",
+  name: "OutEscrow",
   dicts: ['cause','invoices_status','goods_specification','wm_out_reason','cigarette_quality','out_type'],
   data() {
     return {
@@ -378,8 +350,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 商品出库信息表格数据
-      outInfoList: [],
+      // 代管出库信息表格数据
+      outEscrowList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -388,14 +360,13 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        client:undefined,
-        wmOutCoded: undefined,
-        certificateCoded: undefined,
-        goodsName: undefined,
-        goodsSpecification: undefined,
-        invoicesStatus: undefined,
-        storekeeper: undefined,
-        synthesisKeeper: undefined,
+        certificateCodedAssaciation: undefined,
+        unitCoded: undefined,
+        whPutDate: undefined,
+        varietyNumber: undefined,
+        wmOutCoded:undefined,
+        whPutNumber: undefined,
+        measureUnit: undefined,
         betweenTime:undefined,
         startTime:undefined,
         endTime:undefined,
@@ -405,8 +376,26 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        id: [
-          { required: true, message: "主键不能为空", trigger: "blur" }
+        wmOutId: [
+          { required: true, message: "代管出库信息id不能为空", trigger: "blur" }
+        ],
+        certificateCodedAssaciation: [
+          { required: true, message: "关联文书编号不能为空", trigger: "blur" }
+        ],
+        unitCoded: [
+          { required: true, message: "所属单位编号不能为空", trigger: "blur" }
+        ],
+        whPutDate: [
+          { required: true, message: "入库日期(代管出库)不能为空", trigger: "blur" }
+        ],
+        varietyNumber: [
+          { required: true, message: "入库品种数(代管出库)不能为空", trigger: "blur" }
+        ],
+        whPutNumber: [
+          { required: true, message: "入库数不能为空", trigger: "blur" }
+        ],
+        measureUnit: [
+          { required: true, message: "入库单位不能为空", trigger: "blur" }
         ],
         wmOutCoded: [
           { required: true, message: "出库单号不能为空", trigger: "blur" }
@@ -414,14 +403,8 @@ export default {
         certificateCoded: [
           { required: true, message: "文书编号不能为空", trigger: "blur" }
         ],
-        goodsName: [
-          { required: true, message: "商品名称不能为空", trigger: "blur" }
-        ],
         goodsId: [
           { required: true, message: "商品id不能为空", trigger: "blur" }
-        ],
-        goodsSpecification: [
-          { required: true, message: "商品规格不能为空", trigger: "blur" }
         ],
         wmOutNumber: [
           { required: true, message: "出库数量不能为空", trigger: "blur" }
@@ -440,27 +423,6 @@ export default {
         ],
         receiver: [
           { required: true, message: "接收人员不能为空", trigger: "blur" }
-        ],
-        enclosure: [
-          { required: true, message: "附件不能为空", trigger: "blur" }
-        ],
-        client: [
-          { required: true, message: "当事人不能为空", trigger: "blur" }
-        ],
-        cause: [
-          { required: true, message: "案由不能为空", trigger: "blur" }
-        ],
-        certificateCodedAssaciation: [
-          { required: true, message: "关联文书编号(入库且未结案的文书编号，有效数据筛选)不能为空", trigger: "blur" }
-        ],
-        wmOutReason: [
-          { required: true, message: "出库原因(返还，移送，转罚没)不能为空", trigger: "blur" }
-        ],
-        cigaretteQuality: [
-          { required: true, message: "烟卷质量不能为空", trigger: "blur" }
-        ],
-        unitCoded: [
-          { required: true, message: "所属单位编号不能为空", trigger: "blur" }
         ]
       },
       pickerOptions: {
@@ -521,11 +483,11 @@ export default {
         this.goodsList=response.data;
       })
     },
-    /** 查询商品出库信息列表 */
+    /** 查询代管出库信息列表 */
     getList() {
       this.loading = true;
-      listOutTemporary(this.queryParams).then(response => {
-        this.outInfoList = response.rows;
+      listOutEscrow(this.queryParams).then(response => {
+        this.outEscrowList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -539,40 +501,44 @@ export default {
     reset() {
       this.storekeeperList=[];
       this.synthesisKeeperList=[];
-      var userId = this.$store.state.user.userInfo.userId
+      var userId = this.$store.state.user.userId;
       this.storekeeperList.unshift(parseInt(userId))
-   //   this.synthesisKeeperList.unshift(parseInt(userId))
+    //  this.synthesisKeeperList.unshift(parseInt(userId))
       this.form = {
         id: undefined,
+        wmOutId: undefined,
+        certificateCodedAssaciation: undefined,
+        unitCoded: undefined,
+        whPutDate: undefined,
+        varietyNumber: undefined,
+        whPutNumber: undefined,
+        measureUnit: undefined,
         wmOutCoded: undefined,
         certificateCoded: undefined,
+        goodsName: undefined,
         goodsId: undefined,
         goodsSpecification: undefined,
         wmOutNumber: undefined,
-        invoicesStatus: undefined,
+        invoicesStatus: "0",
         wmOutDate: undefined,
         storekeeper: undefined,
+        storekeeperId: undefined,
         synthesisKeeper: undefined,
+        synthesisKeeperId: undefined,
         receiver: undefined,
+        receiverId: undefined,
         createTime: undefined,
         updateBy: undefined,
         updateTime: undefined,
         enclosure: undefined,
         createBy: undefined,
-        outType: 2
+        outType: 1
       };
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
-      let arr = [];
-      let r = this.queryParams.betweenTime;
-      if (r != undefined && r != null && r != "") {
-        arr = this.queryParams.betweenTime.toString().split(",")
-        this.queryParams.startTime = arr[0]
-        this.queryParams.endTime = arr[1];
-      }
       this.getList();
     },
     /** 重置按钮操作 */
@@ -586,8 +552,9 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
+    /*自动生成出库编号*/
     getWmOutCoded(){
-      createWmOutCoded({type:"ZO"}).then(res=>{
+      createWmOutCoded({type:"DO"}).then(res=>{
         this.form.wmOutCoded=res.msg;
       })
     },
@@ -603,23 +570,23 @@ export default {
       this.getWmOutCoded();
       this.getWhBitList()
       this.open = true;
-      this.title = "添加商品出库信息";
+      this.title = "添加代管出库信息";
     },
     /** 修改按钮操作 */
-    handleUpdate: function(row) {
-      this.loading = true
-      this.reset()
+    handleUpdate(row) {
+      this.loading = true;
+      this.reset();
       const id = row.id || this.ids
-      getOutTemporary(id).then(response => {
-        this.loading = false
-        this.form = response.data
-       this.storekeeperList= this.form.storekeeper.split(',')
+      getOutEscrow(id).then(response => {
+        this.loading = false;
+        this.form = response.data;
+        this.storekeeperList= this.form.storekeeper.split(',')
         this.storekeeperList=this.storekeeperList.map(Number);
 /*        this.synthesisKeeperList= this.form.synthesisKeeper.split(",")*/
         this.synthesisKeeperList= this.form.synthesisKeeper.split(",").map(Number);
-        this.open = true
-        this.title = '修改商品出库信息'
-      })
+        this.open = true;
+        this.title = "修改代管出库信息";
+      });
     },
     /** 提交按钮 */
     submitForm() {
@@ -627,7 +594,7 @@ export default {
         if (valid) {
           this.buttonLoading = true;
           if (this.form.id != null) {
-            updateOutTemporary(this.form).then(response => {
+            updateOutEscrow(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
@@ -635,7 +602,7 @@ export default {
               this.buttonLoading = false;
             });
           } else {
-            addOutTemporary(this.form).then(response => {
+            addOutEscrow(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -649,9 +616,9 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除商品出库信息编号为"' + ids + '"的数据项？').then(() => {
+      this.$modal.confirm('是否确认删除代管出库信息编号为"' + ids + '"的数据项？').then(() => {
         this.loading = true;
-        return delOutTemporary(ids);
+        return delOutEscrow(ids);
       }).then(() => {
         this.loading = false;
         this.getList();
@@ -663,9 +630,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/outInfo/export', {
+      this.download('wmOut/outEscrow/export', {
         ...this.queryParams
-      }, `outInfo_${new Date().getTime()}.xlsx`)
+      }, `代管出库_${new Date().getTime()}.xlsx`)
     }
   }
 };

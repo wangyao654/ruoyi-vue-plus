@@ -17,6 +17,7 @@ import com.ruoyi.base.domain.vo.BsWhAreaInfoVo;
 import com.ruoyi.base.domain.BsWhAreaInfo;
 import com.ruoyi.base.mapper.BsWhAreaInfoMapper;
 import com.ruoyi.base.service.IBsWhAreaInfoService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -98,6 +99,7 @@ public class BsWhAreaInfoServiceImpl implements IBsWhAreaInfoService {
      * 修改库区信息
      */
     @Override
+    @Transactional
     public Boolean updateByBo(BsWhAreaInfoBo bo) {
         BsWhAreaInfo update = BeanUtil.toBean(bo, BsWhAreaInfo.class);
         validEntityBeforeSave(update);

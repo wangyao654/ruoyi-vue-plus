@@ -1,5 +1,6 @@
 package com.ruoyi.wmOut.domain.bo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.core.validate.AddGroup;
 import com.ruoyi.common.core.validate.EditGroup;
 import lombok.Data;
@@ -9,6 +10,7 @@ import javax.validation.constraints.*;
 import java.util.Date;
 
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 商品出库信息业务对象 wm_out_info
@@ -73,6 +75,8 @@ public class WmOutInfoBo extends BaseEntity {
      * 出库日期
      */
   //  @NotNull(message = "出库日期不能为空", groups = { AddGroup.class, EditGroup.class })
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date wmOutDate;
 
     /**

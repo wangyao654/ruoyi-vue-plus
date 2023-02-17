@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -122,6 +123,7 @@ public class BsWarehouseInfoServiceImpl implements IBsWarehouseInfoService {
      * 修改仓库管理
      */
     @Override
+    @Transactional
     public Boolean updateByBo(BsWarehouseInfoBo bo) {
         BsWarehouseInfo update = BeanUtil.toBean(bo, BsWarehouseInfo.class);
         validEntityBeforeSave(update);

@@ -15,13 +15,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="unitCoded" column="unit_coded"/>
     </resultMap>
     <sql id="wm_out_info_column">
-    id,wm_out_coded, certificate_coded, goods_id, wm_out_number, invoices_status, wm_out_date,
-    storekeeper, storekeeper_id, synthesis_keeper, synthesis_keeper_id, receiver, receiver_id,
-    create_time, update_by, update_time, create_by, out_type
+    woi.id,wm_out_coded, woi.certificate_coded, woi.goods_id, woi.wm_out_number, woi.invoices_status, woi.wm_out_date,
+    woi.storekeeper, woi.storekeeper_id, woi.synthesis_keeper, woi.synthesis_keeper_id, woi.receiver, woi.receiver_id,
+    woi.create_time, woi.update_by, woi.update_time, woi.create_by, woi.out_type
     </sql>
     <sql id="wm_out_temporary_column">
-    wm_out_id, client, cause, certificate_coded_assaciation, wm_out_reason, cigarette_quality,
-    unit_coded
+    wot.wm_out_id, wot.client, wot.cause, wot.certificate_coded_assaciation, wot.wm_out_reason, wot.cigarette_quality,
+    wot.unit_coded
     </sql>
     <select id="selectPageList" resultType="wmOutTemporaryVo">
       select
@@ -73,11 +73,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       synthesis_keeper, synthesis_keeper_id, receiver,
       receiver_id, create_time, update_by,
       update_time, create_by, out_type)
-    values (#{id}, #{wmOutCoded}, #{certificateCoded},
-      #{goodsId}, #{wmOutNumber}, #{invoicesStatus},
-      #{wmOutDate}, #{storekeeper}, #{storekeeperId},
-      #{synthesisKeeper}, #{synthesisKeeperId}, #{receiver},
-      #{receiverId}, #{createTime}, #{updateBy},
-      #{updateTime}, #{createBy}, #{outType})
+    values (#{info.wmOutCoded}, #{info.certificateCoded},
+      #{info.goodsId}, #{info.wmOutNumber}, #{info.invoicesStatus},
+      #{info.wmOutDate}, #{info.storekeeper}, #{info.storekeeperId},
+      #{info.synthesisKeeper}, #{info.synthesisKeeperId}, #{info.receiver},
+      #{info.receiverId}, #{info.createTime}, #{info.updateBy},
+      #{info.updateTime}, #{info.createBy}, #{info.outType})
     </insert>
+    <select id="selectWmOutTemporaryById" resultType="wmOutTemporaryVo">
+        select
+        <include refid="wm_out_temporary_column"/>,<include refid="wm_out_info_column"/>,
+        goods.goods_name,goods.goods_specification
+        from wm_out_temporary wot
+        left join wm_out_info woi on wot.wm_out_id=woi.id
+        left join bs_goods_info goods on goods.id = woi.goods_id
+        where woi.out_type= 2 and woi.id=#{id}
+    </select>
 </mapper>

@@ -5,14 +5,19 @@ const user = {
   state: {
     token: getToken(),
     name: '',
+    userId:'',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    userInfo:''
   },
 
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_USERID: (state, userId) => {
+      state.userId = userId
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -25,7 +30,10 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
-    }
+    },
+    SET_USERINFO: (state, userInfo) => {
+      state.userInfo = userInfo
+    },
   },
 
   actions: {
@@ -50,6 +58,7 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
+          console.log('获取到的用户信息:',res)
           const user = res.data.user
           const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : user.avatar;
           if (res.data.roles && res.data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
@@ -58,7 +67,9 @@ const user = {
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
-          commit('SET_NAME', user.userName)
+          commit('SET_NAME', res.data.user.userName)
+          commit('SET_USERID', res.data.user.userId)
+          commit('SET_USERINFO', res.data.user)
           commit('SET_AVATAR', avatar)
           resolve(res)
         }).catch(error => {

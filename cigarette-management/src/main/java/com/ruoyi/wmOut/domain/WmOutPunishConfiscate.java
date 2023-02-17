@@ -10,14 +10,15 @@ import java.math.BigDecimal;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 暂存出库信息对象 wm_out_temporary
+ * 罚没出库信息对象 wm_out_punish_confiscate
  *
  * @author ruoyi
- * @date 2023-02-14
+ * @date 2023-02-17
  */
 @Data
-@TableName("wm_out_temporary")
-public class WmOutTemporary  {
+@EqualsAndHashCode(callSuper = true)
+@TableName("wm_out_punish_confiscate")
+public class WmOutPunishConfiscate extends BaseEntity {
 
     private static final long serialVersionUID=1L;
 
@@ -27,7 +28,7 @@ public class WmOutTemporary  {
     @TableId(value = "id")
     private Long id;
     /**
-     * 暂存出库信息id
+     * 出库信息id-罚没
      */
     private Long wmOutId;
     /**
@@ -39,20 +40,20 @@ public class WmOutTemporary  {
      */
     private String cause;
     /**
-     * 关联文书编号(入库且未结案的文书编号，有效数据筛选)
-     */
-    private String certificateCodedAssaciation;
-    /**
      * 出库原因(返还，移送，转罚没)
      */
-    private String wmOutReason;
+    private Long wmOutReason;
     /**
-     * 烟卷质量（1-完好，2-霉变，3-即将霉变）数据字典
+     * 烟卷/商品 质量（1-完好，2-霉变，3-即将霉变）数据字典
      */
     private String cigaretteQuality;
     /**
      * 所属单位编号（接收单位）
      */
-    private String unitCoded;
+    private Long unitCoded;
+    /**
+     * 所属单位
+     */
+    private String unitName;
 
 }

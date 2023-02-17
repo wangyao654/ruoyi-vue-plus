@@ -353,7 +353,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="综合管理员" prop="synthesisKeeper">
-                <el-select v-model="synthesisKeeperList" multiple placeholder="请选择人员" size="mini" @change="getSynthesisKeeper" style="width: 100%">
+                <el-select v-model="woi.out_type= 2" multiple placeholder="请选择人员" size="mini" @change="getSynthesisKeeper" style="width: 100%">
                   <el-option
                     v-for="dict in this.synthesisKeeperUser"
                     :key="dict.userId"
