@@ -35,7 +35,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item  label="时间" prop="betweenTime">
+      <el-form-item  label="创建日期" prop="betweenTime">
         <el-date-picker
           v-model="queryParams.betweenTime"
           type="daterange"
@@ -124,6 +124,7 @@
       <el-table-column label="保管员" align="center" prop="storekeeper" />
       <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
       <el-table-column label="接收人员" align="center" prop="receiver" />
+      <el-table-column label="接收单位" align="center" prop="unitName" />
       <el-table-column label="附件" align="center" prop="enclosure" />
       <el-table-column label="出库类型" align="center" prop="outType" >
         <template slot-scope="scope">
@@ -137,7 +138,7 @@
       <el-table-column label="关联文书编号(入库且未结案的文书编号，有效数据筛选)" align="center" prop="certificateCodedAssaciation" />
       <el-table-column label="出库原因(返还，移送，转罚没)" align="center" prop="wmOutReason" />
       <el-table-column label="烟卷质量" align="center" prop="cigaretteQuality" />
-      <el-table-column label="所属单位编号" align="center" prop="unitCoded" />-->
+     -->
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -276,8 +277,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="所属单位编号" prop="unitCoded">
-              <el-input v-model="form.unitCoded" placeholder="请输入所属单位编号" />
+            <el-form-item label="接收单位" prop="unitCoded">
+              <el-select v-model="form.unitCoded" placeholder="请选择接收单位"filterable style="width: 100%" >
+                <el-option
+                  v-for="dict in this.unitList"
+                  :key="dict.unitCoded"
+                  :label="dict.unitName"
+                  :value="dict.unitCoded"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -342,9 +350,9 @@
 import { listOutInfo, getOutInfo,createWmOutCoded } from "@/api/wmOut/outInfo";
 import { getKeeperUser} from "@/api/wmPut/putInfo";
 import { getAllGoodsInfoList } from "@/api/base/goodsInfo";
+import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
 import {listWhBitAll} from "@/api/base/whBitInfo";
 import { listOutTemporary, getOutTemporary, delOutTemporary, addOutTemporary, updateOutTemporary } from "@/api/wmOut/outTemporary";
-import store from '@/store'
 
 export default {
   name: "outTemporary",
@@ -405,9 +413,6 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        id: [
-          { required: true, message: "主键不能为空", trigger: "blur" }
-        ],
         wmOutCoded: [
           { required: true, message: "出库单号不能为空", trigger: "blur" }
         ],
@@ -496,8 +501,16 @@ export default {
     this.getList();
     this.getGoodsAll();
     this.getUnitRoleUser();
+    this.getUnit();
   },
   methods: {
+    //获取组织
+    getUnit(){
+      listDealingsunitInfo({pageNum: 1,
+        pageSize: 10000,unitEnabled:'0'}).then(response => {
+        this.unitList = response.rows;
+      });
+    },
     //获取组织下的角色人员
     getUnitRoleUser(){
       getKeeperUser().then(res=>{

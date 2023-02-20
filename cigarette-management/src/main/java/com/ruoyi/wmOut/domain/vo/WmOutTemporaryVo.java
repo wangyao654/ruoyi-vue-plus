@@ -72,7 +72,9 @@ public class WmOutTemporaryVo extends WmOutInfoVo {
      */
     @ExcelProperty(value = "所属单位编号", converter = ExcelDictConvert.class)
     @ExcelDictFormat(readConverterExp = "接=收单位")
+    private String unitName;
     private String unitCoded;
+
 
 
 }

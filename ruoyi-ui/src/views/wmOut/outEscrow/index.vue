@@ -111,9 +111,17 @@
         <el-table-column label="关联文书编号" align="center" prop="certificateCodedAssaciation" />
         <el-table-column label="所属单位编号" align="center" prop="unitCoded" />
         <el-table-column label="商品名称" align="center" prop="goodsName" />
-        <el-table-column label="商品规格" align="center" prop="goodsSpecification" />
+      <el-table-column label="商品规格" align="center" prop="goodsSpecification" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.goods_specification" :value="scope.row.goodsSpecification"/>
+        </template>
+      </el-table-column>
         <el-table-column label="出库数量" align="center" prop="wmOutNumber" />
-        <el-table-column label="单据状态" align="center" prop="invoicesStatus" />
+      <el-table-column label="单据状态" align="center" prop="invoicesStatus" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.invoices_status" :value="scope.row.invoicesStatus"/>
+        </template>
+      </el-table-column>
         <el-table-column label="出库日期" align="center" prop="wmOutDate" width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.wmOutDate, '{y}-{m}-{d}') }}</span>
@@ -131,7 +139,11 @@
         <el-table-column label="综合管理员" align="center" prop="synthesisKeeper" />
         <el-table-column label="接收人员" align="center" prop="receiver" />
         <el-table-column label="附件" align="center" prop="enclosure" />
-        <el-table-column label="出库类型" align="center" prop="outType" />
+      <el-table-column label="出库类型" align="center" prop="outType" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.out_type" :value="scope.row.outType"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
 
         <template slot-scope="scope">
@@ -317,10 +329,10 @@ import { listOutInfo, getOutInfo,createWmOutCoded } from "@/api/wmOut/outInfo";
 import { getKeeperUser} from "@/api/wmPut/putInfo";
 import { getAllGoodsInfoList } from "@/api/base/goodsInfo";
 import {listWhBitAll} from "@/api/base/whBitInfo";
-import store from '@/store'
+import { listDealingsunitInfo} from "@/api/base/dealingsunitInfo";
 export default {
   name: "OutEscrow",
-  dicts: ['cause','invoices_status','goods_specification','wm_out_reason','cigarette_quality','out_type'],
+  dicts: ['cause','invoices_status','goods_specification','wm_out_reason','out_type'],
   data() {
     return {
       //库位集合
@@ -458,8 +470,16 @@ export default {
     this.getList();
     this.getGoodsAll();
     this.getUnitRoleUser();
+    this.getUnit();
   },
   methods: {
+    //获取组织
+    getUnit(){
+      listDealingsunitInfo({pageNum: 1,
+        pageSize: 10000,unitEnabled:'0'}).then(response => {
+        this.unitList = response.rows;
+      });
+    },
     //获取组织下的角色人员
     getUnitRoleUser(){
       getKeeperUser().then(res=>{

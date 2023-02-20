@@ -67,6 +67,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     <select id="selectEscrowById" resultType="wmPutEscrowVo">
-
+        select
+        <include refid="wm_out_escrow_column"/>,<include refid="wm_out_info_column"/>,
+        goods.goods_name,goods.goods_specification
+        from wm_out_escrow wot
+        left join wm_out_info woi on wot.wm_out_id=woi.id
+        left join bs_goods_info goods on goods.id = woi.goods_id
+        <where>
+            woi.out_type=1 and woi.id=#{id}
+        </where>
     </select>
 </mapper>

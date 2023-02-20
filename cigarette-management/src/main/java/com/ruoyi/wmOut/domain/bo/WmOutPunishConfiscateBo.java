@@ -19,7 +19,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class WmOutPunishConfiscateBo extends BaseEntity {
+public class WmOutPunishConfiscateBo extends WmOutInfoBo {
 
     /**
      * 主键

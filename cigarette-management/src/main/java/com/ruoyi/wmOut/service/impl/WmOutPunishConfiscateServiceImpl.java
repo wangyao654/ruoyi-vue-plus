@@ -7,13 +7,17 @@ import com.ruoyi.common.core.domain.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.ruoyi.wmOut.domain.bo.WmOutInfoBo;
+import com.ruoyi.wmPut.service.impl.WmPutTemporaryServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wmOut.domain.bo.WmOutPunishConfiscateBo;
 import com.ruoyi.wmOut.domain.vo.WmOutPunishConfiscateVo;
 import com.ruoyi.wmOut.domain.WmOutPunishConfiscate;
 import com.ruoyi.wmOut.mapper.WmOutPunishConfiscateMapper;
 import com.ruoyi.wmOut.service.IWmOutPunishConfiscateService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -30,13 +34,17 @@ import java.util.Collection;
 public class WmOutPunishConfiscateServiceImpl implements IWmOutPunishConfiscateService {
 
     private final WmOutPunishConfiscateMapper baseMapper;
+    @Autowired
+    private WmOutInfoServiceImpl wmOutInfoService;
+    @Autowired
+    private WmPutTemporaryServiceImpl wmPutTemporaryService;
 
     /**
      * 查询罚没出库信息
      */
     @Override
     public WmOutPunishConfiscateVo queryById(Long id){
-        return baseMapper.selectVoById(id);
+        return baseMapper.selectPunishConfiscateById(id);
     }
 
     /**
@@ -44,8 +52,12 @@ public class WmOutPunishConfiscateServiceImpl implements IWmOutPunishConfiscateS
      */
     @Override
     public TableDataInfo<WmOutPunishConfiscateVo> queryPageList(WmOutPunishConfiscateBo bo, PageQuery pageQuery) {
-        LambdaQueryWrapper<WmOutPunishConfiscate> lqw = buildQueryWrapper(bo);
-        Page<WmOutPunishConfiscateVo> result = baseMapper.selectVoPage(pageQuery.build(), lqw);
+       // LambdaQueryWrapper<WmOutPunishConfiscate> lqw = buildQueryWrapper(bo);
+        Page<WmOutPunishConfiscateVo> result = baseMapper.selectPageList(pageQuery.build(), bo);
+        result.getRecords().forEach(t->{
+            t.setStorekeeper(wmPutTemporaryService.getKeeper(t.getStorekeeper(),null).get("2"));
+            t.setSynthesisKeeper(wmPutTemporaryService.getKeeper(null,t.getSynthesisKeeper()).get("1"));
+        });
         return TableDataInfo.build(result);
     }
 
@@ -75,9 +87,14 @@ public class WmOutPunishConfiscateServiceImpl implements IWmOutPunishConfiscateS
      * 新增罚没出库信息
      */
     @Override
+    @Transactional
     public Boolean insertByBo(WmOutPunishConfiscateBo bo) {
         WmOutPunishConfiscate add = BeanUtil.toBean(bo, WmOutPunishConfiscate.class);
         validEntityBeforeSave(add);
+        WmOutInfoBo wmOutInfoBo = BeanUtil.toBean(bo, WmOutInfoBo.class);
+        /*        baseMapper.insertOutInfo(wmOutInfo);*/
+        wmOutInfoService.insertByBo(wmOutInfoBo);
+        add.setWmOutId(wmOutInfoBo.getId());
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setId(add.getId());
@@ -89,8 +106,11 @@ public class WmOutPunishConfiscateServiceImpl implements IWmOutPunishConfiscateS
      * 修改罚没出库信息
      */
     @Override
+    @Transactional
     public Boolean updateByBo(WmOutPunishConfiscateBo bo) {
         WmOutPunishConfiscate update = BeanUtil.toBean(bo, WmOutPunishConfiscate.class);
+        WmOutInfoBo wmOutInfoBo = BeanUtil.toBean(bo, WmOutInfoBo.class);
+        wmOutInfoService.updateByBo(wmOutInfoBo);
         validEntityBeforeSave(update);
         return baseMapper.updateById(update) > 0;
     }
@@ -110,6 +130,7 @@ public class WmOutPunishConfiscateServiceImpl implements IWmOutPunishConfiscateS
         if(isValid){
             //TODO 做一些业务上的校验,判断是否需要校验
         }
-        return baseMapper.deleteBatchIds(ids) > 0;
+        baseMapper.deleteByOutId(ids);
+        return wmOutInfoService.deleteWithValidByIds(ids,isValid);
     }
 }

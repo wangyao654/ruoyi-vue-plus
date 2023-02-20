@@ -14,6 +14,69 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="unitCoded" column="unit_coded"/>
         <result property="unitName" column="unit_name"/>
     </resultMap>
-
-
+    <sql id="wm_out_info_column">
+    woi.id,wm_out_coded, woi.certificate_coded, woi.goods_id, woi.wm_out_number, woi.invoices_status, woi.wm_out_date,
+    woi.storekeeper, woi.storekeeper_id, woi.synthesis_keeper, woi.synthesis_keeper_id, woi.receiver, woi.receiver_id,
+    woi.create_time, woi.update_by, woi.update_time, woi.create_by, woi.out_type
+    </sql>
+    <sql id="wm_out_punish_confiscate_column">
+      wot.wm_out_id, wot.client, wot.cause, wot.wm_out_reason, wot.cigarette_quality, wot.unit_coded
+    </sql>
+    <select id="selectPageList" resultType="wmOutPunishConfiscateVo">
+    select <include refid="wm_out_info_column"/>,<include refid="wm_out_punish_confiscate_column"/>,
+        goods.goods_name,goods.goods_specification,unit.unit_name
+        from  wm_out_punish_confiscate wot
+        left join wm_out_info woi on wot.wm_out_id=woi.id
+        left join bs_goods_info goods on goods.id = woi.goods_id
+        left join bs_dealingsunit_info unit on  unit.unit_coded=wot.unit_coded
+        <where>
+            woi.out_type=4  and unit.unit_enabled=0
+            <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
+                and  woi.certificate_coded = #{bo.certificateCoded}
+            </if>
+            <if test="bo.client!=null and bo.client!=''">
+                and  wot.client like concat('%',#{bo.client},'%')
+            </if>
+            <if test="bo.cause!=null and bo.cause!=''">
+                and wot.cause = #{bo.cause}
+            </if>
+            <if test="bo.goodsName!=null and bo.goodsName!=''">
+                and   goods.goods_name  like concat('%',#{bo.goodsName},'%')
+            </if>
+            <if test="bo.invoicesStatus!=null and bo.invoicesStatus!=''">
+                and   woi.invoices_status = #{bo.invoicesStatus}
+            </if>
+            <if test="bo.unitCoded!=null and bo.unitCoded!=''">
+                and  wot.unit_coded  = #{bo.unitCoded}
+            </if>
+            <choose>
+                <when test="bo.startTime!=null and bo.endTime!=null ">
+                    and  woi.update_time between #{bo.startTime} and #{bo.endTime}
+                </when>
+                <when test="bo.startTime!=null">
+                    woi.update_time &gt;= #{bo.startTime}
+                </when>
+                <when test="bo.endTime!=null">
+                    woi.update_time &lt;= #{bo.endTime}
+                </when>
+            </choose>
+        </where>
+    </select>
+    <select id="selectPunishConfiscateById" resultType="wmOutPunishConfiscateVo">
+        select <include refid="wm_out_info_column"/>,<include refid="wm_out_punish_confiscate_column"/>,
+        goods.goods_name,goods.goods_specification,unit.unit_name
+        from  wm_out_punish_confiscate wot
+        left join wm_out_info woi on wot.wm_out_id=woi.id
+        left join bs_goods_info goods on goods.id = woi.goods_id
+        left join bs_dealingsunit_info unit on  unit.unit_coded=wot.unit_coded
+        <where>
+        woi.out_type=4 and woi.id=#{id} and unit.unit_enabled=0
+        </where>
+    </select>
+    <delete id="deleteByOutId">
+        delete from wm_out_punish_confiscate where wm_out_id in
+        <foreach collection="ids" item="id" index="index" close=")" separator="," open="(">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

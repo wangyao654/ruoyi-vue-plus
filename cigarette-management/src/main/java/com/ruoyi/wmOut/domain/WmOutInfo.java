@@ -86,4 +86,5 @@ public class WmOutInfo extends BaseEntity {
      */
     private String outType;
 
+    private String goodsSpecification;
 }

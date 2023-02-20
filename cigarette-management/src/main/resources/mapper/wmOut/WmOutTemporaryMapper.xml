@@ -26,12 +26,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectPageList" resultType="wmOutTemporaryVo">
       select
       <include refid="wm_out_temporary_column"/>,<include refid="wm_out_info_column"/>,
-      goods.goods_name,goods.goods_specification
+      goods.goods_name,goods.goods_specification,unit.unit_name
       from wm_out_temporary wot
       left join wm_out_info woi on wot.wm_out_id=woi.id
       left join bs_goods_info goods on goods.id = woi.goods_id
+      left join bs_dealingsunit_info unit on  unit.unit_coded=wot.unit_coded
         <where>
-            woi.out_type= 2
+            woi.out_type= 2 and unit.unit_enabled=0
             <if test="bo.certificateCoded!=null and bo.certificateCoded!=''">
             and  woi.certificate_coded = #{bo.certificateCoded}
             </if>
@@ -87,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from wm_out_temporary wot
         left join wm_out_info woi on wot.wm_out_id=woi.id
         left join bs_goods_info goods on goods.id = woi.goods_id
-        where woi.out_type= 2 and woi.id=#{id}
+        left join bs_dealingsunit_info unit on  unit.unit_coded=wot.unit_coded
+        where woi.out_type= 2 and woi.id=#{id} and unit.unit_enabled=0
     </select>
 </mapper>

@@ -8,9 +8,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id" column="id"/>
         <result property="wmOutCoded" column="wm_out_coded"/>
         <result property="certificateCoded" column="certificate_coded"/>
-     <!--   <result property="goodsName" column="goods_name"/>-->
+<!--        <result property="goodsName" column="goods_name"/>-->
         <result property="goodsId" column="goods_id"/>
-  <!--      <result property="goodsSpecification" column="goods_specification"/>-->
+        <result property="goodsSpecification" column="goods_specification"/>
         <result property="wmOutNumber" column="wm_out_number"/>
         <result property="invoicesStatus" column="invoices_status"/>
         <result property="wmOutDate" column="wm_out_date"/>

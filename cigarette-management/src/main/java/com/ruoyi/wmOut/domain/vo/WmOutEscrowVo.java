@@ -45,7 +45,7 @@ public class WmOutEscrowVo extends WmOutInfoVo {
      * 所属单位编号（接收单位）
      */
     @ExcelProperty(value = "所属单位编号", converter = ExcelDictConvert.class)
-    @ExcelDictFormat(readConverterExp = "接=收单位")
+    @ExcelDictFormat(readConverterExp = "接收单位")
     private Long unitCoded;
 
     /**
