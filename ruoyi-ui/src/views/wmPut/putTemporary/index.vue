@@ -327,9 +327,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="查扣部门" prop="detainDeptName" size="mini" style="width: 100%;">
+<!--              <el-form-item label="查扣部门" prop="detainDeptName" size="mini" style="width: 100%;">
                 <el-input v-model="form.detainDeptName" placeholder="请输入部门" size="mini" />
-              </el-form-item>
+              </el-form-item>-->
             </el-col>
 <!--            <el-col :span="8">
               <el-form-item label="存放库区" prop="whAreaCoded" size="mini">
@@ -746,6 +746,7 @@ export default {
           });
         }else{
           //this.putBaseForm.varietyNumber=this.putBaseForm.varietyNumber+parseInt(res.data.varietyNumber);
+          //总条数
           this.putBaseForm.whPutNumber= this.putBaseForm.whPutNumber + parseInt(res.data.whPutNumber);
           //this.form.goodsName=res.data.goodsName
           this.form.goodscoded=res.data.goodsCoded

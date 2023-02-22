@@ -240,9 +240,9 @@
                           </el-form-item>
                         </el-col>-->
             <el-col :span="8">
-              <el-form-item label="扣查部门" prop="detainDeptName">
+<!--              <el-form-item label="扣查部门" prop="detainDeptName">
                 <el-input v-model="form.detainDeptName" placeholder="请输入扣查部门" size="mini"/>
-              </el-form-item>
+              </el-form-item>-->
             </el-col>
             <el-col :span="8">
               <el-form-item label="案件类型" prop="causeType">
@@ -312,9 +312,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="查扣部门" prop="detainDeptName" size="mini" style="width: 100%;">
+<!--              <el-form-item label="查扣部门" prop="detainDeptName" size="mini" style="width: 100%;">
                 <el-input v-model="form.detainDeptName" placeholder="请输入部门" size="mini" />
-              </el-form-item>
+              </el-form-item>-->
             </el-col>
             <!--            <el-col :span="8">
                           <el-form-item label="存放库区" prop="whAreaCoded" size="mini">

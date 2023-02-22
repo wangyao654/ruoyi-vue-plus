@@ -259,6 +259,18 @@
               <el-input v-model="form.certificateCodedAssaciation" placeholder="请输入关联文书编号" />
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item label="单据状态" prop="invoicesStatus">
+              <el-select v-model="form.invoicesStatus" placeholder="请选择单据状态" clearable @keyup.enter.native="handleQuery">
+                <el-option
+                  v-for="dict in dict.type.invoices_status"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
 
 
@@ -539,7 +551,7 @@ export default {
         goodsId: undefined,
         goodsSpecification: undefined,
         wmOutNumber: undefined,
-        invoicesStatus: "0",
+        invoicesStatus: "1",
         wmOutDate: undefined,
         storekeeper: undefined,
         storekeeperId: undefined,
@@ -559,6 +571,13 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      let arr = [];
+      let r = this.queryParams.betweenTime;
+      if (r != undefined && r != null && r != "") {
+        arr = this.queryParams.betweenTime.toString().split(",")
+        this.queryParams.startTime = arr[0]
+        this.queryParams.endTime = arr[1];
+      }
       this.getList();
     },
     /** 重置按钮操作 */
@@ -602,7 +621,6 @@ export default {
         this.form = response.data;
         this.storekeeperList= this.form.storekeeper.split(',')
         this.storekeeperList=this.storekeeperList.map(Number);
-/*        this.synthesisKeeperList= this.form.synthesisKeeper.split(",")*/
         this.synthesisKeeperList= this.form.synthesisKeeper.split(",").map(Number);
         this.open = true;
         this.title = "修改代管出库信息";

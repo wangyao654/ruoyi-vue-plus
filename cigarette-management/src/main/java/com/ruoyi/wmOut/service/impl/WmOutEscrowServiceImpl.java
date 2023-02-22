@@ -111,8 +111,10 @@ public class WmOutEscrowServiceImpl implements IWmOutEscrowService {
         WmOutEscrow update = BeanUtil.toBean(bo, WmOutEscrow.class);
         WmOutInfoBo wmOutInfoBo = BeanUtil.toBean(bo, WmOutInfoBo.class);
         wmOutInfoService.updateByBo(wmOutInfoBo);
+
         validEntityBeforeSave(update);
-        return baseMapper.updateById(update) > 0;
+        int i = baseMapper.updateById(update);
+        return i > 0;
     }
 
     /**

@@ -599,6 +599,13 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      let arr = [];
+      let r = this.queryParams.betweenTime;
+      if (r != undefined && r != null && r != "") {
+        arr = this.queryParams.betweenTime.toString().split(",")
+        this.queryParams.startTime = arr[0]
+        this.queryParams.endTime = arr[1];
+      }
       this.getList();
     },
     /** 重置按钮操作 */
@@ -634,6 +641,9 @@ export default {
       getOutPunishConfiscate(id).then(response => {
         this.loading = false;
         this.form = response.data;
+        this.storekeeperList= this.form.storekeeper.split(',')
+        this.storekeeperList=this.storekeeperList.map(Number);
+        this.synthesisKeeperList= this.form.synthesisKeeper.split(",").map(Number);
         this.open = true;
         this.title = "修改罚没出库信息";
       });

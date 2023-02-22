@@ -68,8 +68,8 @@ public class WmPutTemporaryServiceImpl implements IWmPutTemporaryService {
      */
     @Override
     public List<WmPutTemporaryVo> queryList(WmPutTemporaryBo bo) {
-        LambdaQueryWrapper<WmPutTemporary> lqw = buildQueryWrapper(bo);
-        return baseMapper.selectVoList(lqw);
+      //  LambdaQueryWrapper<WmPutTemporary> lqw = buildQueryWrapper(bo);
+        return baseMapper.selectListVo(bo);
     }
 
     private LambdaQueryWrapper<WmPutTemporary> buildQueryWrapper(WmPutTemporaryBo bo) {
