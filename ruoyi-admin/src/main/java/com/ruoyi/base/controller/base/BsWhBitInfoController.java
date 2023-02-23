@@ -109,6 +109,7 @@ public class BsWhBitInfoController extends BaseController {
     * 校验库位编码
     * */
     @GetMapping("/verifyWhBitCoded")
+    @Log(title = "校验库位编码--不能重复", businessType = BusinessType.DELETE)
     public R verifyWhBitCoded(BsWhBitInfoBo bo) {
         return iBsWhBitInfoService.verifyWhBitCoded(bo);
     }
@@ -116,6 +117,7 @@ public class BsWhBitInfoController extends BaseController {
     * 获取所有库位编号
     * */
     @GetMapping("/listAll")
+    @Log(title = "获取所有库位编号", businessType = BusinessType.DELETE)
     public R listAll(BsWhBitInfoBo bo) {
         return iBsWhBitInfoService.listAll(bo);
     }

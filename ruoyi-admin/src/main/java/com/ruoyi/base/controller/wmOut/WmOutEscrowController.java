@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.*;
@@ -42,6 +43,7 @@ public class WmOutEscrowController extends BaseController {
     /**
      * 查询代管出库信息列表
      */
+    @ApiResponse
     @SaCheckPermission("outEscrow:outEscrow:list")
     @GetMapping("/list")
     public TableDataInfo<WmOutEscrowVo> list(WmOutEscrowBo bo, PageQuery pageQuery) {

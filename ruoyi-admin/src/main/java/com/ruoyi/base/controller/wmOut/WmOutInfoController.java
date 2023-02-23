@@ -106,9 +106,10 @@ public class WmOutInfoController extends BaseController {
         return toAjax(iWmOutInfoService.deleteWithValidByIds(Arrays.asList(ids), true));
     }
     /*
-     * 自动生成入库编号 ZC-暂存 DC-代管 FMC-罚没 CJC-抽检
+     *
      * */
     @GetMapping("/createWmOutCoded")
+    @Log(title = "自动生成入库编号 ZC-暂存 DC-代管 FMC-罚没 CJC-抽检", businessType = BusinessType.DELETE)
     public R createWmOutCoded(@RequestParam("type")String type) {
         return iWmOutInfoService.createWmOutCoded(type);
     }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.base.mapper.BrandTemplateInfoMapper">
+
+    <resultMap type="com.ruoyi.base.domain.BrandTemplateInfo" id="BrandTemplateInfoResult">
+        <result property="id" column="id"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="templateCoded" column="template_coded"/>
+        <result property="templateName" column="template_name"/>
+        <result property="templateFileName" column="template_file_name"/>
+        <result property="templatePicture" column="template_picture"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+
+</mapper>
