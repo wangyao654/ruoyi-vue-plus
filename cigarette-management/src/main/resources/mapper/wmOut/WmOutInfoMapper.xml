@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.wmOut.mapper.WmOutInfoMapper">
 
-    <resultMap type="com.ruoyi.wmOut.domain.WmOutInfo" id="WmOutInfoResult">
+    <resultMap type="com.ruoyi.old.wmOut.domain.WmOutInfo" id="WmOutInfoResult">
         <result property="id" column="id"/>
         <result property="wmOutCoded" column="wm_out_coded"/>
         <result property="certificateCoded" column="certificate_coded"/>

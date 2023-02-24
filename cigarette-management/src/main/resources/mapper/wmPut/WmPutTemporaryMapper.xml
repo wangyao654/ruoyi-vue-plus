@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.wmPut.mapper.WmPutTemporaryMapper">
-    <resultMap type="com.ruoyi.wmPut.domain.WmPutTemporary" id="WmPutTemporaryResult">
+    <resultMap type="com.ruoyi.old.wmPut.domain.WmPutTemporary" id="WmPutTemporaryResult">
         <result property="id" column="id"/>
         <result property="wmPutId" column="wm_put_id"/>
         <result property="client" column="client"/>

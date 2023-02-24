@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.wmPut.mapper.WmPutSamplingMapper">
 
-    <resultMap type="com.ruoyi.wmPut.domain.WmPutSampling" id="WmPutSamplingResult">
+    <resultMap type="com.ruoyi.old.wmPut.domain.WmPutSampling" id="WmPutSamplingResult">
         <result property="id" column="id"/>
         <result property="wmPutId" column="wm_put_id"/>
         <result property="wmOutCoded" column="wm_out_coded"/>
